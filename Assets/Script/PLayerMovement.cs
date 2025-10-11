@@ -17,7 +17,11 @@ public class PlayerMovement : MonoBehaviour
     public float crouchHeight = 1f;  // Reuse for sitting if desired
     public float crouchSpeed = 3f;   // Sitting speed
     private Vector3 moveDirection = Vector3.zero;
-    private float rotationX = 0;
+
+    public float cameraDistance = 6f;
+    public float cameraHeight = 2f;
+    private float rotationY = 0f;  // Horizontal rotation
+    private float rotationX = 0f;
     private CharacterController characterController;
     private bool canMove = true;
 
@@ -85,7 +89,17 @@ public class PlayerMovement : MonoBehaviour
 
         if (canMove)
         {
-            playerCamera.transform.position = transform.position + new Vector3(0, 2f, -6f);
+            // Mouse look
+            rotationY += Input.GetAxis("Mouse X") * lookSpeed;
+            rotationX -= Input.GetAxis("Mouse Y") * lookSpeed;
+            rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
+
+            // Calculate rotation
+            Quaternion rotation = Quaternion.Euler(rotationX, rotationY, 0);
+
+            // Update camera position
+            Vector3 targetPos = transform.position - (rotation * Vector3.forward * cameraDistance) + Vector3.up * cameraHeight;
+            playerCamera.transform.position = targetPos;
             playerCamera.transform.LookAt(transform.position + Vector3.up * 1.5f);
         }
     }
