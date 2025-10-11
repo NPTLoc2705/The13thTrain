@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded;
     private bool isRunning;
     private bool isJumping;
-
     void Update()
     {
         HandleMovement();
@@ -52,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
         // Di chuyển
         controller.Move(move.normalized * targetSpeed * Time.deltaTime);
 
+
         // Gán vào Animator
         animator.SetFloat("Speed", targetSpeed, 0.1f, Time.deltaTime);
         animator.SetBool("isRunning", isRunning);
@@ -64,9 +64,10 @@ public class PlayerMovement : MonoBehaviour
         // Nếu nhấn Space và đang chạm đất
         if (jumpPressed && isGrounded)
         {
+            Debug.Log("Jump triggered");
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             isJumping = true;
-            animator.SetTrigger("Jump");
+            animator.SetBool("IsJumping", true);
         }
 
         // Áp dụng trọng lực
@@ -76,7 +77,9 @@ public class PlayerMovement : MonoBehaviour
         // Khi rơi chạm đất → kết thúc nhảy
         if (isGrounded && isJumping)
         {
+            Debug.Log("Landed, IsJumping = false");
             isJumping = false;
+            animator.SetBool("IsJumping", false);
         }
     }
 }
