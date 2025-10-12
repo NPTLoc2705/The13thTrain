@@ -50,7 +50,8 @@ public class PlayerMovement : MonoBehaviour
 
         // Di chuyển
         controller.Move(move.normalized * targetSpeed * Time.deltaTime);
-
+        Quaternion targetRotation = Quaternion.LookRotation(move);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
 
         // Gán vào Animator
         animator.SetFloat("Speed", targetSpeed, 0.1f, Time.deltaTime);

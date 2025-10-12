@@ -3,62 +3,32 @@ using UnityEngine;
 public class CameraFollow2_5D : MonoBehaviour
 {
     [Header("Target Settings")]
-    public Transform target;
+    public Transform target;       // Player or player root
     public Vector3 offset = new Vector3(0, 2, -5);
     public float followSpeed = 5f;
 
-    [Header("Mouse Rotation Settings")]
-    public float mouseSensitivity = 100f;
-    public float yMinLimit = -20f;
-    public float yMaxLimit = 60f;
+    [Header("Rotation Settings")]
+    public float rotateSpeed = 15f;
+    public bool lockYRotation = true; // Keep camera horizontal like in Little Nightmares
 
-    private float rotationX = 0f;
-    private float rotationY = 0f;
-
-    void Start()
-    {
-        if (target == null)
-        {
-            Debug.LogWarning("Camera target not assigned!");
-            enabled = false;
-            return;
-        }
-
-        // Lock cursor
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        // Initialize rotation
-        Vector3 eulerAngles = transform.eulerAngles;
-        rotationY = eulerAngles.y;
-        rotationX = eulerAngles.x;
-    }
+    private Vector3 desiredPosition;
+    private Quaternion desiredRotation;
 
     void LateUpdate()
     {
         if (!target) return;
 
-        // --- Mouse input for rotation ---
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        // Desired position behind the target
+        desiredPosition = target.position + target.TransformDirection(offset);
 
-        rotationY += mouseX;
-        rotationX -= mouseY;
-        rotationX = Mathf.Clamp(rotationX, yMinLimit, yMaxLimit);
-
-        // Compute rotation
-        Quaternion rotation = Quaternion.Euler(rotationX, rotationY, 0);
-
-        // Update position (camera behind target)
-        Vector3 desiredPosition = target.position + rotation * offset;
+        // Smooth follow
         transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
 
-        // Look at player
-        transform.LookAt(target);
-    }
+        // Look at target smoothly
+        Vector3 lookDir = target.position - transform.position;
+        if (lockYRotation) lookDir.y = 0;
 
-    public Quaternion GetCameraRotation()
-    {
-        return Quaternion.Euler(rotationX, rotationY, 0);
+        desiredRotation = Quaternion.LookRotation(lookDir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotateSpeed * Time.deltaTime);
     }
 }
