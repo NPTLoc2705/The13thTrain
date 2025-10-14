@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Character/Animation/Sit.controller.meta
+guid: 93eaabcb87bbe484ca36f5231ed429cc
+========
+guid: 0fbd9e5ceafb0424a8302602a22b5f00
+>>>>>>>> khoa:Assets/Character/Animation/AnimationAI/PlayerAnimator.controller.meta
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
