@@ -6,11 +6,14 @@ TagManager:
   tags:
   - character
   - Ground
+  - CollectiblePape
+  - FullLetter
+  - CollectiblePaper
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - LetterModel
   - Water
   - UI
   - 
