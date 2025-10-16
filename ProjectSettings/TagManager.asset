@@ -9,6 +9,7 @@ TagManager:
   - CollectiblePape
   - FullLetter
   - CollectiblePaper
+  - PuzzlePiece
   layers:
   - Default
   - TransparentFX

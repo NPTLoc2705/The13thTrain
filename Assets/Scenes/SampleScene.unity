@@ -119,6 +119,28 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &89942973 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1416912146314036949, guid: 66e95005a21ee0748b2584028ea75f06, type: 3}
+  m_PrefabInstance: {fileID: 134762616}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &89942978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89942973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6974dd3653172479fda37c451d4889, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupItem
+  itemID: 3
+  itemName: 
+  model: {fileID: 0}
+  destroyOnPickup: 1
+  isCollected: 0
 --- !u!1001 &124467747
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133,11 +155,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2597149407035733051, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_Size.y
-      value: 0.1
+      value: 2.0541847
       objectReference: {fileID: 0}
     - target: {fileID: 2597149407035733051, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_Size.z
-      value: 2
+      value: 0.88614655
       objectReference: {fileID: 0}
     - target: {fileID: 2597149407035733051, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_Center.x
@@ -145,19 +167,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2597149407035733051, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_Center.y
-      value: 0
+      value: -0.9770924
       objectReference: {fileID: 0}
     - target: {fileID: 2597149407035733051, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_Center.z
-      value: 0
+      value: -0.5569267
       objectReference: {fileID: 0}
     - target: {fileID: 2597149407035733051, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_IsTrigger
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8307918109229613942, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_Name
-      value: TornPiece1
+      value: Piece1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307918109229613942, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
+      propertyPath: m_TagString
+      value: PuzzlePiece
       objectReference: {fileID: 0}
     - target: {fileID: 8647042316774332876, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_LocalScale.y
@@ -206,7 +232,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8307918109229613942, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1459130528}
   m_SourcePrefab: {fileID: 100100000, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
 --- !u!1001 &134762616
 PrefabInstance:
@@ -242,7 +271,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1416912146314036949, guid: 66e95005a21ee0748b2584028ea75f06, type: 3}
       propertyPath: m_Name
-      value: TornPiece3
+      value: Piece3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1416912146314036949, guid: 66e95005a21ee0748b2584028ea75f06, type: 3}
+      propertyPath: m_TagString
+      value: PuzzlePiece
       objectReference: {fileID: 0}
     - target: {fileID: 1793051383009401967, guid: 66e95005a21ee0748b2584028ea75f06, type: 3}
       propertyPath: m_LocalScale.x
@@ -299,7 +332,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1416912146314036949, guid: 66e95005a21ee0748b2584028ea75f06, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 89942978}
   m_SourcePrefab: {fileID: 100100000, guid: 66e95005a21ee0748b2584028ea75f06, type: 3}
 --- !u!1 &181483429
 GameObject:
@@ -578,28 +614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &503711220 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4250078279659800699, guid: 12509673bc0f6d749a78b028196faef0, type: 3}
-  m_PrefabInstance: {fileID: 916819363}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &503711221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 503711220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44b33b43ecf089b4c97c4d8d5cdbfc4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PaperCollector
-  collectedPieces: []
-  fullPaperPrefab: {fileID: 2116719867}
-  letterUICanvas: {fileID: 1315387585}
-  modelViewerTransform: {fileID: 205055754}
-  letterText: {fileID: 1507096090}
 --- !u!1001 &515839115
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -662,7 +676,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5356398654836489774, guid: 6018bf78b9aed86459c00b408bdbb8d2, type: 3}
       propertyPath: m_Name
-      value: TornPiece2
+      value: Piece2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5356398654836489774, guid: 6018bf78b9aed86459c00b408bdbb8d2, type: 3}
+      propertyPath: m_TagString
+      value: PuzzlePiece
       objectReference: {fileID: 0}
     - target: {fileID: 5501753508771018767, guid: 6018bf78b9aed86459c00b408bdbb8d2, type: 3}
       propertyPath: m_Size.x
@@ -683,7 +701,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5356398654836489774, guid: 6018bf78b9aed86459c00b408bdbb8d2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 636747938}
   m_SourcePrefab: {fileID: 100100000, guid: 6018bf78b9aed86459c00b408bdbb8d2, type: 3}
 --- !u!1 &557813334
 GameObject:
@@ -761,6 +782,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 557813334}
   m_CullTransparentMesh: 1
+--- !u!1 &636747933 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5356398654836489774, guid: 6018bf78b9aed86459c00b408bdbb8d2, type: 3}
+  m_PrefabInstance: {fileID: 515839115}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &636747938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636747933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6974dd3653172479fda37c451d4889, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupItem
+  itemID: 2
+  itemName: 
+  model: {fileID: 636747933}
+  destroyOnPickup: 1
+  isCollected: 0
 --- !u!1 &780332243
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,13 +933,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: pose
       objectReference: {fileID: 0}
+    - target: {fileID: 5169690527768330860, guid: 12509673bc0f6d749a78b028196faef0, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4250078279659800699, guid: 12509673bc0f6d749a78b028196faef0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 503711221}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12509673bc0f6d749a78b028196faef0, type: 3}
 --- !u!1001 &928214849
 PrefabInstance:
@@ -1138,7 +1182,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc9810319576f4a4ca7f028d295e4411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LetterUIController
-  paperCollector: {fileID: 503711221}
+  paperCollector: {fileID: 0}
+--- !u!1 &1459130523 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8307918109229613942, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
+  m_PrefabInstance: {fileID: 124467747}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1459130528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459130523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6974dd3653172479fda37c451d4889, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  itemID: 1
+  itemName: "V\u1EADt ph\u1EA9m kh\xF4ng t\xEAn"
+  model: {fileID: 1459130523}
+  destroyOnPickup: 1
+  isCollected: 0
+--- !u!1 &1469354780 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4141254815832409681, guid: 38058beea2fea524f812a560b016132d, type: 3}
+  m_PrefabInstance: {fileID: 2132036165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1469354785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1469354780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6974dd3653172479fda37c451d4889, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupItem
+  itemID: 4
+  itemName: 
+  model: {fileID: 0}
+  destroyOnPickup: 1
+  isCollected: 0
 --- !u!1 &1494926608
 GameObject:
   m_ObjectHideFlags: 0
@@ -1727,6 +1815,57 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1 &1863081710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1863081712}
+  - component: {fileID: 1863081711}
+  m_Layer: 0
+  m_Name: PickupManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1863081711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863081710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5b3e3b8017a2744ea3ffcecc262dc17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  pickupItems:
+  - {fileID: 1459130528}
+  - {fileID: 636747938}
+  - {fileID: 89942978}
+  - {fileID: 1469354785}
+  - {fileID: 2086794200}
+  collectedItemIDs: []
+--- !u!4 &1863081712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863081710}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.26496, y: 5.17847, z: 22.95615}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1896679439
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1749,7 +1888,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7053679058607380236, guid: 2df6ac523f17cf849b4255efc2e027c1, type: 3}
       propertyPath: m_Name
-      value: TornPiece5
+      value: Piece5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7053679058607380236, guid: 2df6ac523f17cf849b4255efc2e027c1, type: 3}
+      propertyPath: m_TagString
+      value: PuzzlePiece
       objectReference: {fileID: 0}
     - target: {fileID: 7685501717988232630, guid: 2df6ac523f17cf849b4255efc2e027c1, type: 3}
       propertyPath: m_LocalScale.x
@@ -1806,13 +1949,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7053679058607380236, guid: 2df6ac523f17cf849b4255efc2e027c1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2086794200}
   m_SourcePrefab: {fileID: 100100000, guid: 2df6ac523f17cf849b4255efc2e027c1, type: 3}
---- !u!1 &2116719867 stripped
+--- !u!1 &2086794195 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 7166357594153478656, guid: 5901f5d761c0ac940bd312cdd1913993, type: 3}
-  m_PrefabInstance: {fileID: 1525685993}
+  m_CorrespondingSourceObject: {fileID: 7053679058607380236, guid: 2df6ac523f17cf849b4255efc2e027c1, type: 3}
+  m_PrefabInstance: {fileID: 1896679439}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2086794200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2086794195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6974dd3653172479fda37c451d4889, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupItem
+  itemID: 5
+  itemName: 
+  model: {fileID: 0}
+  destroyOnPickup: 1
+  isCollected: 0
 --- !u!1001 &2132036165
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1887,12 +2050,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4141254815832409681, guid: 38058beea2fea524f812a560b016132d, type: 3}
       propertyPath: m_Name
-      value: TornPiece4
+      value: Piece4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141254815832409681, guid: 38058beea2fea524f812a560b016132d, type: 3}
+      propertyPath: m_TagString
+      value: PuzzlePiece
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4141254815832409681, guid: 38058beea2fea524f812a560b016132d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1469354785}
   m_SourcePrefab: {fileID: 100100000, guid: 38058beea2fea524f812a560b016132d, type: 3}
 --- !u!1 &2145422814
 GameObject:
@@ -1994,3 +2164,4 @@ SceneRoots:
   - {fileID: 1315387589}
   - {fileID: 1104098026}
   - {fileID: 181483433}
+  - {fileID: 1863081712}
