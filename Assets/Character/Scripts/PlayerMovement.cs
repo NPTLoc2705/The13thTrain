@@ -1,85 +1,158 @@
 using UnityEngine;
+using System.Collections;
 
-public class PlayerMovement : MonoBehaviour
+[RequireComponent(typeof(CharacterController))]
+public class PlayerController_LN_SmoothMove : MonoBehaviour
 {
-    [Header("References")]
-    public Animator animator;          // Kéo Animator của nhân vật vào đây
-    public CharacterController controller; // Gắn CharacterController
-
     [Header("Movement Settings")]
     public float walkSpeed = 2f;
-    public float runSpeed = 4.5f;
-    public float jumpHeight = 1.2f;
-    public float gravity = -9.81f;
+    public float runSpeed = 4f;
+    public float rotationSpeed = 120f;
+    public float jumpForce = 7f;
+    public float baseGravity = 9.81f;
+    public float fallMultiplier = 2.5f;
 
+    [Header("Animation")]
+    public Animator animator;
+    public float pingPongSpeed = 1f;
+    public float smoothAnimBlend = 8f;
+
+    [Header("Camera Follow")]
+    public Transform cameraTransform;
+    public Vector3 cameraOffset = new Vector3(0, 3, -6);
+    public float cameraSmoothTime = 0.2f;
+
+    private CharacterController controller;
     private Vector3 velocity;
-    private bool isGrounded;
-    private bool isRunning;
-    private bool isJumping;
+    private float currentSpeed;
+    private float animSpeed;
+    private Vector3 camVel = Vector3.zero;
+    private bool isJumping = false;
+
+    // Ping-pong
+    private bool pingForward = true;
+    private float animTime = 0f;
+
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+        if (cameraTransform == null && Camera.main != null)
+            cameraTransform = Camera.main.transform;
+    }
+
     void Update()
     {
         HandleMovement();
         HandleJump();
+        HandleCameraFollow();
     }
 
+    // ---------------------- MOVEMENT ----------------------
     void HandleMovement()
     {
-        // Kiểm tra chạm đất
-        isGrounded = controller.isGrounded;
-        if (isGrounded && velocity.y < 0)
-            velocity.y = -2f;
+        float v = Input.GetAxis("Vertical");
+        float h = Input.GetAxis("Horizontal");
+        bool isRunning = Input.GetKey(KeyCode.LeftShift);
 
-        // Nhập phím WASD
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        // Xoay nhân vật
+        transform.Rotate(Vector3.up, h * rotationSpeed * Time.deltaTime);
 
-        Vector3 move = transform.right * horizontal + transform.forward * vertical;
-        bool hasInput = move.magnitude > 0.1f;
+        // Tốc độ mục tiêu
+        float moveSpeed = (isRunning ? runSpeed : walkSpeed);
+        float targetSpeed = Mathf.Abs(v) > 0.1f ? moveSpeed * Mathf.Sign(v) : 0f;
 
-        // Shift để chạy
-        isRunning = Input.GetKey(KeyCode.LeftShift) && hasInput;
+        // Làm mượt chuyển động vật lý
+        currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, Time.deltaTime * 6f);
+        Vector3 move = transform.forward * currentSpeed * Time.deltaTime;
+        controller.Move(move);
 
-        // Tính tốc độ di chuyển
-        float targetSpeed = 0f;
-        if (hasInput)
-            targetSpeed = isRunning ? runSpeed : walkSpeed;
+        // ---------------------- ANIMATION ----------------------
+        if (animator != null)
+        {
+            float speedRatio = Mathf.InverseLerp(0, runSpeed, Mathf.Abs(currentSpeed));
 
-        // Làm mượt tốc độ di chuyển
-        if (targetSpeed < 0.01f)
-            targetSpeed = 0f;
+            // Làm mượt chuyển giá trị gửi vào animator (tránh giật)
+            animSpeed = Mathf.Lerp(animSpeed, speedRatio, Time.deltaTime * smoothAnimBlend);
 
-        // Di chuyển
-        controller.Move(move.normalized * targetSpeed * Time.deltaTime);
+            animator.SetFloat("Speed", animSpeed);
+            animator.SetBool("isGrounded", controller.isGrounded);
 
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+            bool isInLocomotion = state.IsName("Locomotion");
 
-        // Gán vào Animator
-        animator.SetFloat("Speed", targetSpeed, 0.1f, Time.deltaTime);
-        animator.SetBool("isRunning", isRunning);
+            // ✅ Ping-pong chỉ khi grounded & có di chuyển
+            if (controller.isGrounded && !isJumping && animSpeed > 0.1f && isInLocomotion)
+            {
+                animTime += (pingForward ? 1 : -1) * Time.deltaTime * pingPongSpeed;
+
+                if (animTime >= 1f)
+                {
+                    animTime = 1f;
+                    pingForward = false;
+                }
+                else if (animTime <= 0f)
+                {
+                    animTime = 0f;
+                    pingForward = true;
+                }
+
+                animator.Play(state.fullPathHash, 0, animTime);
+            }
+            else if (controller.isGrounded && !isJumping)
+            {
+                animTime = 0f;
+                pingForward = true;
+            }
+        }
     }
 
+    // ---------------------- JUMP ----------------------
     void HandleJump()
     {
-        bool jumpPressed = Input.GetKeyDown(KeyCode.Space);
+        bool isGrounded = controller.isGrounded;
 
-        // Nếu nhấn Space và đang chạm đất
-        if (jumpPressed && isGrounded)
+        if (isGrounded)
         {
-            Debug.Log("Jump triggered");
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            isJumping = true;
-            animator.SetBool("IsJumping", true);
+            if (isJumping)
+                isJumping = false;
+
+            velocity.y = -2f;
+
+            if (Input.GetKeyDown(KeyCode.Space))
+                DoJump();
+        }
+        else
+        {
+            if (velocity.y < 0)
+                velocity.y -= baseGravity * fallMultiplier * Time.deltaTime;
+            else
+                velocity.y -= baseGravity * Time.deltaTime;
         }
 
-        // Áp dụng trọng lực
-        velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+    }
 
-        // Khi rơi chạm đất → kết thúc nhảy
-        if (isGrounded && isJumping)
+    void DoJump()
+    {
+        if (isJumping) return;
+
+        isJumping = true;
+        velocity.y = jumpForce;
+
+        if (animator != null)
         {
-            Debug.Log("Landed, IsJumping = false");
-            isJumping = false;
-            animator.SetBool("IsJumping", false);
+            animator.ResetTrigger("Jump");
+            animator.SetTrigger("Jump");
         }
+    }
+
+    // ---------------------- CAMERA ----------------------
+    void HandleCameraFollow()
+    {
+        if (cameraTransform == null) return;
+
+        Vector3 targetPos = transform.position + transform.rotation * cameraOffset;
+        cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, targetPos, ref camVel, cameraSmoothTime);
+        cameraTransform.LookAt(transform.position + Vector3.up * 1.5f);
     }
 }
