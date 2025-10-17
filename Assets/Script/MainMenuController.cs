@@ -11,32 +11,41 @@ public class MainMenuController : MonoBehaviour
     public TextMeshPro quitButton;
 
     [Header("Hover Settings")]
-    public float hoverHeight = 0.1f;      // độ cao khi hover
-    public float floatSpeed = 2f;         // tốc độ dao động lên xuống
+    public float hoverHeight = 0.1f;
+    public float floatSpeed = 2f;
+
+    [Header("Click Animation")]
+    public float clickScaleUp = 1.2f;        // tỉ lệ phóng to khi click
+    public float clickScaleSpeed = 6f;       // tốc độ phóng to
+    public float clickHoldTime = 0.15f;      // giữ phóng to trước khi fade-out
 
     [Header("Fade Settings")]
     public float fadeDuration = 1.2f;
-    public CanvasGroup fadeCanvas;        // màn hình đen fade-in/out
+    public CanvasGroup fadeCanvas;
+
+    [Header("Audio Settings")]
+    public AudioSource audioSource;
+    public AudioClip hoverSound;
+    public AudioClip clickSound;
+    public AudioSource bgmSource; // nhạc nền menu (fade-out khi play)
 
     private TextMeshPro currentHover;
     private Vector3 basePos;
+    private Vector3 targetScale = Vector3.one;
     private Color normalColor = new Color(0.8f, 0.8f, 0.8f);
     private Color hoverColor = new Color(1f, 0.889f, 0.318f);
-
     private bool isFading = true;
+    private bool isClicking = false;
 
     void Start()
     {
-        // Ẩn chữ ban đầu (alpha = 0)
         SetAlpha(playButton, 0f);
         SetAlpha(settingsButton, 0f);
         SetAlpha(quitButton, 0f);
 
-        // Nếu có CanvasGroup (màn hình đen), set alpha 1 (đen)
         if (fadeCanvas != null)
             fadeCanvas.alpha = 1f;
 
-        // Bắt đầu fade-in
         StartCoroutine(FadeInRoutine());
     }
 
@@ -48,12 +57,10 @@ public class MainMenuController : MonoBehaviour
             timer += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, timer / fadeDuration);
 
-            // Hiện chữ dần
             SetAlpha(playButton, t);
             SetAlpha(settingsButton, t);
             SetAlpha(quitButton, t);
 
-            // Làm sáng dần màn hình
             if (fadeCanvas != null)
                 fadeCanvas.alpha = 1f - t;
 
@@ -68,7 +75,7 @@ public class MainMenuController : MonoBehaviour
 
     void Update()
     {
-        if (isFading) return;
+        if (isFading || isClicking) return;
 
         HandleMouseHover();
         HandleMouseClick();
@@ -83,6 +90,11 @@ public class MainMenuController : MonoBehaviour
             TextMeshPro hovered = hit.transform.GetComponent<TextMeshPro>();
             if (hovered != null && hovered != currentHover)
             {
+                // phát âm thanh hover
+                if (audioSource && hoverSound)
+                    audioSource.PlayOneShot(hoverSound);
+
+                // reset nút cũ
                 if (currentHover != null)
                     currentHover.color = normalColor;
 
@@ -96,7 +108,6 @@ public class MainMenuController : MonoBehaviour
         if (currentHover != null)
         {
             currentHover.color = normalColor;
-            // đưa về vị trí gốc nếu không hover
             currentHover.transform.position = basePos;
             currentHover = null;
         }
@@ -106,7 +117,6 @@ public class MainMenuController : MonoBehaviour
     {
         if (currentHover == null) return;
 
-        // Hiệu ứng “nhấp nhô” nhẹ bằng sóng sin
         float offsetY = Mathf.Sin(Time.time * floatSpeed) * hoverHeight;
         currentHover.transform.position = basePos + Vector3.up * offsetY;
     }
@@ -115,38 +125,75 @@ public class MainMenuController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && currentHover != null)
         {
-            switch (currentHover.name)
-            {
-                case "PlayButton":
-                    StartCoroutine(FadeOutAndLoad("GameScene"));
-                    break;
-                case "SettingsButton":
-                    Debug.Log("Open Settings...");
-                    break;
-                case "QuitButton":
-                    Application.Quit();
+            if (audioSource && clickSound)
+                audioSource.PlayOneShot(clickSound);
+
+            StartCoroutine(ClickAnimation(currentHover));
+        }
+    }
+
+    IEnumerator ClickAnimation(TextMeshPro clickedButton)
+    {
+        isClicking = true;
+        Vector3 originalScale = clickedButton.transform.localScale;
+        Vector3 targetScale = originalScale * clickScaleUp;
+
+        // hiệu ứng phóng to
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * clickScaleSpeed;
+            clickedButton.transform.localScale = Vector3.Lerp(originalScale, targetScale, t);
+            yield return null;
+        }
+
+        // giữ 1 chút
+        yield return new WaitForSeconds(clickHoldTime);
+
+        // thu nhỏ lại
+        t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * clickScaleSpeed;
+            clickedButton.transform.localScale = Vector3.Lerp(targetScale, originalScale, t);
+            yield return null;
+        }
+
+        // chuyển scene hoặc hành động tương ứng
+        switch (clickedButton.name)
+        {
+            case "PlayButton":
+                StartCoroutine(FadeOutAndLoad("GameScene"));
+                break;
+            case "SettingsButton":
+                Debug.Log("Open Settings...");
+                isClicking = false;
+                break;
+            case "QuitButton":
+                Application.Quit();
 #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
+                UnityEditor.EditorApplication.isPlaying = false;
 #endif
-                    break;
-            }
+                break;
         }
     }
 
     IEnumerator FadeOutAndLoad(string sceneName)
     {
-        if (fadeCanvas == null)
-        {
-            SceneManager.LoadScene(sceneName);
-            yield break;
-        }
-
         float timer = 0f;
+        float startVolume = (bgmSource != null) ? bgmSource.volume : 0f;
+
         while (timer < fadeDuration)
         {
             timer += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, timer / fadeDuration);
-            fadeCanvas.alpha = t;
+
+            if (fadeCanvas != null)
+                fadeCanvas.alpha = t;
+
+            if (bgmSource != null)
+                bgmSource.volume = Mathf.Lerp(startVolume, 0f, t);
+
             yield return null;
         }
 
