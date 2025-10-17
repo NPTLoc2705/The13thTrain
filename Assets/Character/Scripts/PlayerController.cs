@@ -1,33 +1,43 @@
 using UnityEngine;
+using System.Collections.Generic;
+using TMPro; // dùng cho UI TextMeshPro
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Interaction Settings")]
+    public float interactionDistance = 5f;
+
     [Header("Movement Settings")]
     public float walkSpeed = 2f;
     public float runSpeed = 4f;
 
     [Header("Jump Settings")]
-    [Tooltip("Độ cao cú nhảy — tăng để nhảy cao hơn")]
     public float jumpHeight = 2.5f;
     public float gravity = -9.81f;
 
     [Header("Camera Settings")]
-    public Transform cameraTransform;         // Tham chiếu tới camera (kéo vào trong Inspector)
+    public Transform cameraTransform;
     public Vector3 cameraOffset = new Vector3(0, 3f, -5f);
     public float cameraSmoothSpeed = 10f;
     public float mouseSensitivity = 120f;
-    public bool lockCursor = true;            // Ẩn và khóa chuột vào giữa màn hình
+    public bool lockCursor = true;
 
     [Header("References")]
     public Animator animator;
+    public TextMeshProUGUI pickupText;  // Tham chiếu tới TMP UI
 
     private CharacterController controller;
     private Vector3 velocity;
     private bool isGrounded;
-
     private float yaw;
     private float pitch;
+
+    // Danh sách mảnh tranh đã nhặt
+    private List<string> collectedPieces = new List<string>();
+
+    // Tổng số mảnh (bạn có thể chỉnh trong Inspector)
+    public int totalPieces = 5;
 
     void Start()
     {
@@ -39,24 +49,37 @@ public class PlayerController : MonoBehaviour
             Cursor.visible = false;
         }
 
-        // Lấy góc hiện tại của camera ban đầu
         if (cameraTransform != null)
         {
             yaw = cameraTransform.eulerAngles.y;
             pitch = cameraTransform.eulerAngles.x;
         }
+        else
+        {
+            Debug.LogError("❌ CameraTransform chưa được gán!");
+        }
+
+        if (pickupText != null)
+        {
+            pickupText.text = ""; // Ẩn khi bắt đầu
+        }
     }
 
     void Update()
     {
-        // --- 1. Kiểm tra chạm đất ---
+        HandleMovement();
+        HandleInteraction();
+    }
+
+    // ---------------------- DI CHUYỂN ----------------------
+    void HandleMovement()
+    {
         isGrounded = controller.isGrounded;
         animator.SetBool("isGrounded", isGrounded);
-
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
-        // --- 2. Camera xoay theo chuột ---
+        // Camera xoay
         if (cameraTransform != null)
         {
             yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
@@ -69,15 +92,13 @@ public class PlayerController : MonoBehaviour
             cameraTransform.LookAt(transform.position + Vector3.up * 1.5f);
         }
 
-        // --- 3. Nhận input di chuyển ---
+        // Di chuyển
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-
         Vector3 direction = new Vector3(h, 0, v).normalized;
 
         if (direction.magnitude >= 0.1f)
         {
-            // Hướng di chuyển dựa trên góc quay của camera
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + yaw;
             Quaternion rot = Quaternion.Euler(0f, targetAngle, 0f);
             transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f);
@@ -94,15 +115,48 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 0f);
         }
 
-        // --- 4. Nhảy ---
+        // Nhảy
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             animator.SetTrigger("JumpTrigger");
         }
 
-        // --- 5. Trọng lực ---
+        // Trọng lực
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    // ---------------------- NHẶT ĐỒ ----------------------
+    void HandleInteraction()
+    {
+        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, interactionDistance, ~0, QueryTriggerInteraction.Collide))
+
+        {
+            PickupItem item = hit.collider.GetComponent<PickupItem>();
+            if (item != null && !item.isCollected)
+            {
+                if (pickupText != null)
+                    pickupText.text = $"[E] Nhặt: {item.itemName}";
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    PickupManager.Instance.CollectItem(item);
+                }
+            }
+            else
+            {
+                if (pickupText != null)
+                    pickupText.text = "";
+            }
+        }
+        else
+        {
+            if (pickupText != null)
+                pickupText.text = "";
+        }
     }
 }
