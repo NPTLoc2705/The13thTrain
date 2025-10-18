@@ -133,9 +133,10 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
         RaycastHit hit;
-
+        Debug.DrawRay(ray.origin, ray.direction * interactionDistance, Color.red, 0.5f);
         if (Physics.Raycast(ray, out hit, interactionDistance, ~0, QueryTriggerInteraction.Collide))
         {
+            Debug.Log("Raycast hit: " + hit.collider.name + " | Tag: " + hit.collider.tag);
             PickupItem item = hit.collider.GetComponent<PickupItem>();
             if (item != null && !item.isCollected)
             {
@@ -197,4 +198,5 @@ public class PlayerController : MonoBehaviour
                 pickupText.text = "";
         }
     }
+    
 }
