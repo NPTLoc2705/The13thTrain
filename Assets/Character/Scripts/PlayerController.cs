@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        gameObject.tag = "Player";
 
         if (lockCursor)
         {
@@ -134,17 +135,54 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, interactionDistance, ~0, QueryTriggerInteraction.Collide))
-
         {
             PickupItem item = hit.collider.GetComponent<PickupItem>();
             if (item != null && !item.isCollected)
             {
                 if (pickupText != null)
-                    pickupText.text = $"[E] Nhặt: {item.itemName}";
-
+                {
+                    // Customize text based on item type (e.g., key vs. paper piece)
+                    if (item.itemID == "SafeKey")
+                        pickupText.text = "[E] Nhặt chìa khóa";
+                    else
+                        pickupText.text = $"[E] Nhặt: {item.itemName}";
+                }
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     PickupManager.Instance.CollectItem(item);
+                    Debug.Log("Attempted to collect: " + item.itemName + ", itemID: " + item.itemID);
+
+                }
+            }
+            else if (hit.collider.CompareTag("Safe"))
+            {
+                if (pickupText != null)
+                    pickupText.text = "[E] Mở két sắt";
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    SafeController safe = hit.collider.GetComponent<SafeController>();
+                    if (safe != null)
+                    {
+                        safe.ShowPasswordUI();
+                    }
+                }
+            }
+            // Placeholder for MysteryBox interaction (to be implemented)
+            else if (hit.collider.CompareTag("MysteryBox"))
+            {
+                if (pickupText != null)
+                    pickupText.text = "[E] Mở hộp bí ẩn";
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    MysteryBoxController box = hit.collider.GetComponent<MysteryBoxController>();
+                    if (box != null && PickupManager.Instance != null && PickupManager.Instance.IsCollected("SafeKey"))
+                    {
+                        box.OpenBox();
+                    }
+                    else if (pickupText != null)
+                    {
+                        pickupText.text = "[E] Cần chìa khóa để mở";
+                    }
                 }
             }
             else

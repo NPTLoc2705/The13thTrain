@@ -14,8 +14,15 @@ public class PickupManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Optional: Keep across scenes
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void RegisterPickup(PickupItem item)
@@ -34,6 +41,20 @@ public class PickupManager : MonoBehaviour
 
         if (!collectedItemIDs.Contains(item.itemID))
             collectedItemIDs.Add(item.itemID);
+
+        // Check if all pieces are collected and show UI
+        if (collectedItemIDs.Count == 5)
+        {
+            // Use singleton to access LetterUIController
+            if (LetterUIController.Instance != null)
+            {
+                LetterUIController.Instance.ShowLetterUI();
+            }
+            else
+            {
+                Debug.LogError("LetterUIController instance not found! Ensure the LetterUI GameObject is active and has the LetterUIController component.");
+            }
+        }
     }
 
     public bool IsCollected(string itemID)
