@@ -6,10 +6,12 @@ TagManager:
   tags:
   - character
   - Ground
-  - CollectiblePape
   - FullLetter
   - CollectiblePaper
   - PuzzlePiece
+  - Safe
+  - MysteryBox
+  - Key
   layers:
   - Default
   - TransparentFX

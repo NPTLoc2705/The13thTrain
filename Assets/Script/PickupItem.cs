@@ -13,7 +13,7 @@ public class PickupItem : MonoBehaviour
 
     public bool isCollected = false;
 
-    public void OnPickup()
+    public virtual void OnPickup()
     {
         if (isCollected) return;
 
