@@ -7,21 +7,57 @@ public class DoorInteraction : MonoBehaviour
     public float openSpeed = 2f;
     public bool isOpen = false;
 
+    [Header("Door Interaction Settings")]
+    public float interactionDistance = 3f;
+    public bool requiresKey = false;  // Tích vào nếu cửa cần chìa khóa
+    public string requiredKeyID = "RedKey"; // ID của chìa khóa (chỉ dùng nếu requiresKey = true)
+
     private Quaternion _closedRotation;
     private Quaternion _openRotation;
     private Coroutine _currentCoroutine;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private Transform playerTransform;
+
     void Start()
     {
         _closedRotation = transform.rotation;
         _openRotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, openFloat, 0));
+
+        // Lấy transform của player
+        playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (playerTransform == null)
+            Debug.LogError("Player không tìm thấy! Đảm bảo Player có tag 'Player'");
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
+            // Kiểm tra khoảng cách
+            if (playerTransform != null)
+            {
+                float distance = Vector3.Distance(playerTransform.position, transform.position);
+                if (distance > interactionDistance)
+                {
+                    Debug.LogWarning($"Quá xa! Cần ở trong {interactionDistance}m để mở cửa");
+                    if (TextManager.Instance != null)
+                        TextManager.Instance.ShowPrompt($"[!] Quá xa cửa!");
+                    return;
+                }
+            }
+
+            // Kiểm tra chìa khóa (chỉ nếu requiresKey = true)
+            if (requiresKey)
+            {
+                if (PickupManager.Instance != null && !PickupManager.Instance.IsCollected(requiredKeyID))
+                {
+                    Debug.LogWarning($"Cần {requiredKeyID} để mở cửa!");
+                    if (TextManager.Instance != null)
+                        TextManager.Instance.ShowPrompt($"[!] Cần chìa khóa để mở cửa!");
+                    return;
+                }
+            }
+
+            // Nếu tất cả điều kiện thỏa mãn, mở cửa
             if (_currentCoroutine != null)
             {
                 StopCoroutine(_currentCoroutine);
@@ -29,6 +65,7 @@ public class DoorInteraction : MonoBehaviour
             _currentCoroutine = StartCoroutine(ToggleDoor());
         }
     }
+
     private IEnumerator ToggleDoor()
     {
         Quaternion targetRotation = isOpen ? _closedRotation : _openRotation;
@@ -39,5 +76,6 @@ public class DoorInteraction : MonoBehaviour
         }
         transform.rotation = targetRotation;
         isOpen = !isOpen;
+        Debug.Log(isOpen ? "Cửa đã mở" : "Cửa đã đóng");
     }
 }
