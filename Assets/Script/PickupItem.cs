@@ -50,24 +50,38 @@ public class PickupItem : MonoBehaviour
         if (isCollected) return;
 
         isCollected = true;
-        Debug.Log($"✅ Đã nhặt: {itemName}");
+        Debug.Log($"Đã nhặt: {itemName}");
 
         // Play sound effect if assigned
         if (audioSource != null && pickupSound != null)
         {
             audioSource.PlayOneShot(pickupSound, soundVolume);
-            Debug.Log($"🔊 Playing sound for {itemName}");
+            Debug.Log($"Playing sound for {itemName}");
         }
         else
         {
-            Debug.LogWarning($"⚠️ No pickup sound assigned or AudioSource missing for {itemName}!");
+            Debug.LogWarning($"No pickup sound assigned or AudioSource missing for {itemName}!");
         }
 
-        // Delay destruction to allow sound to finish playing
+        // Just hide the object, don't destroy it yet
         if (destroyOnPickup)
         {
-            // Calculate delay based on sound length (add small buffer)
-            float delay = pickupSound != null ? pickupSound.length + 0.1f : 0f;
+            // Hide visually but keep the GameObject alive for sound playback
+            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in renderers)
+            {
+                r.enabled = false;
+            }
+
+            // Disable collider so it can't be picked up again
+            Collider col = GetComponent<Collider>();
+            if (col != null)
+            {
+                col.enabled = false;
+            }
+
+            // Destroy after sound finishes
+            float delay = pickupSound != null ? pickupSound.length + 0.1f : 0.1f;
             Destroy(gameObject, delay);
         }
     }

@@ -163,16 +163,16 @@ public class MainMenuController : MonoBehaviour
         switch (clickedButton.name)
         {
             case "PlayButton":
-                StartCoroutine(FadeOutAndLoad("GameScene"));
+                StartCoroutine(FadeOutAndLoad("Ohlala")); // Changed from "Scene3" to "Ohlala"
                 break;
             case "SettingsButton":
-                Debug.Log("Open Settings...");
+                Debug.Log("Settings button clicked, but functionality is not implemented yet.");
                 isClicking = false;
                 break;
             case "QuitButton":
                 Application.Quit();
 #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
 #endif
                 break;
         }

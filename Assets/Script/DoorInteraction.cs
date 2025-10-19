@@ -30,6 +30,9 @@ public class DoorInteraction : MonoBehaviour
 
     void Update()
     {
+        // Kiểm tra khoảng cách và hiển thị prompt
+        UpdatePrompt();
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             // Kiểm tra khoảng cách
@@ -39,8 +42,6 @@ public class DoorInteraction : MonoBehaviour
                 if (distance > interactionDistance)
                 {
                     Debug.LogWarning($"Quá xa! Cần ở trong {interactionDistance}m để mở cửa");
-                    if (TextManager.Instance != null)
-                        TextManager.Instance.ShowPrompt($"[!] Quá xa cửa!");
                     return;
                 }
             }
@@ -51,8 +52,6 @@ public class DoorInteraction : MonoBehaviour
                 if (PickupManager.Instance != null && !PickupManager.Instance.IsCollected(requiredKeyID))
                 {
                     Debug.LogWarning($"Cần {requiredKeyID} để mở cửa!");
-                    if (TextManager.Instance != null)
-                        TextManager.Instance.ShowPrompt($"[!] Cần chìa khóa để mở cửa!");
                     return;
                 }
             }
@@ -63,6 +62,29 @@ public class DoorInteraction : MonoBehaviour
                 StopCoroutine(_currentCoroutine);
             }
             _currentCoroutine = StartCoroutine(ToggleDoor());
+        }
+    }
+
+    private void UpdatePrompt()
+    {
+        if (playerTransform != null)
+        {
+            float distance = Vector3.Distance(playerTransform.position, transform.position);
+            bool showPrompt = distance <= interactionDistance;
+
+            if (showPrompt)
+            {
+                string promptMessage = "[E] Mở cửa";
+                if (requiresKey && (PickupManager.Instance == null || !PickupManager.Instance.IsCollected(requiredKeyID)))
+                {
+                    promptMessage = "[E] Cần chìa khóa để mở cửa!";
+                }
+                TextManager.Instance.ShowPrompt(promptMessage);
+            }
+            else
+            {
+                TextManager.Instance.HidePrompt();
+            }
         }
     }
 

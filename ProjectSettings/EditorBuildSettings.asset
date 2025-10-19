@@ -11,5 +11,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/map.unity
     guid: 185e7d7d8d535d24da0a8082abf6f8f3
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: cbd7bcee4f4856846a817f7f2e7fd3df
+  - enabled: 1
+    path: Assets/Scenes/ohlala.unity
+    guid: 7bfc091d5d5e50c4794bcad997aadbed
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
