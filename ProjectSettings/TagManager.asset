@@ -12,6 +12,7 @@ TagManager:
   - Safe
   - MysteryBox
   - Key
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - LetterModel
   - Water
   - UI
-  - 
+  - Wall
   - 
   - 
   - 
