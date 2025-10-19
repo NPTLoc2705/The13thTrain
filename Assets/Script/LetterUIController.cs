@@ -64,5 +64,9 @@ public class LetterUIController : MonoBehaviour
         gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        // Show "Find the safe" notice via TextManager
+        TextManager.Instance.ShowNotice("Find the safe", 3f);
+        Debug.Log("LetterUI closed, showing 'Find the safe' notice.");
     }
 }

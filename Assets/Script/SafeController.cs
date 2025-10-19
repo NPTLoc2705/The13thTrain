@@ -1,15 +1,42 @@
 using UnityEngine;
 using TMPro;
-using System.Collections; // For coroutine
+using System.Collections;
 
 public class SafeController : MonoBehaviour
 {
     public GameObject passwordUI; // Drag PasswordUI Canvas here
     public TMP_InputField passwordInput; // Drag TMP_InputField here
-    public TextMeshProUGUI noticeText; // Drag the small notice TextMeshProUGUI here (set font size small in Inspector)
     public GameObject key; // Drag Key GameObject here (inactive near safe position)
     public GameObject mysteryBox; // Drag MysteryBox GameObject here
+
+    [Header("Shake Settings")]
+    public RectTransform shakeTarget; // Drag the Panel (child of Canvas) here
+    public float shakeDuration = 0.5f;
+    public float shakeIntensity = 20f;
+
     private bool isOpen = false;
+    private bool isShaking = false;
+    private Vector2 originalAnchoredPosition;
+
+    void Start()
+    {
+        // If shakeTarget is not assigned, try to find the Panel automatically
+        if (shakeTarget == null && passwordUI != null)
+        {
+            // Try to find a child named "Panel"
+            Transform panelTransform = passwordUI.transform.Find("Panel");
+            if (panelTransform != null)
+            {
+                shakeTarget = panelTransform.GetComponent<RectTransform>();
+            }
+        }
+
+        // Store the original anchored position
+        if (shakeTarget != null)
+        {
+            originalAnchoredPosition = shakeTarget.anchoredPosition;
+        }
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -41,6 +68,13 @@ public class SafeController : MonoBehaviour
         if (passwordUI != null && !isOpen)
         {
             passwordUI.SetActive(true);
+
+            // Reset position when showing UI
+            if (shakeTarget != null)
+            {
+                shakeTarget.anchoredPosition = originalAnchoredPosition;
+            }
+
             if (passwordInput != null)
             {
                 passwordInput.text = ""; // Clear previous input
@@ -68,12 +102,11 @@ public class SafeController : MonoBehaviour
             if (key != null)
             {
                 key.SetActive(true);
-                Debug.Log("Key activated at: " + key.transform.position); // Debug key position
-                // Ensure key is not already collected
+                Debug.Log("Key activated at: " + key.transform.position);
                 PickupItem keyItem = key.GetComponent<PickupItem>();
                 if (keyItem != null)
                 {
-                    keyItem.isCollected = false; // Reset if previously collected
+                    keyItem.isCollected = false;
                     Debug.Log("Key itemID: " + keyItem.itemID + ", isCollected: " + keyItem.isCollected);
                 }
             }
@@ -84,44 +117,46 @@ public class SafeController : MonoBehaviour
                 Debug.Log("Mystery box activated at: " + mysteryBox.transform.position);
             }
 
-            // Show notice text
-            if (noticeText != null)
-            {
-                StartCoroutine(ShowNotice("Mystery box appeared!", 3f));
-                Debug.Log("Started ShowNoticeAndDestroy coroutine with noticeText: " + noticeText.name);
-    
-            }
-            else
-            {
-                Debug.LogError("noticeText is null! Check Inspector assignment.");
-            }
+            // Show notice via TextManager
+            TextManager.Instance.ShowNotice("Mystery box appeared!", 3f);
 
-            Debug.Log("Safe opened! Key and Mystery Box revealed.");
-
-            // Destroy the safe after success
+            // Destroy the safe immediately
             Destroy(gameObject);
         }
         else
         {
             Debug.Log("Incorrect password!");
+            // Trigger shake animation
+            if (!isShaking && shakeTarget != null)
+            {
+                StartCoroutine(ShakePasswordUI());
+            }
+            else if (shakeTarget == null)
+            {
+                Debug.LogWarning("Shake Target not assigned! Please assign the Panel RectTransform in the Inspector.");
+            }
         }
     }
 
-    private IEnumerator ShowNotice(string message, float duration)
+    IEnumerator ShakePasswordUI()
     {
-        if (noticeText != null)
+        isShaking = true;
+        float elapsed = 0f;
+
+        while (elapsed < shakeDuration)
         {
-            noticeText.text = message;
-            noticeText.gameObject.SetActive(true);
-            Debug.Log("Showing notice: " + message);
-            yield return new WaitForSeconds(duration);
-            noticeText.gameObject.SetActive(false);
-            noticeText.text = ""; // Clear for next use
-            Debug.Log("Notice hidden");
+            // Generate random offset for shake effect
+            float offsetX = Random.Range(-shakeIntensity, shakeIntensity);
+            float offsetY = Random.Range(-shakeIntensity, shakeIntensity);
+
+            shakeTarget.anchoredPosition = originalAnchoredPosition + new Vector2(offsetX, offsetY);
+
+            elapsed += Time.deltaTime;
+            yield return null;
         }
-        else
-        {
-            Debug.LogError("noticeText is null in coroutine!");
-        }
+
+        // Reset to original position
+        shakeTarget.anchoredPosition = originalAnchoredPosition;
+        isShaking = false;
     }
 }

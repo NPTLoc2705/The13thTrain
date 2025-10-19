@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using TMPro; // dùng cho UI TextMeshPro
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -25,7 +24,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     public Animator animator;
-    public TextMeshProUGUI pickupText;  // Tham chiếu tới TMP UI
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -57,12 +55,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("❌ CameraTransform chưa được gán!");
-        }
-
-        if (pickupText != null)
-        {
-            pickupText.text = ""; // Ẩn khi bắt đầu
+            Debug.LogError("CameraTransform chưa được gán!");
         }
     }
 
@@ -134,30 +127,28 @@ public class PlayerController : MonoBehaviour
         Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
         RaycastHit hit;
 
+        bool showPrompt = false;
+        string promptMessage = "";
+
         if (Physics.Raycast(ray, out hit, interactionDistance, ~0, QueryTriggerInteraction.Collide))
         {
             PickupItem item = hit.collider.GetComponent<PickupItem>();
             if (item != null && !item.isCollected)
             {
-                if (pickupText != null)
-                {
-                    // Customize text based on item type (e.g., key vs. paper piece)
-                    if (item.itemID == "SafeKey")
-                        pickupText.text = "[E] Nhặt chìa khóa";
-                    else
-                        pickupText.text = $"[E] Nhặt: {item.itemName}";
-                }
+                showPrompt = true;
+                if (item.itemID == "SafeKey")
+                    promptMessage = "[E] Nhặt chìa khóa";
+                else
+                    promptMessage = $"[E] Nhặt: {item.itemName}";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     PickupManager.Instance.CollectItem(item);
-                    Debug.Log("Attempted to collect: " + item.itemName + ", itemID: " + item.itemID);
-
                 }
             }
             else if (hit.collider.CompareTag("Safe"))
             {
-                if (pickupText != null)
-                    pickupText.text = "[E] Mở két sắt";
+                showPrompt = true;
+                promptMessage = "[E] Mở két sắt";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     SafeController safe = hit.collider.GetComponent<SafeController>();
@@ -167,34 +158,35 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            // Placeholder for MysteryBox interaction (to be implemented)
             else if (hit.collider.CompareTag("MysteryBox"))
             {
-                if (pickupText != null)
-                    pickupText.text = "[E] Mở hộp bí ẩn";
+                showPrompt = true;
+                if (PickupManager.Instance != null && PickupManager.Instance.IsCollected("SafeKey"))
+                    promptMessage = "[E] Mở hộp bí ẩn";
+                else
+                    promptMessage = "[E] Cần chìa khóa để mở";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     MysteryBoxController box = hit.collider.GetComponent<MysteryBoxController>();
-                    if (box != null && PickupManager.Instance != null && PickupManager.Instance.IsCollected("SafeKey"))
+                    if (box != null)
                     {
-                        box.OpenBox();
-                    }
-                    else if (pickupText != null)
-                    {
-                        pickupText.text = "[E] Cần chìa khóa để mở";
+                        if (PickupManager.Instance != null && PickupManager.Instance.IsCollected("SafeKey"))
+                        {
+                            box.OpenBox();
+                        }
                     }
                 }
             }
-            else
-            {
-                if (pickupText != null)
-                    pickupText.text = "";
-            }
+        }
+
+        // Use TextManager for prompt
+        if (showPrompt)
+        {
+            TextManager.Instance.ShowPrompt(promptMessage);
         }
         else
         {
-            if (pickupText != null)
-                pickupText.text = "";
+            TextManager.Instance.HidePrompt();
         }
     }
 }
