@@ -16,9 +16,6 @@ public class PlayerController : MonoBehaviour
     public float gravity = -9.81f;
 
     [Header("Camera Settings")]
-    public Transform cameraTransform;
-    public Vector3 cameraOffset = new Vector3(0, 3f, -5f);
-    public float cameraSmoothSpeed = 10f;
     public float mouseSensitivity = 120f;
     public bool lockCursor = true;
 
@@ -29,12 +26,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 velocity;
     private bool isGrounded;
     private float yaw;
-    private float pitch;
 
-    // Danh sách mảnh tranh đã nhặt
+    // Collected pieces list
     private List<string> collectedPieces = new List<string>();
-
-    // Tổng số mảnh (bạn có thể chỉnh trong Inspector)
     public int totalPieces = 5;
 
     void Start()
@@ -48,15 +42,7 @@ public class PlayerController : MonoBehaviour
             Cursor.visible = false;
         }
 
-        if (cameraTransform != null)
-        {
-            yaw = cameraTransform.eulerAngles.y;
-            pitch = cameraTransform.eulerAngles.x;
-        }
-        else
-        {
-            Debug.LogError("CameraTransform chưa được gán!");
-        }
+        yaw = transform.eulerAngles.y;
     }
 
     void Update()
@@ -65,7 +51,6 @@ public class PlayerController : MonoBehaviour
         HandleInteraction();
     }
 
-    // ---------------------- DI CHUYỂN ----------------------
     void HandleMovement()
     {
         isGrounded = controller.isGrounded;
@@ -73,20 +58,11 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
-        // Camera xoay
-        if (cameraTransform != null)
-        {
-            yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-            pitch = Mathf.Clamp(pitch, -30f, 60f);
+        // Player rotation with mouse
+        yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        transform.rotation = Quaternion.Euler(0f, yaw, 0f);
 
-            Quaternion camRot = Quaternion.Euler(pitch, yaw, 0f);
-            Vector3 desiredPos = transform.position + camRot * cameraOffset;
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, desiredPos, cameraSmoothSpeed * Time.deltaTime);
-            cameraTransform.LookAt(transform.position + Vector3.up * 1.5f);
-        }
-
-        // Di chuyển
+        // Movement
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(h, 0, v).normalized;
@@ -109,22 +85,24 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", 0f);
         }
 
-        // Nhảy
+        // Jump
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             animator.SetTrigger("JumpTrigger");
         }
 
-        // Trọng lực
+        // Gravity
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
 
-    // ---------------------- NHẶT ĐỒ ----------------------
     void HandleInteraction()
     {
-        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null) return;
+
+        Ray ray = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
         RaycastHit hit;
 
         bool showPrompt = false;
