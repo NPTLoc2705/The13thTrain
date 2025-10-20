@@ -133,6 +133,7 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * interactionDistance, Color.red, 0.5f);
         if (Physics.Raycast(ray, out hit, interactionDistance, ~0, QueryTriggerInteraction.Collide))
         {
+            // Check for PickupItem
             PickupItem item = hit.collider.GetComponent<PickupItem>();
             if (item != null && !item.isCollected)
             {
@@ -141,15 +142,18 @@ public class PlayerController : MonoBehaviour
                     promptMessage = "[E] Nhặt chìa khóa";
                 else
                     promptMessage = $"[E] Nhặt: {item.itemName}";
+
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     PickupManager.Instance.CollectItem(item);
                 }
             }
+            // Check for Safe
             else if (hit.collider.CompareTag("Safe"))
             {
                 showPrompt = true;
                 promptMessage = "[E] Mở két sắt";
+
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     SafeController safe = hit.collider.GetComponent<SafeController>();
@@ -159,6 +163,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+            // Check for MysteryBox
             else if (hit.collider.CompareTag("MysteryBox"))
             {
                 showPrompt = true;
@@ -166,6 +171,7 @@ public class PlayerController : MonoBehaviour
                     promptMessage = "[E] Mở hộp bí ẩn";
                 else
                     promptMessage = "[E] Cần chìa khóa để mở";
+
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     MysteryBoxController box = hit.collider.GetComponent<MysteryBoxController>();
@@ -178,17 +184,31 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+            // Check for FinalModel
+            else if (hit.collider.CompareTag("FinalModel"))
+            {
+                showPrompt = true;
+                promptMessage = "[E] Kiểm tra tranh hoàn chỉnh";
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    FinalModelInteraction finalModel = hit.collider.GetComponent<FinalModelInteraction>();
+                    if (finalModel != null)
+                    {
+                        finalModel.Interact();
+                    }
+                }
+            }
         }
 
         // Use TextManager for prompt
-        if (showPrompt)
+        if (showPrompt && TextManager.Instance != null)
         {
             TextManager.Instance.ShowPrompt(promptMessage);
         }
-        else
+        else if (TextManager.Instance != null)
         {
             TextManager.Instance.HidePrompt();
         }
     }
-    
 }
