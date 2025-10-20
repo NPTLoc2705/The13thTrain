@@ -3,101 +3,157 @@ using System.Collections;
 
 public class DoorInteraction : MonoBehaviour
 {
-    public float openFloat = 90f;
+    [Header("Door Animation Settings")]
+    public Transform doorWing; // Assign the doorwing child object here
+    public float openAngle = 90f;
     public float openSpeed = 2f;
     public bool isOpen = false;
 
     [Header("Door Interaction Settings")]
     public float interactionDistance = 3f;
-    public bool requiresKey = false;  // Tích vào nếu cửa cần chìa khóa
-    public string requiredKeyID = "RedKey"; // ID của chìa khóa (chỉ dùng nếu requiresKey = true)
+    public bool requiresKey = false;
+    public string requiredKeyID = "RedKey";
 
-    private Quaternion _closedRotation;
-    private Quaternion _openRotation;
-    private Coroutine _currentCoroutine;
+    private Quaternion closedRotation;
+    private Quaternion openRotation;
+    private Coroutine currentCoroutine;
     private Transform playerTransform;
+    private bool wasInRange = false;
 
     void Start()
     {
-        _closedRotation = transform.rotation;
-        _openRotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, openFloat, 0));
+        // If doorWing is not assigned, try to find it
+        if (doorWing == null)
+        {
+            doorWing = transform.Find("doorwing");
+            if (doorWing == null)
+            {
+                Debug.LogError("doorWing not found! Please assign it in the inspector or ensure it's named 'doorwing'");
+            }
+        }
 
-        // Lấy transform của player
+        if (doorWing != null)
+        {
+            closedRotation = doorWing.rotation;
+            openRotation = Quaternion.Euler(doorWing.eulerAngles + new Vector3(0, openAngle, 0));
+        }
+        else
+        {
+            Debug.LogError("DoorWing is required for door animation!");
+        }
+
         playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
         if (playerTransform == null)
-            Debug.LogError("Player không tìm thấy! Đảm bảo Player có tag 'Player'");
+            Debug.LogError("Player not found! Make sure Player has tag 'Player'");
     }
 
     void Update()
     {
-        // Kiểm tra khoảng cách và hiển thị prompt
         UpdatePrompt();
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            // Kiểm tra khoảng cách
-            if (playerTransform != null)
-            {
-                float distance = Vector3.Distance(playerTransform.position, transform.position);
-                if (distance > interactionDistance)
-                {
-                    Debug.LogWarning($"Quá xa! Cần ở trong {interactionDistance}m để mở cửa");
-                    return;
-                }
-            }
-
-            // Kiểm tra chìa khóa (chỉ nếu requiresKey = true)
-            if (requiresKey)
-            {
-                if (PickupManager.Instance != null && !PickupManager.Instance.IsCollected(requiredKeyID))
-                {
-                    Debug.LogWarning($"Cần {requiredKeyID} để mở cửa!");
-                    return;
-                }
-            }
-
-            // Nếu tất cả điều kiện thỏa mãn, mở cửa
-            if (_currentCoroutine != null)
-            {
-                StopCoroutine(_currentCoroutine);
-            }
-            _currentCoroutine = StartCoroutine(ToggleDoor());
+            TryInteract();
         }
     }
 
     private void UpdatePrompt()
     {
-        if (playerTransform != null)
-        {
-            float distance = Vector3.Distance(playerTransform.position, transform.position);
-            bool showPrompt = distance <= interactionDistance;
+        if (playerTransform == null || TextManager.Instance == null) return;
 
-            if (showPrompt)
+        float distance = Vector3.Distance(playerTransform.position, transform.position);
+        bool inRange = distance <= interactionDistance;
+
+        if (inRange)
+        {
+            string promptMessage = GetPromptMessage();
+            TextManager.Instance.ShowPrompt(promptMessage);
+            wasInRange = true;
+        }
+        else if (wasInRange)
+        {
+            // Only hide prompt if we were previously showing it
+            TextManager.Instance.HidePrompt();
+            wasInRange = false;
+        }
+    }
+
+    private string GetPromptMessage()
+    {
+        if (requiresKey)
+        {
+            if (PickupManager.Instance == null || !PickupManager.Instance.IsCollected(requiredKeyID))
             {
-                string promptMessage = "[E] Mở cửa";
-                if (requiresKey && (PickupManager.Instance == null || !PickupManager.Instance.IsCollected(requiredKeyID)))
-                {
-                    promptMessage = "[E] Cần chìa khóa để mở cửa!";
-                }
-                TextManager.Instance.ShowPrompt(promptMessage);
-            }
-            else
-            {
-                TextManager.Instance.HidePrompt();
+                return $"[E] Need {requiredKeyID} to open door!";
             }
         }
+
+        return isOpen ? "[E] Close Door" : "[E] Open Door";
+    }
+
+    private void TryInteract()
+    {
+        if (playerTransform == null) return;
+
+        float distance = Vector3.Distance(playerTransform.position, transform.position);
+
+        if (distance > interactionDistance)
+        {
+            if (TextManager.Instance != null)
+            {
+                TextManager.Instance.ShowNotice($"Too far! Need to be in {interactionDistance}m", 2f);
+            }
+            return;
+        }
+
+        if (requiresKey)
+        {
+            if (PickupManager.Instance == null || !PickupManager.Instance.IsCollected(requiredKeyID))
+            {
+                if (TextManager.Instance != null)
+                {
+                    TextManager.Instance.ShowNotice($"Need {requiredKeyID} to open door!", 2f);
+                }
+                return;
+            }
+        }
+
+        // All conditions met, toggle door
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+        }
+        currentCoroutine = StartCoroutine(ToggleDoor());
     }
 
     private IEnumerator ToggleDoor()
     {
-        Quaternion targetRotation = isOpen ? _closedRotation : _openRotation;
-        while (Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
+        if (doorWing == null) yield break;
+
+        Quaternion targetRotation = isOpen ? closedRotation : openRotation;
+
+        while (Quaternion.Angle(doorWing.rotation, targetRotation) > 0.1f)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * openSpeed);
+            doorWing.rotation = Quaternion.Slerp(doorWing.rotation, targetRotation, Time.deltaTime * openSpeed);
             yield return null;
         }
-        transform.rotation = targetRotation;
+
+        doorWing.rotation = targetRotation;
         isOpen = !isOpen;
-        Debug.Log(isOpen ? "Cửa đã mở" : "Cửa đã đóng");
+
+        if (TextManager.Instance != null)
+        {
+            TextManager.Instance.ShowNotice(isOpen ? "Opened" : "Closed", 1.5f);
+        }
+    }
+
+    void OnDisable()
+    {
+        // Hide prompt when door is disabled
+        if (wasInRange && TextManager.Instance != null)
+        {
+            TextManager.Instance.HidePrompt();
+            wasInRange = false;
+        }
     }
 }
