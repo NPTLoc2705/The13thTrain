@@ -1322,6 +1322,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 698406904946747579, guid: 1b1a5dc4e36f2b24c83c9da15dc4d86c, type: 3}
+      propertyPath: runSpeed
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8164362291417515752, guid: 1b1a5dc4e36f2b24c83c9da15dc4d86c, type: 3}
       propertyPath: m_Name
       value: Pose1

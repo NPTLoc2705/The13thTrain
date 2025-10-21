@@ -58,44 +58,42 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
-        // Player rotation with mouse
+        // --- Xoay player theo chuột ---
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         transform.rotation = Quaternion.Euler(0f, yaw, 0f);
 
-        // Movement
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        Vector3 direction = new Vector3(h, 0, v).normalized;
+        // --- Di chuyển ---
+        float h = Input.GetAxis("Horizontal"); // A/D
+        float v = Input.GetAxis("Vertical");   // W/S
+        Vector3 direction = new Vector3(h, 0, v);
 
-        if (direction.magnitude >= 0.1f)
-        {
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + yaw;
-            Quaternion rot = Quaternion.Euler(0f, targetAngle, 0f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f);
+        // Di chuyển theo hướng nhìn của player
+        Vector3 move = transform.TransformDirection(direction).normalized;
 
-            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            bool isRunning = Input.GetKey(KeyCode.LeftShift);
-            float currentSpeed = isRunning ? runSpeed : walkSpeed;
+        bool isMoving = move.magnitude > 0.1f;
+        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
 
-            controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime);
+        controller.Move(move * currentSpeed * Time.deltaTime);
+
+        // Animation
+        if (isMoving)
             animator.SetFloat("Speed", isRunning ? 3f : 1f);
-        }
         else
-        {
             animator.SetFloat("Speed", 0f);
-        }
 
-        // Jump
+        // --- Nhảy ---
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             animator.SetTrigger("JumpTrigger");
         }
 
-        // Gravity
+        // --- Trọng lực ---
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
+
 
     void HandleInteraction()
     {
