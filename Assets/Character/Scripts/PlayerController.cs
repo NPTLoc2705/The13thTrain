@@ -108,7 +108,6 @@ public class PlayerController : MonoBehaviour
         bool showPrompt = false;
         string promptMessage = "";
 
-        Debug.DrawRay(ray.origin, ray.direction * interactionDistance, Color.red, 0.5f);
         if (Physics.Raycast(ray, out hit, interactionDistance, ~0, QueryTriggerInteraction.Collide))
         {
             // Check for PickupItem

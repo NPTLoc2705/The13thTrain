@@ -459,6 +459,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 073a127c91d5ce54cb2f2801049b57b3, type: 3}
+--- !u!114 &167854187 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8306861032066250737, guid: 1b1a5dc4e36f2b24c83c9da15dc4d86c, type: 3}
+  m_PrefabInstance: {fileID: 670643108}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5ac1e903fb092347b02e9df4733bc81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
 --- !u!1 &171774683
 GameObject:
   m_ObjectHideFlags: 0
@@ -1548,9 +1559,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 698406904946747579, guid: 1b1a5dc4e36f2b24c83c9da15dc4d86c, type: 3}
+      propertyPath: cameraFollow
+      value: 
+      objectReference: {fileID: 167854187}
     - target: {fileID: 8164362291417515752, guid: 1b1a5dc4e36f2b24c83c9da15dc4d86c, type: 3}
       propertyPath: m_Name
       value: Pose1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164362291417515752, guid: 1b1a5dc4e36f2b24c83c9da15dc4d86c, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8792843500673129554, guid: 1b1a5dc4e36f2b24c83c9da15dc4d86c, type: 3}
       propertyPath: m_LocalPosition.x
