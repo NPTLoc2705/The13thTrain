@@ -278,12 +278,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FinalModelInteraction
   nextSceneName: SampleScene
-  interactionDistance: 10
+  interactionDistance: 6
   interactionAngle: 90
   checkLineOfSight: 1
   obstacleLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   promptUI: {fileID: 2088421474}
 --- !u!1001 &230250042
 PrefabInstance:
@@ -1195,52 +1195,6 @@ PrefabInstance:
       insertIndex: 1
       addedObject: {fileID: 2075977556}
   m_SourcePrefab: {fileID: 100100000, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
---- !u!1 &825250493
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 825250495}
-  - component: {fileID: 825250494}
-  m_Layer: 0
-  m_Name: SceneTransitionManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &825250494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 825250493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e15fceeb8247fa34c86868514ecb4e2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SceneTransition
-  fadeImage: {fileID: 0}
-  fadeDuration: 1
---- !u!4 &825250495
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 825250493}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.34107, y: 4.86536, z: 48.15882}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &867198496
 GameObject:
   m_ObjectHideFlags: 0
@@ -3496,6 +3450,5 @@ SceneRoots:
   - {fileID: 3997291874106680669}
   - {fileID: 348315241}
   - {fileID: 1869120274}
-  - {fileID: 825250495}
   - {fileID: 402560370}
   - {fileID: 2088421478}
