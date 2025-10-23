@@ -85,9 +85,9 @@ public class PlayerController : MonoBehaviour
         // --- Nhảy ---
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             animator.SetTrigger("JumpTrigger");
         }
+
 
         // --- Trọng lực ---
         velocity.y += gravity * Time.deltaTime;
