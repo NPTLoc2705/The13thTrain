@@ -130,22 +130,48 @@ public class DoorInteraction : MonoBehaviour
     {
         if (doorWing == null) yield break;
 
+        Collider doorCollider = GetComponent<Collider>();
+        Quaternion startRotation = doorWing.rotation;
         Quaternion targetRotation = isOpen ? closedRotation : openRotation;
+        float totalAngle = Quaternion.Angle(startRotation, targetRotation);
+
+        bool triggerToggled = false; // Đảm bảo chỉ bật 1 lần
 
         while (Quaternion.Angle(doorWing.rotation, targetRotation) > 0.1f)
         {
             doorWing.rotation = Quaternion.Slerp(doorWing.rotation, targetRotation, Time.deltaTime * openSpeed);
+
+            float currentAngle = Quaternion.Angle(startRotation, doorWing.rotation);
+            float progress = currentAngle / totalAngle;
+
+            // 🔄 Bật trigger sớm khi đạt 65% góc mở
+            if (!isOpen && !triggerToggled && progress >= 0.65f)
+            {
+                if (doorCollider != null) doorCollider.isTrigger = true;
+                triggerToggled = true;
+            }
+
             yield return null;
         }
 
         doorWing.rotation = targetRotation;
         isOpen = !isOpen;
 
+        // ✅ Đảm bảo trạng thái cuối cùng khớp (đóng thì tắt trigger)
+        if (doorCollider != null)
+        {
+            doorCollider.isTrigger = isOpen;
+        }
+
         if (TextManager.Instance != null)
         {
             TextManager.Instance.ShowNotice(isOpen ? "Opened" : "Closed", 1.5f);
         }
     }
+
+
+
+
 
     void OnDisable()
     {
