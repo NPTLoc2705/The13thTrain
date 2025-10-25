@@ -2250,7 +2250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b2f24a005e807a47b949e97f3ba6b51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InspectableObject
-  objectName: "B\u1EE9c \u1EA3nh gia \u0111\xECnh b\u1ECB thi\u1EBFu"
+  objectName: "B\u1EE9c \u1EA3nh b\u1ECB m\u1EA5t m\u1ED9t ph\u1EA7n"
   canInspectMultipleTimes: 1
   inspectionThoughts:
   - "B\u1EE9c \u1EA3nh n\xE0y..."
