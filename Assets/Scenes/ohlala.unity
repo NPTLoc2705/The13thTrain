@@ -277,7 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 103711625e4809640930c6a1baf22361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FinalModelInteraction
-  nextSceneName: SampleScene
+  nextSceneName: Cutscene_EndOfChapter1
 --- !u!65 &218235916
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -612,7 +612,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2722861732060022225, guid: 65c87446168d65144b8ae9646f7842c4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1340703099}
+    - targetCorrespondingSourceObject: {fileID: 2722861732060022225, guid: 65c87446168d65144b8ae9646f7842c4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1340703098}
   m_SourcePrefab: {fileID: 100100000, guid: 65c87446168d65144b8ae9646f7842c4, type: 3}
 --- !u!1 &333212352
 GameObject:
@@ -836,6 +842,14 @@ MonoBehaviour:
   pickupSound: {fileID: 0}
   soundVolume: 1
   spatialSound: 0
+  showMonologueBeforePickup: 0
+  monologueBeforePickup:
+  - "\u0110\xE2y l\xE0 g\xEC nh\u1EC9?"
+  - "C\xF3 v\u1EBB quan tr\u1ECDng..."
+  showMonologueAfterPickup: 0
+  monologueAfterPickup:
+  - "\u0110\xE3 l\u1EA5y \u0111\u01B0\u1EE3c r\u1ED3i."
+  - "Hy v\u1ECDng n\xF3 s\u1EBD h\u1EEFu \xEDch..."
   isCollected: 0
 --- !u!65 &355581204
 BoxCollider:
@@ -1320,6 +1334,53 @@ PrefabInstance:
     - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
       propertyPath: isCollected
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: showMonologue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: showMonologueAfterPickup
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: showMonologueBeforePickup
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: monologueAfterPickup.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: 'monologueThoughts.Array.data[0]'
+      value: "H\xECnh nh\u01B0 \u0111\xE2y l\xE0 m\u1EA3nh c\xF2n thi\u1EBFu c\u1EE7a
+        b\u1EE9c \u1EA3nh ngo\xE0i kia th\xEC ph\u1EA3i"
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: 'monologueThoughts.Array.data[1]'
+      value: "\u0110\u1EC3 nh\u1EB7t th\u1EED xem"
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: monologueBeforePickup.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: 'monologueAfterPickup.Array.data[0]'
+      value: "H\xECnh nh\u01B0 b\u1EE9c \u1EA3nh ngo\xE0i kia c\xF3 thay \u0111\u1ED5i
+        g\xEC \u0111\xF3"
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: 'monologueBeforePickup.Array.data[0]'
+      value: "\u0110\xE2y l\xE0..."
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: 'monologueBeforePickup.Array.data[1]'
+      value: "M\u1EA3nh c\xF2n thi\u1EBFu c\u1EE7a b\u1EE9c \u1EA3nh ngo\xE0i kia
+        th\xEC ph\u1EA3i"
+      objectReference: {fileID: 0}
+    - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
+      propertyPath: 'monologueBeforePickup.Array.data[2]'
+      value: "\u0110\u1EC3 nh\u1EB7t th\u1EED xem"
       objectReference: {fileID: 0}
     - target: {fileID: 2464758367831517994, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
       propertyPath: m_LocalScale.x
@@ -2156,6 +2217,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3351343315441229675, guid: 65c87446168d65144b8ae9646f7842c4, type: 3}
   m_PrefabInstance: {fileID: 297647012}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &1340703098
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340703096}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.996788, y: 3.548336, z: 7.4095097}
+  m_Center: {x: 10.6136, y: 1.274168, z: 1.5139465}
+--- !u!114 &1340703099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340703096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b2f24a005e807a47b949e97f3ba6b51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InspectableObject
+  objectName: "B\u1EE9c \u1EA3nh gia \u0111\xECnh b\u1ECB thi\u1EBFu"
+  canInspectMultipleTimes: 1
+  inspectionThoughts:
+  - "B\u1EE9c \u1EA3nh n\xE0y..."
+  - "L\xE0 m\u1ED9t c\u1EADu b\xE9 \u0111ang c\u01B0\u1EDDi \u0111\xF9a"
+  - "H\xECnh nh\u01B0 l\xE0 c\xF9ng v\u1EDBi gi\xE1 \u0111\xECnh c\u1EADu"
+  - "Khoan \u0111\xE3..."
+  - "C\u1EADu b\xE9 \u0111\xF3..."
+  - "T\u1EA1i sao l\u1EA1i gi\u1ED1ng m\xECnh v\u1EADy?"
+  - "B\u1EE9c \u1EA3nh n\xE0y r\u1ED1t cu\u1ED9c l\xE0 g\xEC?"
+  - "H\xECnh nh\u01B0 c\xF3 ph\u1EA7n b\u1ECB thi\u1EBFu, c\xF3 l\u1EBD n\xF3 n\u1EB1m
+    \u0111\xE2u \u0111\xF3 trong c\u0103n nh\xE0 n\xE0y"
+  useDifferentThoughtsOnRevisit: 0
+  revisitThoughts:
+  - "Kh\xF4ng c\xF3 g\xEC \u0111\u1EB7c bi\u1EC7t..."
+  isInspecting: 0
 --- !u!1 &1470613535
 GameObject:
   m_ObjectHideFlags: 0
@@ -2316,6 +2426,14 @@ MonoBehaviour:
   pickupSound: {fileID: 0}
   soundVolume: 1
   spatialSound: 0
+  showMonologueBeforePickup: 0
+  monologueBeforePickup:
+  - "\u0110\xE2y l\xE0 g\xEC nh\u1EC9?"
+  - "C\xF3 v\u1EBB quan tr\u1ECDng..."
+  showMonologueAfterPickup: 0
+  monologueAfterPickup:
+  - "\u0110\xE3 l\u1EA5y \u0111\u01B0\u1EE3c r\u1ED3i."
+  - "Hy v\u1ECDng n\xF3 s\u1EBD h\u1EEFu \xEDch..."
   isCollected: 0
 --- !u!65 &1496615259
 BoxCollider:
@@ -2336,8 +2454,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5.55, y: 3.44, z: 3.29}
-  m_Center: {x: 2.37, y: 0, z: 0}
+  m_Size: {x: 5.55, y: 3.44, z: 6}
+  m_Center: {x: 2.4036, y: 0.08375549, z: 0.5372381}
 --- !u!1 &1843589261 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4913709487419530708, guid: 00e9011015c1d0046aac8c100da5a278, type: 3}
@@ -2503,13 +2621,14 @@ MonoBehaviour:
   monologueText: {fileID: 417946607}
   monologuePanel: {fileID: 238366726}
   playerObject: {fileID: 1843589261}
-  thoughts:
-  - "N\u01A1i n\xE0y... tr\xF4ng c\xF3 v\u1EBB quen thu\u1ED9c..."
-  - "H\xECnh nh\u01B0... \u0111\xE2y ch\xEDnh l\xE0 ng\xF4i nh\xE0 c\u1EE7a m\xECnh
-    m\xE0"
-  - "T\u1EA1i sao m\xECnh l\u1EA1i \u1EDF \u0111\xE2y?"
-  - "R\xF5 r\xE0ng l\xFAc n\xE3y m\xECnh c\xF2n \u1EDF s\xE2n ga m\xE0?"
+  startingThoughts:
+  - "\u0110\xE2y l\xE0 \u0111\xE2u?"
+  - "Ng\xF4i nh\xE0 n\xE0y... t\u1EA1i sao m\xECnh l\u1EA1i \u1EDF trong \u0111\xE2y?"
+  - "M\xECnh nh\u1EDB l\xFAc n\xE3y m\xECnh c\xF2n \u1EDF trong s\xE2n ga m\xE0..."
   - ...
+  - "C\xF3 l\u1EBD m\xECnh n\xEAn th\u1EED \u0111i xung quanh xem"
+  - "Bi\u1EBFt \u0111\xE2u m\xECnh s\u1EBD t\xECm ra c\xE1i g\xEC \u0111\xF3"
+  playOnStart: 1
   timeBetweenThoughts: 2.5
   typeSpeed: 0.05
   useTypewriterEffect: 1

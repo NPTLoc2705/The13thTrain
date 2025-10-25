@@ -87,19 +87,17 @@ public class PlayerController : MonoBehaviour
         if (cam == null) return;
 
         // ===== KIỂM TRA CỬA GẦN ĐÓ TRƯỚC =====
-        // Nếu có cửa trong phạm vi interactionDistance, DỪ NG can thiệp
         Collider[] nearbyColliders = Physics.OverlapSphere(transform.position, 3f);
         foreach (Collider col in nearbyColliders)
         {
             DoorInteraction door = col.GetComponent<DoorInteraction>();
             if (door != null)
             {
-                // Có cửa gần đó, để DoorInteraction tự xử lý prompt
                 return;
             }
         }
 
-        // ===== KIỂM TRA RAYCAST CHO PICKUP ITEM =====
+        // ===== KIỂM TRA RAYCAST =====
         Ray ray = new(cam.transform.position, cam.transform.forward);
         RaycastHit hit;
 
@@ -108,19 +106,51 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, interactionDistance))
         {
-            // Kiểm tra PickupItem
-            PickupItem item = hit.collider.GetComponentInParent<PickupItem>();
-            if (item != null && !item.isCollected)
+            // ===== KIỂM TRA FINAL MODEL =====
+            FinalModelInteraction finalModel = hit.collider.GetComponent<FinalModelInteraction>();
+            if (finalModel != null)
             {
                 showPrompt = true;
-                promptMessage = $"[E] Nhặt: {item.itemName}";
+                promptMessage = "[E]";
 
                 if (Input.GetKeyDown(KeyCode.E))
-                    PickupManager.Instance.CollectItem(item);
+                {
+                    finalModel.Interact();
+                    Debug.Log("✓ Player pressed E on Final Model");
+                }
+            }
+            // ===== KIỂM TRA INSPECTABLE OBJECT (MỚI THÊM) =====
+            else
+            {
+                InspectableObject inspectable = hit.collider.GetComponent<InspectableObject>();
+                if (inspectable != null && inspectable.CanInspect())
+                {
+                    showPrompt = true;
+                    promptMessage = inspectable.GetPromptMessage();
+
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        inspectable.Inspect();
+                        Debug.Log($"✓ Player inspecting: {inspectable.objectName}");
+                    }
+                }
+                // ===== KIỂM TRA PICKUP ITEM =====
+                else
+                {
+                    PickupItem item = hit.collider.GetComponentInParent<PickupItem>();
+                    if (item != null && !item.isCollected)
+                    {
+                        showPrompt = true;
+                        promptMessage = $"[E] Nhặt: {item.itemName}";
+
+                        if (Input.GetKeyDown(KeyCode.E))
+                            PickupManager.Instance.CollectItem(item);
+                    }
+                }
             }
         }
 
-        // Chỉ ẩn prompt nếu KHÔNG có cửa gần đó
+        // Cập nhật prompt
         if (TextManager.Instance == null) return;
 
         if (showPrompt)
