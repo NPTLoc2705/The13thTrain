@@ -119,8 +119,10 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("✓ Player pressed E on Final Model");
                 }
             }
-            // ===== KIỂM TRA INSPECTABLE OBJECT (MỚI THÊM) =====
-            else
+
+            // ===== KIỂM TRA INSPECTABLE OBJECT - KIỂM TRA RIÊNG BIỆT =====
+            // Thay đổi: Không dùng else, kiểm tra độc lập
+            if (finalModel == null)  // Chỉ kiểm tra khi không phải final model
             {
                 InspectableObject inspectable = hit.collider.GetComponent<InspectableObject>();
                 if (inspectable != null && inspectable.CanInspect())
@@ -134,8 +136,8 @@ public class PlayerController : MonoBehaviour
                         Debug.Log($"✓ Player inspecting: {inspectable.objectName}");
                     }
                 }
-                // ===== KIỂM TRA PICKUP ITEM =====
-                else
+                // ===== KIỂM TRA PICKUP ITEM - CHỈ KHI KHÔNG CÓ INSPECTABLE =====
+                else if (inspectable == null)
                 {
                     PickupItem item = hit.collider.GetComponentInParent<PickupItem>();
                     if (item != null && !item.isCollected)
