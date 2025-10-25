@@ -4,9 +4,9 @@ using System.Collections;
 public class DoorInteraction : MonoBehaviour
 {
     [Header("Door Animation Settings")]
-    public Transform doorWing; // Assign the doorwing child object here
+    public Transform doorWing;
     public float openAngle = 90f;
-    public float openSpeed = 2f;
+    public float openSpeed = 3f;
     public bool isOpen = false;
 
     [Header("Door Interaction Settings")]
@@ -19,10 +19,10 @@ public class DoorInteraction : MonoBehaviour
     private Coroutine currentCoroutine;
     private Transform playerTransform;
     private bool wasInRange = false;
+    private bool isAnimating = false;
 
     void Start()
     {
-        // If doorWing is not assigned, try to find it
         if (doorWing == null)
         {
             doorWing = transform.Find("doorwing");
@@ -49,7 +49,11 @@ public class DoorInteraction : MonoBehaviour
 
     void Update()
     {
-        UpdatePrompt();
+        // Chỉ hiện prompt khi KHÔNG đang animation
+        if (!isAnimating)
+        {
+            UpdatePrompt();
+        }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -59,7 +63,8 @@ public class DoorInteraction : MonoBehaviour
 
     private void UpdatePrompt()
     {
-        if (playerTransform == null || TextManager.Instance == null) return;
+        if (playerTransform == null || TextManager.Instance == null)
+            return;
 
         float distance = Vector3.Distance(playerTransform.position, transform.position);
         bool inRange = distance <= interactionDistance;
@@ -72,7 +77,6 @@ public class DoorInteraction : MonoBehaviour
         }
         else if (wasInRange)
         {
-            // Only hide prompt if we were previously showing it
             TextManager.Instance.HidePrompt();
             wasInRange = false;
         }
@@ -80,45 +84,45 @@ public class DoorInteraction : MonoBehaviour
 
     private string GetPromptMessage()
     {
-        if (requiresKey)
+        // Nếu cửa cần chìa khóa và chưa có chìa khóa
+        if (requiresKey && (PickupManager.Instance == null || !PickupManager.Instance.IsCollected(requiredKeyID)))
         {
-            if (PickupManager.Instance == null || !PickupManager.Instance.IsCollected(requiredKeyID))
-            {
-                return $"[E] Need {requiredKeyID} to open door!";
-            }
+            return $"Cửa bị khóa! Cần {requiredKeyID}";
         }
 
-        return isOpen ? "[E] Close Door" : "[E] Open Door";
+        // Nếu đã có chìa khóa hoặc cửa không cần chìa khóa
+        return isOpen ? "[E] Đóng cửa" : "[E] Mở cửa";
     }
 
     private void TryInteract()
     {
-        if (playerTransform == null) return;
+        if (playerTransform == null || isAnimating) return;
 
         float distance = Vector3.Distance(playerTransform.position, transform.position);
 
         if (distance > interactionDistance)
+            return;
+
+        // Kiểm tra nếu cửa bị khóa và chưa có chìa
+        if (requiresKey && (PickupManager.Instance == null || !PickupManager.Instance.IsCollected(requiredKeyID)))
         {
+            // ẨN PROMPT trước khi hiện notice
             if (TextManager.Instance != null)
             {
-                TextManager.Instance.ShowNotice($"Too far! Need to be in {interactionDistance}m", 2f);
+                TextManager.Instance.HidePrompt();
+                TextManager.Instance.ShowNotice($"Không thể mở! Cần {requiredKeyID}!", 2f);
             }
             return;
         }
 
-        if (requiresKey)
+        // ẨN PROMPT ngay khi nhấn E
+        if (TextManager.Instance != null)
         {
-            if (PickupManager.Instance == null || !PickupManager.Instance.IsCollected(requiredKeyID))
-            {
-                if (TextManager.Instance != null)
-                {
-                    TextManager.Instance.ShowNotice($"Need {requiredKeyID} to open door!", 2f);
-                }
-                return;
-            }
+            TextManager.Instance.HidePrompt();
+            wasInRange = false;
         }
 
-        // All conditions met, toggle door
+        // Toggle door
         if (currentCoroutine != null)
         {
             StopCoroutine(currentCoroutine);
@@ -130,52 +134,68 @@ public class DoorInteraction : MonoBehaviour
     {
         if (doorWing == null) yield break;
 
+        isAnimating = true;
+
         Collider doorCollider = GetComponent<Collider>();
         Quaternion startRotation = doorWing.rotation;
         Quaternion targetRotation = isOpen ? closedRotation : openRotation;
-        float totalAngle = Quaternion.Angle(startRotation, targetRotation);
 
-        bool triggerToggled = false; // Đảm bảo chỉ bật 1 lần
-
-        while (Quaternion.Angle(doorWing.rotation, targetRotation) > 0.1f)
+        // Hiển thị notice
+        if (TextManager.Instance != null)
         {
-            doorWing.rotation = Quaternion.Slerp(doorWing.rotation, targetRotation, Time.deltaTime * openSpeed);
+            TextManager.Instance.ShowNotice(isOpen ? "Đang đóng cửa..." : "Đang mở cửa...", 1.5f);
+        }
 
-            float currentAngle = Quaternion.Angle(startRotation, doorWing.rotation);
-            float progress = currentAngle / totalAngle;
+        // Set trigger ngay lập tức khi mở cửa
+        if (doorCollider != null && !isOpen)
+        {
+            doorCollider.isTrigger = true;
+        }
 
-            // 🔄 Bật trigger sớm khi đạt 65% góc mở
-            if (!isOpen && !triggerToggled && progress >= 0.65f)
-            {
-                if (doorCollider != null) doorCollider.isTrigger = true;
-                triggerToggled = true;
-            }
+        float elapsedTime = 0f;
+        float duration = 1f / openSpeed;
 
+        // Smooth animation với Lerp
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            // Sử dụng SmoothStep để có animation mượt hơn
+            t = t * t * (3f - 2f * t);
+
+            doorWing.rotation = Quaternion.Lerp(startRotation, targetRotation, t);
             yield return null;
         }
 
+        // Đảm bảo rotation chính xác
         doorWing.rotation = targetRotation;
         isOpen = !isOpen;
 
-        // ✅ Đảm bảo trạng thái cuối cùng khớp (đóng thì tắt trigger)
-        if (doorCollider != null)
+        // Tắt trigger khi đóng cửa
+        if (doorCollider != null && !isOpen)
         {
-            doorCollider.isTrigger = isOpen;
+            doorCollider.isTrigger = false;
         }
 
-        if (TextManager.Instance != null)
+        isAnimating = false;
+
+        // SAU KHI animation xong, kiểm tra xem player còn trong range không
+        // Nếu còn thì hiện lại prompt
+        if (playerTransform != null && TextManager.Instance != null)
         {
-            TextManager.Instance.ShowNotice(isOpen ? "Opened" : "Closed", 1.5f);
+            float distance = Vector3.Distance(playerTransform.position, transform.position);
+            if (distance <= interactionDistance)
+            {
+                string promptMessage = GetPromptMessage();
+                TextManager.Instance.ShowPrompt(promptMessage);
+                wasInRange = true;
+            }
         }
     }
 
-
-
-
-
     void OnDisable()
     {
-        // Hide prompt when door is disabled
         if (wasInRange && TextManager.Instance != null)
         {
             TextManager.Instance.HidePrompt();

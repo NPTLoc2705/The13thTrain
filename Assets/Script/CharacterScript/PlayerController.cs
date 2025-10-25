@@ -86,6 +86,20 @@ public class PlayerController : MonoBehaviour
         Camera cam = Camera.main;
         if (cam == null) return;
 
+        // ===== KIỂM TRA CỬA GẦN ĐÓ TRƯỚC =====
+        // Nếu có cửa trong phạm vi interactionDistance, DỪ NG can thiệp
+        Collider[] nearbyColliders = Physics.OverlapSphere(transform.position, 3f);
+        foreach (Collider col in nearbyColliders)
+        {
+            DoorInteraction door = col.GetComponent<DoorInteraction>();
+            if (door != null)
+            {
+                // Có cửa gần đó, để DoorInteraction tự xử lý prompt
+                return;
+            }
+        }
+
+        // ===== KIỂM TRA RAYCAST CHO PICKUP ITEM =====
         Ray ray = new(cam.transform.position, cam.transform.forward);
         RaycastHit hit;
 
@@ -94,6 +108,7 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, interactionDistance))
         {
+            // Kiểm tra PickupItem
             PickupItem item = hit.collider.GetComponentInParent<PickupItem>();
             if (item != null && !item.isCollected)
             {
@@ -105,6 +120,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        // Chỉ ẩn prompt nếu KHÔNG có cửa gần đó
         if (TextManager.Instance == null) return;
 
         if (showPrompt)
