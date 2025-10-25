@@ -1078,7 +1078,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 700, y: 50}
+  m_SizeDelta: {x: 900, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &417946606
 CanvasRenderer:
@@ -2236,8 +2236,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.996788, y: 3.548336, z: 7.4095097}
-  m_Center: {x: 10.6136, y: 1.274168, z: 1.5139465}
+  m_Size: {x: 5.98386, y: 8.349634, z: 9.52024}
+  m_Center: {x: 10.759167, y: 3.674817, z: 0.45858145}
 --- !u!114 &1340703099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2255,16 +2255,19 @@ MonoBehaviour:
   inspectionThoughts:
   - "B\u1EE9c \u1EA3nh n\xE0y..."
   - "L\xE0 m\u1ED9t c\u1EADu b\xE9 \u0111ang c\u01B0\u1EDDi \u0111\xF9a"
-  - "H\xECnh nh\u01B0 l\xE0 c\xF9ng v\u1EDBi gi\xE1 \u0111\xECnh c\u1EADu"
+  - "H\xECnh nh\u01B0 l\xE0 c\xF9ng v\u1EDBi gia \u0111\xECnh c\u1EADu"
   - "Khoan \u0111\xE3..."
   - "C\u1EADu b\xE9 \u0111\xF3..."
   - "T\u1EA1i sao l\u1EA1i gi\u1ED1ng m\xECnh v\u1EADy?"
   - "B\u1EE9c \u1EA3nh n\xE0y r\u1ED1t cu\u1ED9c l\xE0 g\xEC?"
-  - "H\xECnh nh\u01B0 c\xF3 ph\u1EA7n b\u1ECB thi\u1EBFu, c\xF3 l\u1EBD n\xF3 n\u1EB1m
-    \u0111\xE2u \u0111\xF3 trong c\u0103n nh\xE0 n\xE0y"
-  useDifferentThoughtsOnRevisit: 0
+  - "H\xECnh nh\u01B0 c\xF3 ph\u1EA7n b\u1ECB thi\u1EBFu, c\xF3 l\u1EBD n\u1EBFu
+    m\xECnh t\xECm th\u1EA5y n\xF3, m\xECnh c\xF3 th\u1EC3 nh\u1EADn ra \u0111i\u1EC1u
+    g\xEC \u0111\xF3"
+  useDifferentThoughtsOnRevisit: 1
   revisitThoughts:
-  - "Kh\xF4ng c\xF3 g\xEC \u0111\u1EB7c bi\u1EC7t..."
+  - "M\xECnh c\u1EA7n t\xECm l\u1EA1i m\u1EA3nh c\xF2n thi\u1EBFu trong c\u0103n
+    nh\xE0 n\xE0y"
+  - "C\xF3 l\u1EBD n\xF3 n\u1EB1m \u1EDF \u0111\xE2u \u0111\xF3 ch\u0103ng..."
   isInspecting: 0
 --- !u!1 &1470613535
 GameObject:
@@ -2629,7 +2632,7 @@ MonoBehaviour:
   - "C\xF3 l\u1EBD m\xECnh n\xEAn th\u1EED \u0111i xung quanh xem"
   - "Bi\u1EBFt \u0111\xE2u m\xECnh s\u1EBD t\xECm ra c\xE1i g\xEC \u0111\xF3"
   playOnStart: 1
-  timeBetweenThoughts: 2.5
+  timeBetweenThoughts: 2
   typeSpeed: 0.05
   useTypewriterEffect: 1
   fadeInDuration: 0.5
