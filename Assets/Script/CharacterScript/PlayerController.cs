@@ -50,10 +50,14 @@ public class PlayerController : MonoBehaviour
         HandleCollisionPickup();
     }
 
+    // ==============================
+    // ====== MOVEMENT CONTROL ======
+    // ==============================
     void HandleMovement()
     {
         isGrounded = controller.isGrounded;
         animator.SetBool("isGrounded", isGrounded);
+
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
@@ -62,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        Vector3 direction = new(h, 0, v);
+        Vector3 direction = new Vector3(h, 0, v);
 
         Vector3 move = transform.TransformDirection(direction).normalized;
 
@@ -81,38 +85,43 @@ public class PlayerController : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
+    // =================================
+    // ====== INTERACTION SYSTEM =======
+    // =================================
     void HandleInteraction()
     {
+        // Nếu đang đọc note thì không cho tương tác khác
+        if (FindObjectOfType<NoteUI>()?.IsOpen() == true)
+            return;
+
         Camera cam = Camera.main;
         if (cam == null) return;
 
-        // ===== KIỂM TRA CỬA GẦN ĐÓ TRƯỚC =====
+        // ===== Kiểm tra CỬA gần đó =====
         Collider[] nearbyColliders = Physics.OverlapSphere(transform.position, 3f);
         foreach (Collider col in nearbyColliders)
         {
             DoorInteraction door = col.GetComponent<DoorInteraction>();
             if (door != null)
             {
+                // nếu đang trong vùng cửa thì bỏ qua các tương tác khác
                 return;
             }
         }
 
-        // ===== KIỂM TRA RAYCAST =====
-        Ray ray = new(cam.transform.position, cam.transform.forward);
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         RaycastHit hit;
-
         bool showPrompt = false;
         string promptMessage = "";
 
         if (Physics.Raycast(ray, out hit, interactionDistance))
         {
-            // ===== KIỂM TRA FINAL MODEL =====
+            // 1️⃣ Kiểm tra FINAL MODEL
             FinalModelInteraction finalModel = hit.collider.GetComponent<FinalModelInteraction>();
             if (finalModel != null)
             {
                 showPrompt = true;
                 promptMessage = "[E]";
-
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     finalModel.Interact();
@@ -120,39 +129,53 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            // ===== KIỂM TRA INSPECTABLE OBJECT - KIỂM TRA RIÊNG BIỆT =====
-            // Thay đổi: Không dùng else, kiểm tra độc lập
-            if (finalModel == null)  // Chỉ kiểm tra khi không phải final model
+            // 2️⃣ Kiểm tra TRANH XOAY
+            RotatePicture picture = hit.collider.GetComponentInParent<RotatePicture>();
+            if (picture != null)
             {
-                InspectableObject inspectable = hit.collider.GetComponent<InspectableObject>();
-                if (inspectable != null && inspectable.CanInspect())
-                {
-                    showPrompt = true;
-                    promptMessage = inspectable.GetPromptMessage();
+                showPrompt = true;
+                promptMessage = "[E] Xoay bức tranh";
+                if (Input.GetKeyDown(KeyCode.E))
+                    picture.Rotate();
+            }
 
-                    if (Input.GetKeyDown(KeyCode.E))
-                    {
-                        inspectable.Inspect();
-                        Debug.Log($"✓ Player inspecting: {inspectable.objectName}");
-                    }
-                }
-                // ===== KIỂM TRA PICKUP ITEM - CHỈ KHI KHÔNG CÓ INSPECTABLE =====
-                else if (inspectable == null)
-                {
-                    PickupItem item = hit.collider.GetComponentInParent<PickupItem>();
-                    if (item != null && !item.isCollected)
-                    {
-                        showPrompt = true;
-                        promptMessage = $"[E] Nhặt: {item.itemName}";
+            // 3️⃣ Kiểm tra NOTE
+            NoteOpener note = hit.collider.GetComponentInParent<NoteOpener>();
+            if (note != null)
+            {
+                showPrompt = true;
+                promptMessage = "[E] Đọc ghi chú\n\"Tại sao lại có mảnh giấy này ở đây... Mình nên đọc nó.\"";
+                if (Input.GetKeyDown(KeyCode.E))
+                    note.noteUI.OpenNote();
+            }
 
-                        if (Input.GetKeyDown(KeyCode.E))
-                            PickupManager.Instance.CollectItem(item);
-                    }
+            // 4️⃣ Kiểm tra OBJECT CÓ THỂ XEM
+            InspectableObject inspectable = hit.collider.GetComponent<InspectableObject>();
+            if (inspectable != null && inspectable.CanInspect())
+            {
+                showPrompt = true;
+                promptMessage = inspectable.GetPromptMessage();
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    inspectable.Inspect();
+                    Debug.Log($"✓ Player inspecting: {inspectable.objectName}");
                 }
+            }
+
+            // 5️⃣ Kiểm tra PICKUP ITEM
+            PickupItem item = hit.collider.GetComponentInParent<PickupItem>();
+            if (item != null && !item.isCollected)
+            {
+                showPrompt = true;
+                promptMessage = $"[E] Nhặt: {item.itemName}";
+
+                if (Input.GetKeyDown(KeyCode.E))
+                    PickupManager.Instance.CollectItem(item);
             }
         }
 
-        // Cập nhật prompt
+        // ====== Cập nhật PROMPT UI ======
         if (TextManager.Instance == null) return;
 
         if (showPrompt)
@@ -161,6 +184,9 @@ public class PlayerController : MonoBehaviour
             TextManager.Instance.HidePrompt();
     }
 
+    // ===============================
+    // ====== NHẶT KHI VA CHẠM ======
+    // ===============================
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         PickupItem item = hit.collider.GetComponentInParent<PickupItem>();
