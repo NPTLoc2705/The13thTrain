@@ -5,6 +5,9 @@ using System.Collections;
 
 public class MainMenuController : MonoBehaviour
 {
+    [Header("Game Title")]
+    public TextMeshPro gameTitle;
+
     [Header("Button References (TextMeshPro Objects)")]
     public TextMeshPro playButton;
     public TextMeshPro settingsButton;
@@ -28,6 +31,14 @@ public class MainMenuController : MonoBehaviour
     public AudioClip hoverSound;
     public AudioClip clickSound;
     public AudioSource bgmSource; // nhạc nền menu (fade-out khi play)
+
+    [Header("Character & Camera Transition")]
+    public Transform playerCharacter;      // nhân vật chính
+    public Transform cameraFollowTarget;   // vị trí mà camera sẽ nhìn/đặt (thường là 1 empty object đặt trước mặt nhân vật)
+    public float cameraMoveDuration = 2f;  // thời gian phóng tới
+    public float cameraFollowDistance = 3f; // khoảng cách giữ với nhân vật sau khi gắn theo
+    public float cameraFollowHeight = 1.5f; // độ cao camera
+    public float followSmoothSpeed = 3f;    // độ mượt khi follow
 
     private TextMeshPro currentHover;
     private Vector3 basePos;
@@ -163,7 +174,9 @@ public class MainMenuController : MonoBehaviour
         switch (clickedButton.name)
         {
             case "PlayButton":
-                StartCoroutine(FadeOutAndLoad("Ohlala")); // Changed from "Scene3" to "Ohlala"
+                //StartCoroutine(FadeOutAndLoad("Ohlala")); // Changed from "Scene3" to "Ohlala"
+                StartCoroutine(FadeOutAllText());
+                FindObjectOfType<CameraTransition3D_Menu>()?.StartTransition();
                 break;
             case "SettingsButton":
                 Debug.Log("Settings button clicked, but functionality is not implemented yet.");
@@ -206,5 +219,45 @@ public class MainMenuController : MonoBehaviour
         Color c = tmp.color;
         c.a = a;
         tmp.color = c;
+    }
+
+    IEnumerator FadeOutAllText()
+    {
+        float duration = 1.2f; // thời gian mờ dần
+        float timer = 0f;
+
+        // ✅ Thêm GameTitle vào danh sách
+        TextMeshPro[] allTexts = { gameTitle, playButton, settingsButton, quitButton };
+
+        // Lưu lại màu ban đầu
+        Color[] startColors = new Color[allTexts.Length];
+        for (int i = 0; i < allTexts.Length; i++)
+            if (allTexts[i] != null)
+                startColors[i] = allTexts[i].color;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, timer / duration);
+
+            for (int i = 0; i < allTexts.Length; i++)
+            {
+                if (allTexts[i] != null)
+                {
+                    Color c = startColors[i];
+                    c.a = Mathf.Lerp(1f, 0f, t);
+                    allTexts[i].color = c;
+                }
+            }
+
+            yield return null;
+        }
+
+        // Sau khi fade xong → ẩn hoàn toàn
+        for (int i = 0; i < allTexts.Length; i++)
+        {
+            if (allTexts[i] != null)
+                allTexts[i].gameObject.SetActive(false);
+        }
     }
 }
