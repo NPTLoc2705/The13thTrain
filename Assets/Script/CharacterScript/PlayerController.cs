@@ -26,7 +26,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 velocity;
     private bool isGrounded;
     private float yaw;
-
+    private bool movementLocked = false; // Lock movement during radio tuning
+    private Candle nearbyCandle = null; //Detech the nearby candle for interaction
     private PickupItem collidedItem = null;
 
     void Start()
@@ -43,11 +44,30 @@ public class PlayerController : MonoBehaviour
         yaw = transform.eulerAngles.y;
     }
 
+    // Public method to lock/unlock movement (called by RadioPuzzle)
+    public void SetMovementLocked(bool locked)
+    {
+        movementLocked = locked;
+        if (locked)
+        {
+            animator.SetFloat("Speed", 0f); // Stop animation
+            velocity = Vector3.zero; // Stop any vertical movement
+        }
+        else
+        {
+            Debug.Log("✅ Movement unlocked!");
+        }
+    }
+
     void Update()
     {
         HandleMovement();
         HandleInteraction();
         HandleCollisionPickup();
+        if (nearbyCandle != null && Input.GetKeyDown(KeyCode.E))
+        {
+            nearbyCandle.LightCandle();
+        }
     }
 
     // ==============================
@@ -55,32 +75,55 @@ public class PlayerController : MonoBehaviour
     // ==============================
     void HandleMovement()
     {
+        // CRITICAL: Exit early if movement is locked (during radio tuning)
+        if (movementLocked)
+        {
+            // Allow camera rotation even when locked
+            yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+            transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+            return;
+        }
+
         isGrounded = controller.isGrounded;
         animator.SetBool("isGrounded", isGrounded);
-
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
+        // Player rotation with mouse
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         transform.rotation = Quaternion.Euler(0f, yaw, 0f);
 
+        // Movement
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        Vector3 direction = new Vector3(h, 0, v);
+        Vector3 direction = new Vector3(h, 0, v).normalized;
 
-        Vector3 move = transform.TransformDirection(direction).normalized;
+        if (direction.magnitude >= 0.1f)
+        {
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + yaw;
+            Quaternion rot = Quaternion.Euler(0f, targetAngle, 0f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f);
 
-        bool isMoving = move.magnitude > 0.1f;
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
-        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            bool isRunning = Input.GetKey(KeyCode.LeftShift);
+            float currentSpeed = isRunning ? runSpeed : walkSpeed;
 
-        controller.Move(move * currentSpeed * Time.deltaTime);
+            controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime);
+            animator.SetFloat("Speed", isRunning ? 3f : 1f);
+        }
+        else
+        {
+            animator.SetFloat("Speed", 0f);
+        }
 
-        animator.SetFloat("Speed", isMoving ? (isRunning ? 3f : 1f) : 0f);
-
+        // Jump
         if (isGrounded && Input.GetButtonDown("Jump"))
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             animator.SetTrigger("JumpTrigger");
+        }
 
+        // Gravity
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
@@ -94,6 +137,27 @@ public class PlayerController : MonoBehaviour
         if (FindObjectOfType<NoteUI>()?.IsOpen() == true)
             return;
 
+        // ===== CRITICAL: If radio is tuning, don't interfere with its prompts! =====
+        RadioPuzzle activeRadio = FindObjectOfType<RadioPuzzle>();
+        if (activeRadio != null && activeRadio.IsTuning)
+        {
+            return; // Exit early - radio controls its own prompts
+        }
+
+        // ===== CRITICAL: If character monologue is active, don't interfere! =====
+        if (CharacterMonologue.Instance != null && CharacterMonologue.Instance.IsActive())
+        {
+            return; // Exit early - monologue controls its own prompts
+        }
+
+        // ===== PRIORITY: If near a candle, show candle prompt and skip other interactions =====
+        if (nearbyCandle != null && !nearbyCandle.isLit)
+        {
+            if (TextManager.Instance != null)
+                TextManager.Instance.ShowPrompt(nearbyCandle.inspectPrompt);
+            return; // Exit early, don't check other interactions
+        }
+
         Camera cam = Camera.main;
         if (cam == null) return;
 
@@ -101,35 +165,60 @@ public class PlayerController : MonoBehaviour
         Collider[] nearbyColliders = Physics.OverlapSphere(transform.position, 3f);
         foreach (Collider col in nearbyColliders)
         {
-            DoorInteraction door = col.GetComponent<DoorInteraction>();
-            if (door != null)
+            if (col.GetComponent<DoorInteraction>() != null)
             {
-                // nếu đang trong vùng cửa thì bỏ qua các tương tác khác
+                // Nếu gần cửa, ưu tiên cửa và bỏ qua các tương tác khác
                 return;
             }
         }
 
-        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
-        RaycastHit hit;
+        // ===== RAYCAST CHECK - Use RaycastAll to detect triggers =====
+        Ray ray = new(cam.transform.position, cam.transform.forward);
+        RaycastHit[] allHits = Physics.RaycastAll(ray, interactionDistance);
+        System.Array.Sort(allHits, (a, b) => a.distance.CompareTo(b.distance)); // Sort by distance
+
         bool showPrompt = false;
         string promptMessage = "";
+        bool foundInteractable = false;
 
-        if (Physics.Raycast(ray, out hit, interactionDistance))
+        foreach (RaycastHit hit in allHits)
         {
-            // 1️⃣ Kiểm tra FINAL MODEL
+            // Skip player collider
+            if (hit.collider.gameObject.CompareTag("Player"))
+                continue;
+
+            // If we already found something to interact with, stop checking
+            if (foundInteractable)
+                break;
+
+            // ===== CHECK RADIO PUZZLE (HIGH PRIORITY) =====
+            RadioPuzzle radio = hit.collider.GetComponentInParent<RadioPuzzle>();
+            if (radio != null)
+            {
+                if (!radio.IsTuning)
+                {
+                    showPrompt = true;
+                    promptMessage = radio.GetPromptMessage();
+                }
+                foundInteractable = true;
+                continue; // Radio handles its own E key input
+            }
+
+            // ===== CHECK FINAL MODEL =====
             FinalModelInteraction finalModel = hit.collider.GetComponent<FinalModelInteraction>();
             if (finalModel != null)
             {
                 showPrompt = true;
-                promptMessage = "[E]";
+                promptMessage = "[E] Đụng vào bức tranh"; // Simplified prompt
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     finalModel.Interact();
-                    Debug.Log("✓ Player pressed E on Final Model");
                 }
+                foundInteractable = true;
+                continue;
             }
 
-            // 2️⃣ Kiểm tra TRANH XOAY
+            // ===== CHECK ROTATE PICTURE =====
             RotatePicture picture = hit.collider.GetComponentInParent<RotatePicture>();
             if (picture != null)
             {
@@ -137,9 +226,11 @@ public class PlayerController : MonoBehaviour
                 promptMessage = "[E] Xoay bức tranh";
                 if (Input.GetKeyDown(KeyCode.E))
                     picture.Rotate();
+                foundInteractable = true;
+                continue;
             }
 
-            // 3️⃣ Kiểm tra NOTE
+            // ===== CHECK NOTE =====
             NoteOpener note = hit.collider.GetComponentInParent<NoteOpener>();
             if (note != null)
             {
@@ -147,41 +238,65 @@ public class PlayerController : MonoBehaviour
                 promptMessage = "[E] Đọc ghi chú\n\"Tại sao lại có mảnh giấy này ở đây... Mình nên đọc nó.\"";
                 if (Input.GetKeyDown(KeyCode.E))
                     note.noteUI.OpenNote();
+                foundInteractable = true;
+                continue;
             }
 
-            // 4️⃣ Kiểm tra OBJECT CÓ THỂ XEM
+            // ===== CHECK INSPECTABLE OBJECT =====
             InspectableObject inspectable = hit.collider.GetComponent<InspectableObject>();
             if (inspectable != null && inspectable.CanInspect())
             {
                 showPrompt = true;
                 promptMessage = inspectable.GetPromptMessage();
-
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     inspectable.Inspect();
-                    Debug.Log($"✓ Player inspecting: {inspectable.objectName}");
                 }
+                foundInteractable = true;
+                continue;
             }
 
-            // 5️⃣ Kiểm tra PICKUP ITEM
+            // ===== CHECK MYSTERY BOX =====
+            if (hit.collider.CompareTag("MysteryBox"))
+            {
+                showPrompt = true;
+                if (PickupManager.Instance != null && PickupManager.Instance.IsCollected("SafeKey"))
+                    promptMessage = "[E] Mở hộp bí ẩn";
+                else
+                    promptMessage = "[E] Cần chìa khóa để mở";
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    MysteryBoxController box = hit.collider.GetComponent<MysteryBoxController>();
+                    if (box != null && PickupManager.Instance != null && PickupManager.Instance.IsCollected("SafeKey"))
+                    {
+                        box.OpenBox();
+                    }
+                }
+                foundInteractable = true;
+                continue;
+            }
+
+            // ===== CHECK PICKUP ITEM =====
             PickupItem item = hit.collider.GetComponentInParent<PickupItem>();
             if (item != null && !item.isCollected)
             {
                 showPrompt = true;
                 promptMessage = $"[E] Nhặt: {item.itemName}";
-
                 if (Input.GetKeyDown(KeyCode.E))
                     PickupManager.Instance.CollectItem(item);
+                foundInteractable = true;
+                continue;
             }
         }
 
         // ====== Cập nhật PROMPT UI ======
-        if (TextManager.Instance == null) return;
-
-        if (showPrompt)
-            TextManager.Instance.ShowPrompt(promptMessage);
-        else
-            TextManager.Instance.HidePrompt();
+        if (TextManager.Instance != null)
+        {
+            if (showPrompt)
+                TextManager.Instance.ShowPrompt(promptMessage);
+            else
+                TextManager.Instance.HidePrompt();
+        }
     }
 
     // ===============================
@@ -190,7 +305,6 @@ public class PlayerController : MonoBehaviour
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         PickupItem item = hit.collider.GetComponentInParent<PickupItem>();
-
         if (item != null && !item.isCollected)
         {
             collidedItem = item;
@@ -207,10 +321,33 @@ public class PlayerController : MonoBehaviour
             {
                 PickupManager.Instance.CollectItem(collidedItem);
                 collidedItem = null;
-
                 if (TextManager.Instance != null)
                     TextManager.Instance.HidePrompt();
             }
+        }
+    }
+
+    // ==========================================
+    // ====== CANDLE TRIGGER INTERACTION ========
+    // ==========================================
+    private void OnTriggerEnter(Collider other)
+    {
+        Candle candle = other.GetComponentInParent<Candle>();
+        if (candle != null && !candle.isLit)
+        {
+            nearbyCandle = candle;
+            // Don't show prompt here - let HandleInteraction do it
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Candle candle = other.GetComponentInParent<Candle>();
+        if (candle != null && candle == nearbyCandle)
+        {
+            nearbyCandle = null;
+            if (TextManager.Instance != null)
+                TextManager.Instance.HidePrompt();
         }
     }
 }

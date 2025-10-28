@@ -87,6 +87,14 @@ public class CharacterMonologue : MonoBehaviour
     }
 
     /// <summary>
+    /// PUBLIC METHOD: Check if monologue is currently active (for PlayerController)
+    /// </summary>
+    public bool IsActive()
+    {
+        return isPlaying;
+    }
+
+    /// <summary>
     /// Chạy monologue ban đầu khi vào scene (không cần callback)
     /// </summary>
     IEnumerator PlayStartingMonologue()
