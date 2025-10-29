@@ -8325,6 +8325,17 @@ PrefabInstance:
       propertyPath: rewardObject
       value: 
       objectReference: {fileID: 1681072154}
+    - target: {fileID: 4012670486848977971, guid: 19db6da5dcb6159439ee26c8261e69e5, type: 3}
+      propertyPath: 'pages.Array.data[2]'
+      value: "Trang 3:\r\n\r\n\xC1nh \u0111\xE8n m\u1EDD, b\xE0n \u0103n ch\u1EADt
+        h\u1EB9p,\nm\xF9i canh c\xF2n v\u01B0\u01A1ng tr\xEAn \u0111\xF4i \u0111\u0169a.\nC\u1EA3
+        nh\xE0 c\u01B0\u1EDDi n\xF3i, ti\u1EBFng c\u01B0\u1EDDi vang nghi\xEAng trong
+        c\u0103n b\u1EBFp c\u0169.\nC\xF3 nh\u1EEFng kho\u1EA3nh kh\u1EAFc \u1EA5m
+        \xE1p\u2026\nnh\u01B0ng ch\u1EC9 c\xF2n vang v\u1ECDng, l\u1EC7ch \u0111i
+        nh\u01B0 th\u1EDDi gian \u0111\xE3 nghi\xEAng sang chi\u1EC1u.\n\nH\xE3y
+        th\u1EED xoay b\u1EE9c tranh \u1EA5y\u2026 nghi\xEAng v\u1EC1 b\xEAn tr\xE1i,\nnh\u01B0
+        mu\u1ED1n k\xE9o l\u1EA1i ch\xFAt c\xE2n b\u1EB1ng c\u1EE7a k\xFD \u1EE9c..\r\n"
+      objectReference: {fileID: 0}
     - target: {fileID: 5568436435668147836, guid: 19db6da5dcb6159439ee26c8261e69e5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 32.49546
