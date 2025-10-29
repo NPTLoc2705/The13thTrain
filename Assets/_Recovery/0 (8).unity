@@ -184,10 +184,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -255,10 +251,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -338,10 +330,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c42ca527658a58b488c228deef11a874, type: 3}
       propertyPath: m_Name
       value: train_bonus_door
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4377446124621994086, guid: c42ca527658a58b488c228deef11a874, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -483,10 +471,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (12)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -561,10 +545,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -633,10 +613,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -658,7 +634,7 @@ GameObject:
   m_Component:
   - component: {fileID: 68352184}
   - component: {fileID: 68352185}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -822,7 +798,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 122717569}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -839,7 +815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1013,10 +989,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1085,10 +1057,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1128,7 +1096,7 @@ GameObject:
   - component: {fileID: 206502115}
   - component: {fileID: 206502117}
   - component: {fileID: 206502116}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: TrainSmoke (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6101,7 +6069,7 @@ GameObject:
   m_Component:
   - component: {fileID: 215376938}
   - component: {fileID: 215376939}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6248,10 +6216,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (28)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -6328,10 +6292,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6742,8 +6702,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.062326368, y: 0.039869294, z: 0.053196397}
-  m_Center: {x: 0.032970447, y: 0.016188594, z: 0.021566553}
+  m_Size: {x: 0.038355842, y: 0.03862785, z: 0.029349042}
+  m_Center: {x: 0.027978007, y: 0.015567865, z: 0.023541318}
 --- !u!114 &266320360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6761,7 +6721,7 @@ MonoBehaviour:
   openDistanceY: -0.00155
   openSpeed: 1
   playerTag: Player
-  interactDistance: 6
+  interactDistance: 2
   promptText: {fileID: 1507697718}
   fadeCanvas: {fileID: 122717571}
   lockIndicatorLight: {fileID: 0}
@@ -6826,10 +6786,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6907,10 +6863,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6929,7 +6881,7 @@ GameObject:
   m_Component:
   - component: {fileID: 281840626}
   - component: {fileID: 281840627}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7078,7 +7030,7 @@ GameObject:
   m_Component:
   - component: {fileID: 310232390}
   - component: {fileID: 310232391}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7225,17 +7177,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -3470091286522075441, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
       propertyPath: m_Name
       value: tauf_phuj (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6096692414213067818, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -7335,10 +7279,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -7412,10 +7352,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (30)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7493,10 +7429,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7721,10 +7653,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (9)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -7749,7 +7677,7 @@ GameObject:
   m_Component:
   - component: {fileID: 344459935}
   - component: {fileID: 344459936}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7917,10 +7845,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (15)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -8031,10 +7955,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8106,14 +8026,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: dd7ff723e231c8c4d8e4109e3d6bd8ef, type: 3}
       propertyPath: m_Name
       value: tauf
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: dd7ff723e231c8c4d8e4109e3d6bd8ef, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: dd7ff723e231c8c4d8e4109e3d6bd8ef, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 2500762179135359269, guid: dd7ff723e231c8c4d8e4109e3d6bd8ef, type: 3}
       propertyPath: m_Enabled
@@ -8211,14 +8123,6 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[22]'
       value: 
       objectReference: {fileID: 2100000, guid: 9302d2bb20d53fc4b9a710e1bbacb715, type: 2}
-    - target: {fileID: 4313416836223513572, guid: dd7ff723e231c8c4d8e4109e3d6bd8ef, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4313416836223513572, guid: dd7ff723e231c8c4d8e4109e3d6bd8ef, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 621358873498723534, guid: dd7ff723e231c8c4d8e4109e3d6bd8ef, type: 3}
@@ -8315,10 +8219,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8387,10 +8287,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8458,10 +8354,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8669,10 +8561,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8782,10 +8670,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (24)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -8863,10 +8747,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8939,10 +8819,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9020,10 +8896,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (19)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -9098,10 +8970,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (21)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -9173,10 +9041,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9244,10 +9108,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (31)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9322,10 +9182,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (25)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9403,10 +9259,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (17)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9493,10 +9345,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9575,10 +9423,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (11)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -9655,10 +9499,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9832,10 +9672,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9935,10 +9771,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (20)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -10013,10 +9845,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (27)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -10045,7 +9873,7 @@ GameObject:
   - component: {fileID: 707908142}
   - component: {fileID: 707908144}
   - component: {fileID: 707908143}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: TrainSmoke (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14930,10 +14758,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15116,10 +14940,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -15242,10 +15062,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15326,10 +15142,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c42ca527658a58b488c228deef11a874, type: 3}
       propertyPath: m_Name
       value: train_bonus_door (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4377446124621994086, guid: c42ca527658a58b488c228deef11a874, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -15520,10 +15332,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (33)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -15672,10 +15480,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15854,10 +15658,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (10)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -15957,10 +15757,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (23)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16260,10 +16056,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (8)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -16387,7 +16179,7 @@ GameObject:
   m_Component:
   - component: {fileID: 880011445}
   - component: {fileID: 880011446}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16555,13 +16347,13 @@ MonoBehaviour:
   minSpeed: 2
   acceleration: 8
   slowdownDistance: 20
-  pauseTime: 3
+  pauseTime: 2
   headLight: {fileID: 0}
   flickerSpeed: 3
   flickerIntensity: 0.3
   smokeEffect: {fileID: 0}
   trainRenderers: []
-  fadeDuration: 1.2
+  fadeDuration: 3
 --- !u!1 &905606215 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
@@ -16719,10 +16511,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16900,10 +16688,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17007,10 +16791,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (34)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17153,10 +16933,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -17257,10 +17033,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17334,10 +17106,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -17363,7 +17131,7 @@ GameObject:
   - component: {fileID: 992593878}
   - component: {fileID: 992593880}
   - component: {fileID: 992593879}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: TrainSmoke (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22300,10 +22068,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (16)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -22377,10 +22141,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22457,10 +22217,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c42ca527658a58b488c228deef11a874, type: 3}
       propertyPath: m_Name
       value: train_bonus_door (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4377446124621994086, guid: c42ca527658a58b488c228deef11a874, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -22576,10 +22332,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -22647,10 +22399,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22720,10 +22468,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -22791,10 +22535,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22898,10 +22638,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (22)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -22950,7 +22686,7 @@ GameObject:
   - component: {fileID: 1085796664}
   - component: {fileID: 1085796666}
   - component: {fileID: 1085796665}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: TrainSmoke (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28012,10 +27748,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -28083,10 +27815,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -28159,10 +27887,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -28231,10 +27955,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (29)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -28262,7 +27982,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1153740685}
   - component: {fileID: 1153740686}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28512,10 +28232,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -28534,7 +28250,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1213748371}
   - component: {fileID: 1213748372}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28681,10 +28397,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -28752,10 +28464,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -29104,10 +28812,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -29176,10 +28880,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -29247,10 +28947,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -29502,10 +29198,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -29611,20 +29303,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 65152bb10904fdd408e1540b61b866fc, type: 2}
     - target: {fileID: -890725610732284099, guid: ad42f08ccbed2554285398dbc7d8e8ba, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: -890725610732284099, guid: ad42f08ccbed2554285398dbc7d8e8ba, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ad42f08ccbed2554285398dbc7d8e8ba, type: 3}
       propertyPath: m_Name
       value: chair
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: ad42f08ccbed2554285398dbc7d8e8ba, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -29644,7 +29328,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1401077329}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Trees
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30064,10 +29748,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (26)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -30144,10 +29824,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -30269,10 +29945,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -30340,10 +30012,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -30460,10 +30128,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (4)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -30497,7 +30161,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1507697717
 RectTransform:
   m_ObjectHideFlags: 0
@@ -30512,11 +30176,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 324765475}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -300, y: -200}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -200}
   m_SizeDelta: {x: 600, y: 100}
-  m_Pivot: {x: 1, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1507697718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30564,13 +30228,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 52
-  m_fontSizeBase: 52
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -30675,10 +30339,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -30816,10 +30476,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -30933,7 +30589,7 @@ GameObject:
   - component: {fileID: 1545831310}
   - component: {fileID: 1545831312}
   - component: {fileID: 1545831311}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: TrainSmoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35818,10 +35474,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -35920,10 +35572,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (32)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36025,10 +35673,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -36096,10 +35740,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (13)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36257,10 +35897,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -37095,7 +36731,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1719851193}
   - component: {fileID: 1719851194}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37234,11 +36870,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 18.294811, y: 24.196377, z: 18.104675}
   m_Center: {x: 0.38158083, y: 12.098188, z: -0.15141249}
---- !u!4 &1737823681 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-  m_PrefabInstance: {fileID: 1988848883}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1743758429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37298,10 +36929,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -37459,10 +37086,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (18)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -37536,10 +37159,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -37793,25 +37412,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -3470091286522075441, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: -3470091286522075441, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
       propertyPath: m_Name
       value: tauf_phuj
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 6096692414213067818, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -37855,9 +37458,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1747304}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1737823681}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: -3470091286522075441, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
       insertIndex: -1
@@ -37899,7 +37499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1784044661}
   - component: {fileID: 1784044662}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38046,10 +37646,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -38068,7 +37664,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1813015107}
   - component: {fileID: 1813015108}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38345,10 +37941,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -38416,10 +38008,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -38584,10 +38172,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -38794,7 +38378,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1920244369}
   - component: {fileID: 1920244370}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Spot Light (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38993,10 +38577,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -39093,14 +38673,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: dbd2baef5e6279446bc5f52d6a9e0ed9, type: 3}
       propertyPath: m_Name
       value: light1
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: dbd2baef5e6279446bc5f52d6a9e0ed9, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 8189305077739628681, guid: dbd2baef5e6279446bc5f52d6a9e0ed9, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -39291,92 +38863,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 9.86087, y: 24.196377, z: 10.570374}
   m_Center: {x: -3.83539, y: 12.098188, z: 3.615738}
---- !u!1001 &1988848883
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1631340264}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.0019
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -241669551609874367, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: -241669551609874367, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_Name
-      value: train_bonus_door (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
-    - target: {fileID: 4466396854058148490, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4466396854058148490, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4466396854058148490, guid: c42ca527658a58b488c228deef11a874, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: -4940617971596973429, guid: c42ca527658a58b488c228deef11a874, type: 3}
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c42ca527658a58b488c228deef11a874, type: 3}
 --- !u!1001 &2001942022
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39436,10 +38922,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -39508,10 +38990,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (6)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -39670,10 +39148,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -39799,10 +39273,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -39870,10 +39340,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (7)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -39996,10 +39462,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -40098,10 +39560,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -40223,10 +39681,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -40301,17 +39755,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -3470091286522075441, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
       propertyPath: m_Name
       value: tauf_phuj (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6096692414213067818, guid: f64bfc8ae5a6d164798139716395d2b2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -40410,10 +39856,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
       propertyPath: m_Name
       value: SM_Mobile_Trees (14)
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -40541,10 +39983,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Mobile_Trees (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 857c696e02e85cf44a84167b88e9f133, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -40654,16 +40092,8 @@ PrefabInstance:
       value: grass1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 875513a76dc066b4aa013b230989be36, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 875513a76dc066b4aa013b230989be36, type: 3}
       propertyPath: m_TagString
       value: Ground
-      objectReference: {fileID: 0}
-    - target: {fileID: 4907177805066212155, guid: 875513a76dc066b4aa013b230989be36, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4907177805066212155, guid: 875513a76dc066b4aa013b230989be36, type: 3}
       propertyPath: m_TagString

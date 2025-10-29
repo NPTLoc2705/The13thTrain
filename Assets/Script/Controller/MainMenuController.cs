@@ -176,6 +176,7 @@ public class MainMenuController : MonoBehaviour
             case "PlayButton":
                 //StartCoroutine(FadeOutAndLoad("Ohlala")); // Changed from "Scene3" to "Ohlala"
                 StartCoroutine(FadeOutAllText());
+                FindObjectOfType<TrainMover>()?.PlayCinematicStopAtStation();
                 FindObjectOfType<CameraTransition3D_Menu>()?.StartTransition();
                 break;
             case "SettingsButton":
