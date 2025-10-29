@@ -242,6 +242,18 @@ public class PlayerController : MonoBehaviour
                 continue;
             }
 
+            // ===== CHECK PAINTING BOOK =====
+            PaintingBookOpener paintingBook = hit.collider.GetComponentInParent<PaintingBookOpener>();
+            if (paintingBook != null)
+            {
+                showPrompt = true;
+                promptMessage = paintingBook.GetPromptMessage();
+                if (Input.GetKeyDown(KeyCode.E))
+                    paintingBook.OpenBook();
+                foundInteractable = true;
+                continue;
+            }
+
             // ===== CHECK INSPECTABLE OBJECT =====
             InspectableObject inspectable = hit.collider.GetComponent<InspectableObject>();
             if (inspectable != null && inspectable.CanInspect())
