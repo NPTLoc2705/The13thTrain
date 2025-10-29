@@ -137,6 +137,12 @@ public class PlayerController : MonoBehaviour
         if (FindObjectOfType<NoteUI>()?.IsOpen() == true)
             return;
 
+        // ===== CRITICAL: If painting viewer is open, don't show prompts! =====
+        if (PaintingViewerUI.Instance != null && PaintingViewerUI.Instance.IsOpen())
+        {
+            return; // Exit early - painting viewer is active
+        }
+
         // ===== CRITICAL: If radio is tuning, don't interfere with its prompts! =====
         RadioPuzzle activeRadio = FindObjectOfType<RadioPuzzle>();
         if (activeRadio != null && activeRadio.IsTuning)
@@ -246,10 +252,27 @@ public class PlayerController : MonoBehaviour
             PaintingBookOpener paintingBook = hit.collider.GetComponentInParent<PaintingBookOpener>();
             if (paintingBook != null)
             {
+                string bookPrompt = paintingBook.GetPromptMessage();
+
+                // Nếu prompt là null (viewer đang mở), skip interaction này
+                if (bookPrompt == null)
+                {
+                    foundInteractable = true;
+                    continue;
+                }
+
                 showPrompt = true;
-                promptMessage = paintingBook.GetPromptMessage();
+                promptMessage = bookPrompt;
+
                 if (Input.GetKeyDown(KeyCode.E))
+                {
+                    // Ẩn prompt NGAY KHI NHẤN E
+                    if (TextManager.Instance != null)
+                        TextManager.Instance.HidePrompt();
+
                     paintingBook.OpenBook();
+                }
+
                 foundInteractable = true;
                 continue;
             }

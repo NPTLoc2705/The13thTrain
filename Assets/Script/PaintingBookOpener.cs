@@ -14,10 +14,6 @@ public class PaintingBookOpener : MonoBehaviour
     [Tooltip("Tên hiển thị của vật phẩm")]
     public string bookName = "Cuốn sách bí ẩn";
 
-    [Tooltip("Prompt message khi nhìn vào")]
-    [TextArea(2, 4)]
-    public string promptMessage = "[E] Mở cuốn sách\n\"Có vẻ như có gì đó bên trong...\"";
-
     [Header("Optional: Monologue")]
     [Tooltip("Hiển thị suy nghĩ trước khi mở sách")]
     public bool showMonologueBeforeOpen = false;
@@ -56,6 +52,12 @@ public class PaintingBookOpener : MonoBehaviour
             return;
         }
 
+        // Ẩn prompt ngay khi nhấn E
+        if (TextManager.Instance != null)
+        {
+            TextManager.Instance.HidePrompt();
+        }
+
         // Nếu có monologue và chưa mở lần nào
         if (showMonologueBeforeOpen && !hasBeenOpened && monologueBeforeOpen.Length > 0)
         {
@@ -65,6 +67,7 @@ public class PaintingBookOpener : MonoBehaviour
                 {
                     // Sau khi xem xong monologue, mở viewer
                     paintingViewer.OpenViewer();
+                    // Đánh dấu đã mở SAU KHI viewer mở xong
                     hasBeenOpened = true;
                 });
 
@@ -72,7 +75,7 @@ public class PaintingBookOpener : MonoBehaviour
             }
         }
 
-        // Mở viewer trực tiếp
+        // Mở viewer trực tiếp (nếu đã mở lần đầu rồi)
         paintingViewer.OpenViewer();
         hasBeenOpened = true;
     }
@@ -82,7 +85,20 @@ public class PaintingBookOpener : MonoBehaviour
     /// </summary>
     public string GetPromptMessage()
     {
-        return promptMessage;
+        // CRITICAL: Không hiển thị prompt khi viewer đang mở
+        if (paintingViewer != null && paintingViewer.IsOpen())
+        {
+            return null; // Trả về null để PlayerController ẩn prompt
+        }
+
+        // CRITICAL: Không hiển thị prompt khi CharacterMonologue đang active
+        if (CharacterMonologue.Instance != null && CharacterMonologue.Instance.IsActive())
+        {
+            return null; // Trả về null để PlayerController ẩn prompt
+        }
+
+        // Luôn hiển thị prompt đơn giản khi đứng gần
+        return "[E] Mở cuốn sách";
     }
 
     // Visualize interaction range

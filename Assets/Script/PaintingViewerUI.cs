@@ -13,6 +13,7 @@ public class PaintingViewerUI : MonoBehaviour
     [SerializeField] private RawImage paintingDisplay;
     [SerializeField] private TextMeshProUGUI instructionText; // Text hướng dẫn
     [SerializeField] private TextMeshProUGUI pageCounterText; // "1/5"
+    [SerializeField] private TextMeshProUGUI thoughtsText; // Text hiển thị suy nghĩ (optional)
 
     [Header("Painting Materials")]
     [SerializeField] private Material[] paintingMaterials;
@@ -21,8 +22,32 @@ public class PaintingViewerUI : MonoBehaviour
     [SerializeField] private KeyCode closeKey = KeyCode.Z; // Dùng Z để đóng, tránh conflict với ESC Pause Menu
     [SerializeField] private string instructionMessage = "◄ ► : Xem tranh | Z : Đóng";
 
+    [Header("First Time Thoughts")]
+    [Tooltip("Hiển thị suy nghĩ khi xem tranh lần đầu")]
+    [SerializeField] private bool showFirstTimeThoughts = true;
+    [Tooltip("Dùng thoughtsText riêng (nếu có) thay vì CharacterMonologue")]
+    [SerializeField] private bool useInternalThoughtsText = false;
+    [TextArea(2, 5)]
+    [SerializeField]
+    private string[] firstTimeThoughts = new string[]
+    {
+        "Những bức vẽ này...",
+        "Chúng có ý nghĩa gì đây?",
+        "Có vẻ như chúng đang kể một câu chuyện..."
+    };
+
+    [Header("Puzzle Hint - Pen Requirement")]
+    [Tooltip("Item ID của cây bút cần tìm")]
+    [SerializeField] private string penItemID = "Pen";
+    [Tooltip("Hiển thị hint khi chưa có bút (các lần xem sau lần đầu)")]
+    [SerializeField] private bool showPenHint = true;
+    [Tooltip("Nội dung hint khi chưa có bút")]
+    [TextArea(1, 3)]
+    [SerializeField] private string penHintMessage = "Mình cần tìm một cây bút...";
+
     private int currentPaintingIndex = 0;
     private bool isOpen = false;
+    private bool hasViewedOnce = false; // Track xem đã xem lần đầu chưa
     private MonoBehaviour playerController;
 
     // Singleton
@@ -74,6 +99,13 @@ public class PaintingViewerUI : MonoBehaviour
         else
         {
             Debug.LogWarning("⚠️ Instruction Text chưa được gán (optional)");
+        }
+
+        // Setup thoughts text (ẩn ban đầu)
+        if (thoughtsText != null)
+        {
+            thoughtsText.text = "";
+            Debug.Log("✅ Thoughts text initialized");
         }
 
         // Ẩn panel ban đầu
@@ -187,6 +219,153 @@ public class PaintingViewerUI : MonoBehaviour
             TextManager.Instance.HidePrompt();
 
         Debug.Log($"📖 Painting Viewer đã mở! isOpen = {isOpen}, closeKey = {closeKey}");
+
+        // Logic hiển thị thoughts/hints
+        if (!hasViewedOnce && showFirstTimeThoughts && firstTimeThoughts.Length > 0)
+        {
+            // LẦN ĐẦU: Show first-time thoughts
+            hasViewedOnce = true;
+            StartCoroutine(ShowThoughtsAfterDelay(0.5f));
+        }
+        else if (hasViewedOnce && showPenHint && !HasPen())
+        {
+            // CÁC LẦN SAU + CHƯA CÓ BÚT: Show pen hint
+            StartCoroutine(ShowPenHintAfterDelay(0.5f));
+        }
+        // Nếu đã có bút: Không hiển thị gì, xem tranh thoải mái
+    }
+
+    /// <summary>
+    /// Show thoughts sau một khoảng delay ngắn (để tranh hiện lên trước)
+    /// </summary>
+    private System.Collections.IEnumerator ShowThoughtsAfterDelay(float delay)
+    {
+        yield return new UnityEngine.WaitForSeconds(delay);
+
+        if (!isOpen) yield break;
+
+        // Nếu dùng internal thoughts text
+        if (useInternalThoughtsText && thoughtsText != null)
+        {
+            yield return StartCoroutine(ShowInternalThoughts());
+        }
+        // Nếu dùng CharacterMonologue (default)
+        else if (CharacterMonologue.Instance != null)
+        {
+            CharacterMonologue.Instance.ShowMonologueWithCallback(firstTimeThoughts, null);
+        }
+    }
+
+    /// <summary>
+    /// Show pen hint sau một khoảng delay ngắn
+    /// </summary>
+    private System.Collections.IEnumerator ShowPenHintAfterDelay(float delay)
+    {
+        yield return new UnityEngine.WaitForSeconds(delay);
+
+        if (!isOpen) yield break;
+
+        // Nếu dùng internal thoughts text
+        if (useInternalThoughtsText && thoughtsText != null)
+        {
+            yield return StartCoroutine(ShowInternalSingleThought(penHintMessage));
+        }
+        // Nếu dùng CharacterMonologue (default)
+        else if (CharacterMonologue.Instance != null)
+        {
+            CharacterMonologue.Instance.ShowMonologueWithCallback(penHintMessage, null);
+        }
+    }
+
+    /// <summary>
+    /// Kiểm tra xem đã nhặt bút chưa
+    /// </summary>
+    private bool HasPen()
+    {
+        if (PickupManager.Instance == null) return false;
+        return PickupManager.Instance.IsCollected(penItemID);
+    }
+
+    /// <summary>
+    /// Hiển thị thoughts bằng text riêng trong painting viewer (không che tranh)
+    /// </summary>
+    private System.Collections.IEnumerator ShowInternalThoughts()
+    {
+        if (thoughtsText == null || firstTimeThoughts.Length == 0)
+            yield break;
+
+        // Hiện từng dòng thought
+        foreach (string thought in firstTimeThoughts)
+        {
+            thoughtsText.text = thought;
+
+            // Fade in (optional - nếu có CanvasGroup)
+            CanvasGroup cg = thoughtsText.GetComponent<CanvasGroup>();
+            if (cg != null)
+            {
+                yield return StartCoroutine(FadeText(cg, 0f, 1f, 0.3f));
+            }
+
+            // Hiển thị trong 2.5 giây
+            yield return new UnityEngine.WaitForSeconds(2.5f);
+
+            // Fade out
+            if (cg != null)
+            {
+                yield return StartCoroutine(FadeText(cg, 1f, 0f, 0.3f));
+            }
+
+            thoughtsText.text = "";
+            yield return new UnityEngine.WaitForSeconds(0.3f);
+        }
+
+        // Xóa text sau khi xong
+        thoughtsText.text = "";
+    }
+
+    /// <summary>
+    /// Fade text helper
+    /// </summary>
+    private System.Collections.IEnumerator FadeText(CanvasGroup cg, float start, float end, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            cg.alpha = Mathf.Lerp(start, end, elapsed / duration);
+            yield return null;
+        }
+        cg.alpha = end;
+    }
+
+    /// <summary>
+    /// Hiển thị 1 dòng thought (cho pen hint)
+    /// </summary>
+    private System.Collections.IEnumerator ShowInternalSingleThought(string thought)
+    {
+        if (thoughtsText == null || string.IsNullOrEmpty(thought))
+            yield break;
+
+        thoughtsText.text = thought;
+
+        // Fade in (optional - nếu có CanvasGroup)
+        CanvasGroup cg = thoughtsText.GetComponent<CanvasGroup>();
+        if (cg != null)
+        {
+            yield return StartCoroutine(FadeText(cg, 0f, 1f, 0.3f));
+        }
+
+        // Hiển thị trong 2.5 giây
+        yield return new UnityEngine.WaitForSeconds(2.5f);
+
+        // Fade out
+        if (cg != null)
+        {
+            yield return StartCoroutine(FadeText(cg, 1f, 0f, 0.3f));
+        }
+
+        // Xóa text
+        thoughtsText.text = "";
     }
 
     /// <summary>
