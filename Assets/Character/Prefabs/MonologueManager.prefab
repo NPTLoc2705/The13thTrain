@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5229235307028168370
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3026623822287420728}
+  - component: {fileID: 7148901434740957312}
+  m_Layer: 0
+  m_Name: MonologueManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3026623822287420728
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5229235307028168370}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 15.36701, y: 5.65657, z: 49.40481}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7148901434740957312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5229235307028168370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16531af4d514f7947b2418697ea85c77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterMonologue
+  monologueText: {fileID: 0}
+  monologuePanel: {fileID: 0}
+  playerObject: {fileID: 0}
+  startingThoughts:
+  - "\u0110\xE2y l\xE0 \u0111\xE2u?"
+  - "Ng\xF4i nh\xE0 n\xE0y... t\u1EA1i sao m\xECnh l\u1EA1i \u1EDF trong \u0111\xE2y?"
+  - "M\xECnh nh\u1EDB l\xFAc n\xE3y m\xECnh c\xF2n \u1EDF trong s\xE2n ga m\xE0..."
+  - ...
+  - "C\xF3 l\u1EBD m\xECnh n\xEAn th\u1EED \u0111i xung quanh xem"
+  - "Bi\u1EBFt \u0111\xE2u m\xECnh s\u1EBD t\xECm ra c\xE1i g\xEC \u0111\xF3"
+  playOnStart: 1
+  timeBetweenThoughts: 2
+  typeSpeed: 0.05
+  useTypewriterEffect: 1
+  fadeInDuration: 0.5
+  fadeOutDuration: 0.5

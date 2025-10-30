@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 using System;
+using UnityEngine.SceneManagement;
 
 public class CharacterMonologue : MonoBehaviour
 {
@@ -13,15 +14,23 @@ public class CharacterMonologue : MonoBehaviour
     [Header("Player Reference")]
     [SerializeField] private GameObject playerObject;
 
-    [Header("Monologue Settings")]
+    [Header("Monologue Settings - Default (Ohlala Scene)")]
     [SerializeField]
-    private string[] startingThoughts = new string[]
+    private string[] defaultStartingThoughts = new string[]
     {
         "Nơi này... trông có vẻ quen thuộc...",
         "Tôi cần phải tìm ra sự thật...",
         "Hành trình này sẽ không dễ dàng..."
     };
-    [SerializeField] private bool playOnStart = true; // Bật/tắt monologue khi vào scene
+
+    [Header("Monologue Settings - SampleScene")]
+    [SerializeField]
+    private string[] sampleSceneThoughts = new string[]
+    {
+        "Lại là ác mộng à, hình như có gì đó khác trong ngôi nhà này, mình phải đi xem thử mới được"
+    };
+
+    [SerializeField] private bool playOnStart = true;
     [SerializeField] private float timeBetweenThoughts = 2.5f;
     [SerializeField] private float typeSpeed = 0.05f;
     [SerializeField] private bool useTypewriterEffect = true;
@@ -31,7 +40,7 @@ public class CharacterMonologue : MonoBehaviour
     [SerializeField] private float fadeOutDuration = 0.5f;
 
     private CanvasGroup canvasGroup;
-    private MonoBehaviour playerController;
+    private PlayerController playerController;
     private bool playerWasEnabled;
     private bool isPlaying = false;
 
@@ -53,13 +62,18 @@ public class CharacterMonologue : MonoBehaviour
 
     void Start()
     {
-        // Tìm player controller
+        // Find player controller
+        if (playerObject == null)
+        {
+            playerObject = GameObject.FindGameObjectWithTag("Player");
+        }
+
         if (playerObject != null)
         {
             playerController = playerObject.GetComponent<PlayerController>();
             if (playerController == null)
             {
-                playerController = playerObject.GetComponent<PlayerController_LN_SmoothMove>();
+                Debug.LogWarning("[CharacterMonologue] PlayerController not found!");
             }
         }
 
@@ -73,14 +87,14 @@ public class CharacterMonologue : MonoBehaviour
             canvasGroup = monologuePanel.GetComponent<CanvasGroup>();
         }
 
-        // Ẩn panel ban đầu
+        // Hide panel initially
         if (monologuePanel != null)
         {
             monologuePanel.SetActive(false);
         }
 
-        // Tự động chạy monologue ban đầu nếu được bật
-        if (playOnStart && startingThoughts.Length > 0)
+        // Auto-play starting monologue based on scene
+        if (playOnStart)
         {
             StartCoroutine(PlayStartingMonologue());
         }
@@ -95,24 +109,44 @@ public class CharacterMonologue : MonoBehaviour
     }
 
     /// <summary>
-    /// Chạy monologue ban đầu khi vào scene (không cần callback)
+    /// Play starting monologue when entering scene - auto-select text based on scene
     /// </summary>
     IEnumerator PlayStartingMonologue()
     {
-        // Đợi một chút trước khi bắt đầu
+        // Wait a bit before starting
         yield return new WaitForSeconds(0.5f);
 
-        yield return StartCoroutine(PlayMonologue(startingThoughts, null));
+        // Get current scene name
+        string currentScene = SceneManager.GetActiveScene().name;
+        string[] thoughtsToPlay;
+
+        // Select monologue based on scene
+        if (currentScene == "SampleScene")
+        {
+            thoughtsToPlay = sampleSceneThoughts;
+            Debug.Log("🎬 Playing SampleScene monologue");
+        }
+        else // Default is Ohlala scene or any other scene
+        {
+            thoughtsToPlay = defaultStartingThoughts;
+            Debug.Log("🎬 Playing default (Ohlala) monologue");
+        }
+
+        // Only play if there are thoughts
+        if (thoughtsToPlay.Length > 0)
+        {
+            yield return StartCoroutine(PlayMonologue(thoughtsToPlay, null));
+        }
     }
 
     /// <summary>
-    /// Hiển thị monologue với một hoặc nhiều câu, sau đó gọi callback
+    /// Show monologue with one or more sentences, then call callback
     /// </summary>
     public void ShowMonologueWithCallback(string[] thoughts, Action onComplete = null)
     {
         if (isPlaying)
         {
-            Debug.LogWarning("Monologue đang chạy, bỏ qua yêu cầu mới");
+            Debug.LogWarning("[CharacterMonologue] Already playing a monologue!");
             return;
         }
 
@@ -120,18 +154,51 @@ public class CharacterMonologue : MonoBehaviour
     }
 
     /// <summary>
-    /// Hiển thị monologue với một câu duy nhất
+    /// Show monologue with a single sentence
     /// </summary>
     public void ShowMonologueWithCallback(string thought, Action onComplete = null)
     {
         ShowMonologueWithCallback(new string[] { thought }, onComplete);
     }
 
+    /// <summary>
+    /// Show monologue with a single sentence (no callback)
+    /// </summary>
+    public void ShowMonologue(string thought)
+    {
+        ShowMonologueWithCallback(new string[] { thought }, null);
+    }
+
+    /// <summary>
+    /// Show monologue with multiple sentences (no callback)
+    /// </summary>
+    public void ShowMonologue(string[] thoughts)
+    {
+        ShowMonologueWithCallback(thoughts, null);
+    }
+
+    /// <summary>
+    /// Show monologue for wrong candle order
+    /// </summary>
+    public void ShowCandleWrongOrderMonologue()
+    {
+        ShowMonologue("Có vẻ không đúng, chắc phải có ghi chú gì đó quanh đây");
+    }
+
+    /// <summary>
+    /// Show monologue when candle puzzle is completed
+    /// </summary>
+    public void ShowCandleCompletedMonologue(Action onComplete = null)
+    {
+        ShowMonologueWithCallback("Mẹ ơi, sao con không thể nhớ được gương mặt của mẹ nữa vậy?", onComplete);
+    }
+
     IEnumerator PlayMonologue(string[] thoughts, Action onComplete)
     {
         isPlaying = true;
+        Debug.Log("[CharacterMonologue] Starting monologue playback");
 
-        // Khóa di chuyển của player
+        // Lock player movement
         DisablePlayerMovement();
 
         if (monologuePanel != null)
@@ -147,7 +214,7 @@ public class CharacterMonologue : MonoBehaviour
                 yield return StartCoroutine(FadeCanvasGroup(canvasGroup, 0f, 1f, fadeInDuration));
             }
 
-            // Hiển thị text
+            // Display text
             if (useTypewriterEffect)
             {
                 yield return StartCoroutine(TypeText(thought));
@@ -158,7 +225,7 @@ public class CharacterMonologue : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenThoughts);
             }
 
-            // Đợi trước khi fade out
+            // Wait before fade out
             yield return new WaitForSeconds(1f);
 
             // Fade out
@@ -170,22 +237,23 @@ public class CharacterMonologue : MonoBehaviour
             // Clear text
             monologueText.text = "";
 
-            // Đợi giữa các dòng text
+            // Wait between lines
             yield return new WaitForSeconds(0.3f);
         }
 
-        // Ẩn panel sau khi hoàn thành
+        // Hide panel after completion
         if (monologuePanel != null)
         {
             monologuePanel.SetActive(false);
         }
 
-        // Mở khóa di chuyển của player
+        // CRITICAL: Unlock player movement BEFORE calling callback
         EnablePlayerMovement();
 
         isPlaying = false;
+        Debug.Log("[CharacterMonologue] Monologue finished, movement unlocked");
 
-        // Gọi callback nếu có
+        // Call callback if provided
         onComplete?.Invoke();
     }
 
@@ -222,9 +290,10 @@ public class CharacterMonologue : MonoBehaviour
         {
             playerWasEnabled = playerController.enabled;
             playerController.enabled = false;
+            Debug.Log("[CharacterMonologue] Player movement disabled");
         }
 
-        // Hiển thị cursor
+        // Show cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -234,9 +303,10 @@ public class CharacterMonologue : MonoBehaviour
         if (playerController != null)
         {
             playerController.enabled = playerWasEnabled;
+            Debug.Log("[CharacterMonologue] Player movement enabled");
         }
 
-        // Khóa lại cursor
+        // Lock cursor again
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
