@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -64,11 +64,11 @@ public class PauseMenuController : MonoBehaviour
         if (quitButton != null)
         {
             quitButton.onClick.AddListener(QuitToMainMenu);
-            Debug.Log(" Quit button listener added");
+            Debug.Log("Quit button listener added");
         }
         else
         {
-            Debug.LogWarning(" Quit button not assigned!");
+            Debug.LogWarning("Quit button not assigned!");
         }
 
         // Ensure cursor is locked at start
@@ -81,6 +81,13 @@ public class PauseMenuController : MonoBehaviour
         // Toggle pause menu with Escape key
         if (Input.GetKeyDown(KeyCode.Escape) && canPause)
         {
+            // ✅ Check if any interactive UI is currently open
+            if (IsAnyInteractionActive())
+            {
+                Debug.Log("⚠️ Cannot pause - interaction UI is open");
+                return; // Don't allow pause while interacting
+            }
+
             if (isPaused)
             {
                 ResumeGame();
@@ -92,11 +99,96 @@ public class PauseMenuController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ✅ Check if player is currently interacting with any UI element
+    /// </summary>
+    private bool IsAnyInteractionActive()
+    {
+        // Check if Note UI is open
+        NoteUI noteUI = FindObjectOfType<NoteUI>();
+        if (noteUI != null && noteUI.IsOpen())
+        {
+            Debug.Log("📖 Note is open");
+            return true;
+        }
+
+        // Check if Riddle UI is open
+        RiddleUIController riddleUI = FindObjectOfType<RiddleUIController>();
+        if (riddleUI != null && riddleUI.IsOpen())
+        {
+            Debug.Log("📄 Riddle UI is open");
+            return true;
+        }
+
+        // Check if Safe password UI is open
+        SafeController safeController = FindObjectOfType<SafeController>();
+        if (safeController != null && safeController.IsPasswordUIOpen())
+        {
+            Debug.Log("🔐 Safe password UI is open");
+            return true;
+        }
+
+        // Check if Radio is tuning
+        RadioPuzzle activeRadio = FindObjectOfType<RadioPuzzle>();
+        if (activeRadio != null && activeRadio.IsTuning)
+        {
+            Debug.Log("📻 Radio is tuning");
+            return true;
+        }
+
+        // Check if Character Monologue is active
+        if (CharacterMonologue.Instance != null && CharacterMonologue.Instance.IsActive())
+        {
+            Debug.Log("💭 Monologue is playing");
+            return true;
+        }
+
+        // Check if Letter UI is open
+        if (LetterUIController.Instance != null && LetterUIController.Instance.IsOpen())
+        {
+            Debug.Log("✉️ Letter UI is open");
+            return true;
+        }
+
+        // Check if Mystery Box train display is open
+        MysteryBoxController mysteryBox = FindObjectOfType<MysteryBoxController>();
+        if (mysteryBox != null && mysteryBox.IsTrainDisplayOpen())
+        {
+            Debug.Log("🎁 Mystery Box train display is open");
+            return true;
+        }
+
+        // Check if any InspectableObject is being inspected
+        InspectableObject[] inspectables = FindObjectsOfType<InspectableObject>();
+        foreach (var inspectable in inspectables)
+        {
+            if (inspectable.isInspecting)
+            {
+                Debug.Log("🔍 Object is being inspected");
+                return true;
+            }
+        }
+
+        // Check if any NoteInteractable is open
+        NoteInteractable[] noteInteractables = FindObjectsOfType<NoteInteractable>();
+        foreach (var noteInteractable in noteInteractables)
+        {
+            if (noteInteractable.IsOpen())
+            {
+                Debug.Log("📝 NoteInteractable is open");
+                return true;
+            }
+        }
+
+        // No interaction is active
+        return false;
+    }
+
     public void PauseGame()
     {
         if (isPaused || pauseMenuCanvas == null) return;
 
-        Debug.Log(" Game Paused");
+        Debug.Log("⏸️ Game Paused");
         isPaused = true;
         Time.timeScale = 0f; // Pause the game
 
@@ -118,7 +210,7 @@ public class PauseMenuController : MonoBehaviour
     {
         if (!isPaused || pauseMenuCanvas == null) return;
 
-        Debug.Log(" Game Resumed");
+        Debug.Log("▶️ Game Resumed");
         isPaused = false;
         Time.timeScale = 1f; // Resume the game
 

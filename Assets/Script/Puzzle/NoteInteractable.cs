@@ -14,6 +14,10 @@ public class NoteInteractable : MonoBehaviour
     public bool openOnce = false; // if true, can only open once
     public string interactPrompt = "[E] Đọc mảnh giấy";
 
+    [Header("Monologue Settings")]
+    public bool playMonologueAfterClose = false;
+    public string afterCloseMonologue = "Lần đầu?, căn phòng? mẹ đang muốn ám chỉ điều gì cho mình sao";
+
     [Header("Journal Settings (Optional)")]
     public bool addToJournalOnRead = false;
     public string journalEntryID = "note_riddle_01";
@@ -23,8 +27,6 @@ public class NoteInteractable : MonoBehaviour
     private GameObject uiInstance;
     private RiddleUIController uiController;
     private bool hasBeenRead = false;
-    private bool playerNearby = false;
-    private bool isUIOpen = false;
 
     void Start()
     {
@@ -32,26 +34,26 @@ public class NoteInteractable : MonoBehaviour
         Collider c = GetComponent<Collider>();
         if (c == null)
         {
-            Debug.LogError($"NoteInteractable on {gameObject.name} requires a Collider component!");
             return;
         }
-
-        // Make sure it's a trigger for OnTriggerEnter/Exit to work
         c.isTrigger = true;
     }
 
-    void Update()
+    // Public method to check if the note can be interacted with
+    public bool CanInteract()
     {
-        // Only allow interaction when player is nearby and UI is not already open
-        if (playerNearby && !isUIOpen && Input.GetKeyDown(KeyCode.E))
-        {
-            TryOpen();
-        }
+        return !(openOnce && hasBeenRead);
     }
 
-    private void TryOpen()
+    // Public method to get the prompt message
+    public string GetPromptMessage()
     {
-        // If set to open once and already read, don't open again
+        return interactPrompt;
+    }
+
+    // Public method to open the note
+    public void Interact()
+    {
         if (openOnce && hasBeenRead)
         {
             if (TextManager.Instance != null)
@@ -74,7 +76,6 @@ public class NoteInteractable : MonoBehaviour
 
             if (uiController == null)
             {
-                Debug.LogError("RiddleUIPrefab is missing RiddleUIController component!");
                 Destroy(uiInstance);
                 return;
             }
@@ -82,99 +83,58 @@ public class NoteInteractable : MonoBehaviour
 
         if (uiController != null)
         {
-            isUIOpen = true;
-
             // Lock player movement
             PlayerController pc = FindObjectOfType<PlayerController>();
             if (pc != null)
             {
                 pc.SetMovementLocked(true);
+                Debug.Log("[NoteInteractable] Player movement LOCKED");
             }
-
-            // Hide the interaction prompt
-            if (TextManager.Instance != null)
-            {
-                TextManager.Instance.HidePrompt();
-            }
-
-            // Show cursor for UI interaction
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
 
             // Show UI with callback for when it closes
             uiController.Show(noteText, () =>
             {
-                // On close callback
-                isUIOpen = false;
+                Debug.Log("[NoteInteractable] RiddleUI closed callback triggered");
 
-                // Unlock player movement
+                // FIRST: Unlock player movement BEFORE playing monologue
                 PlayerController pcc = FindObjectOfType<PlayerController>();
                 if (pcc != null)
                 {
                     pcc.SetMovementLocked(false);
+                    Debug.Log("[NoteInteractable] Player movement UNLOCKED after riddle close");
                 }
 
                 // Lock cursor again
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
 
-                // Add to journal if enabled (only if you have JournalManager in your project)
-                if (addToJournalOnRead && !hasBeenRead)
+                // Play monologue after close (if enabled)
+                if (playMonologueAfterClose && !string.IsNullOrEmpty(afterCloseMonologue))
                 {
-                    // TODO: Implement journal system if needed
-                    Debug.Log($"[Note] Would add to journal: {journalTitle}");
+                    if (CharacterMonologue.Instance != null)
+                    {
+                        Debug.Log("[NoteInteractable] Playing monologue: " + afterCloseMonologue);
+                        CharacterMonologue.Instance.ShowMonologue(afterCloseMonologue);
+                    }
                 }
 
-                // Show prompt again if player is still nearby and can read again
-                if (playerNearby && !(openOnce && hasBeenRead))
+                // Add to journal if enabled
+                if (addToJournalOnRead && !hasBeenRead)
                 {
-                    if (TextManager.Instance != null)
-                    {
-                        TextManager.Instance.ShowPrompt(interactPrompt);
-                    }
+                    Debug.Log($"[Note] Would add to journal: {journalTitle}");
                 }
             });
 
             hasBeenRead = true;
         }
-        else
-        {
-            Debug.LogWarning($"No RiddleUI assigned to {gameObject.name} or missing controller.");
-        }
     }
 
-    // Trigger-based interaction detection
-    private void OnTriggerEnter(Collider other)
+    /// <summary>
+    /// Check if this note UI is currently open
+    /// </summary>
+    public bool IsOpen()
     {
-        // Check if it's the player
-        if (other.CompareTag("Player") || other.GetComponent<CharacterController>() != null)
-        {
-            playerNearby = true;
-
-            // Show prompt if not already read (or if can read multiple times)
-            if (!isUIOpen && !(openOnce && hasBeenRead))
-            {
-                if (TextManager.Instance != null)
-                {
-                    TextManager.Instance.ShowPrompt(interactPrompt);
-                }
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        // Check if it's the player
-        if (other.CompareTag("Player") || other.GetComponent<CharacterController>() != null)
-        {
-            playerNearby = false;
-
-            // Hide prompt when player leaves
-            if (TextManager.Instance != null)
-            {
-                TextManager.Instance.HidePrompt();
-            }
-        }
+        return uiController != null && uiController.IsOpen();
     }
 
     private void OnDestroy()
