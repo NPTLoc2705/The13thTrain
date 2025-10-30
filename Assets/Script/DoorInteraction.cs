@@ -141,10 +141,7 @@ public class DoorInteraction : MonoBehaviour
         Quaternion targetRotation = isOpen ? closedRotation : openRotation;
 
         // Hiển thị notice
-        if (TextManager.Instance != null)
-        {
-            TextManager.Instance.ShowNotice(isOpen ? "Đang đóng cửa..." : "Đang mở cửa...", 1.5f);
-        }
+        
 
         // Set trigger ngay lập tức khi mở cửa
         if (doorCollider != null && !isOpen)

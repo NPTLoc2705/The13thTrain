@@ -18,6 +18,10 @@ public class RiddleUIController : MonoBehaviour
     public float defaultAutoCloseSeconds = 0f; // 0 = don't auto close
     public string hintText = "[Gợi ý] Hãy nhìn vào những phòng nơi mẹ đã ở nhiều nhất.";
 
+    [Header("After Close Monologue")]
+    public bool playMonologueAfterClose = false;
+    public string afterCloseMonologue = "Lần đầu?, căn phòng? mẹ đang muốn ám chỉ điều gì cho mình sao";
+
     private System.Action onCloseCallback;
     private bool hintShown = false;
 
@@ -60,7 +64,6 @@ public class RiddleUIController : MonoBehaviour
         if (note3DBackground != null)
         {
             note3DBackground.Show();
-            Debug.Log("[RiddleUI] Showing 3D note background");
         }
 
         // Show the UI
@@ -89,7 +92,6 @@ public class RiddleUIController : MonoBehaviour
             Invoke(nameof(Close), defaultAutoCloseSeconds);
         }
 
-        Debug.Log($"[RiddleUI] Showing note: {text.Substring(0, Mathf.Min(30, text.Length))}...");
     }
 
     public void Close()
@@ -101,7 +103,6 @@ public class RiddleUIController : MonoBehaviour
         if (note3DBackground != null)
         {
             note3DBackground.Hide();
-            Debug.Log("[RiddleUI] Hiding 3D note background");
         }
 
         // Hide the UI
@@ -117,9 +118,16 @@ public class RiddleUIController : MonoBehaviour
         // Invoke the callback
         onCloseCallback?.Invoke();
 
-        Debug.Log("[RiddleUI] Closed note UI");
-    }
+       
 
+    }
+    public bool IsOpen()
+    {
+        if (panel != null)
+            return panel.activeSelf;
+        else
+            return gameObject.activeSelf;
+    }
     private void OnHintClicked()
     {
         if (riddleText != null && !hintShown)
@@ -128,11 +136,7 @@ public class RiddleUIController : MonoBehaviour
             riddleText.text += "\n\n" + hintText;
             hintShown = true;
 
-            Debug.Log("[RiddleUI] Hint shown");
         }
-        else if (hintShown)
-        {
-            Debug.Log("[RiddleUI] Hint already shown");
-        }
+        
     }
 }
