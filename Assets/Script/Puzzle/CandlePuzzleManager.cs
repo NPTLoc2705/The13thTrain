@@ -238,8 +238,15 @@ public class CandlePuzzleManager : MonoBehaviour
         // Stop any currently playing message/voice
         StopCurrentMessage();
 
-        if (TextManager.Instance != null)
+        if (CharacterMonologue.Instance != null)
+        {
+            CharacterMonologue.Instance.ShowCandleWrongOrderMonologue();
+        }
+        else if (TextManager.Instance != null)
+        {
+            // Fallback if monologue system not available
             TextManager.Instance.ShowNotice("Thứ tự không đúng. Các ngọn nến tắt hết.", 2f);
+        }
     }
 
     private void ResetAllCandles()
@@ -288,6 +295,12 @@ public class CandlePuzzleManager : MonoBehaviour
                 TextManager.Instance.ShowNotice("Bạn đã nhận được 1 mảnh giấy!", 3f);
             }
 
+            if (CharacterMonologue.Instance != null)
+            {
+                // Wait a bit for collection message, then show monologue
+                StartCoroutine(ShowCompletionMonologueAfterDelay(2.5f));
+            }
+
             // Check if all pieces collected (trigger letter UI)
             if (PickupManager.Instance.collectedItemIDs.Count == 5)
             {
@@ -297,11 +310,9 @@ public class CandlePuzzleManager : MonoBehaviour
                 }
             }
 
-            Debug.Log($"[CandleManager] Auto-collected: {tornPiece.itemID} ({PickupManager.Instance.collectedItemIDs.Count}/5)");
         }
 
-        Debug.Log("[CandleManager] Puzzle solved - torn piece auto-collected.");
-    }
+   }
 
     // Optional helper to force-solve (editor/test)
     [ContextMenu("Force Solve")]
@@ -309,5 +320,25 @@ public class CandlePuzzleManager : MonoBehaviour
     {
         playerSequence = new List<int>(correctOrder);
         OnPuzzleSolved();
+    }
+    private IEnumerator ShowCompletionMonologueAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (CharacterMonologue.Instance != null)
+        {
+            // Show monologue, then check for letter UI
+            CharacterMonologue.Instance.ShowCandleCompletedMonologue(() =>
+            {
+                // After monologue finishes, check if all pieces collected
+                if (PickupManager.Instance != null && PickupManager.Instance.collectedItemIDs.Count == 5)
+                {
+                    if (LetterUIController.Instance != null)
+                    {
+                        LetterUIController.Instance.ShowLetterUI();
+                    }
+                }
+            });
+        }
     }
 }
