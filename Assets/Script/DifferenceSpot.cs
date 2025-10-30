@@ -5,7 +5,6 @@ using UnityEngine.UI;
 /// Script đại diện cho một điểm khác nhau trên bức tranh
 /// Gắn vào các button/area có thể click trên painting
 /// Phiên bản đơn giản - không dùng LeanTween
-/// FIXED: Thêm raycastTarget và debug logging để sửa lỗi click
 /// </summary>
 public class DifferenceSpot : MonoBehaviour
 {
@@ -31,7 +30,7 @@ public class DifferenceSpot : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log($"🎯 DifferenceSpot '{spotID}' Awake() - Painting Index: {paintingIndex}");
+        Debug.Log($"🎯 DifferenceSpot '{spotID}' Awake()");
 
         // Get Button component
         button = GetComponent<Button>();
@@ -66,25 +65,20 @@ public class DifferenceSpot : MonoBehaviour
             Debug.LogWarning($"⚠️ Circle marker chưa gán cho '{spotID}'");
         }
 
-        // CRITICAL FIX: Ẩn button visual nhưng GIỮ raycastTarget = true
+        // Ẩn button visual ban đầu (chỉ giữ collider để click)
         Image buttonImage = GetComponent<Image>();
         if (buttonImage != null)
         {
             Color transparent = buttonImage.color;
-            transparent.a = 0.01f; // Gần như trong suốt nhưng vẫn có thể raycast
+            transparent.a = 0f; // Làm trong suốt hoàn toàn
             buttonImage.color = transparent;
-            buttonImage.raycastTarget = true; // QUAN TRỌNG: Phải bật để nhận click!
-            Debug.Log($"✅ Button image setup for '{spotID}' - raycastTarget: {buttonImage.raycastTarget}");
-        }
-        else
-        {
-            Debug.LogWarning($"⚠️ '{spotID}' không có Image component - sẽ không nhận click được!");
+            Debug.Log($"✅ Button image made transparent for '{spotID}'");
         }
     }
 
     void OnSpotClicked()
     {
-        Debug.Log($"🖱️ CLICK DETECTED on Spot '{spotID}' (Painting {paintingIndex}) at position {transform.position}");
+        Debug.Log($"🖱️ Spot '{spotID}' clicked!");
 
         if (isFound)
         {
@@ -110,7 +104,6 @@ public class DifferenceSpot : MonoBehaviour
             DifferencePuzzleManager puzzleManager = FindObjectOfType<DifferencePuzzleManager>();
             if (puzzleManager != null)
             {
-                Debug.Log($"✅ Forwarding click to PuzzleManager for spot '{spotID}'");
                 puzzleManager.OnSpotFound(this);
             }
             else
@@ -223,10 +216,5 @@ public class DifferenceSpot : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, 20f);
-
-        // Hiển thị spot ID
-#if UNITY_EDITOR
-        UnityEditor.Handles.Label(transform.position, $"Spot: {spotID}\nPainting: {paintingIndex}");
-#endif
     }
 }
