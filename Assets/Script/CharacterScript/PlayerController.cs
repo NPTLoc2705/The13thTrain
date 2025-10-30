@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private bool movementLocked = false; // Lock movement during radio tuning
     private Candle nearbyCandle = null; //Detech the nearby candle for interaction
     private PickupItem collidedItem = null;
+    private TrainDoorController nearbyTrainDoor = null;
 
     void Start()
     {
@@ -68,47 +69,110 @@ public class PlayerController : MonoBehaviour
         {
             nearbyCandle.LightCandle();
         }
+
+        // ===== Train Door Interaction =====
+        if (nearbyTrainDoor != null && nearbyTrainDoor.isActiveAndEnabled)
+        {
+            // Nếu cửa đã mở, cho phép hiển thị prompt và vào tàu
+            if (nearbyTrainDoor != null && Input.GetKeyDown(KeyCode.E))
+            {
+                nearbyTrainDoor.StartCoroutine("EnterTrainRoutine");
+            }
+        }
     }
 
     // ==============================
     // ====== MOVEMENT CONTROL ======
     // ==============================
+    //void HandleMovement()
+    //{
+    //    // CRITICAL: Exit early if movement is locked (during radio tuning)
+    //    if (movementLocked)
+    //    {
+    //        // Allow camera rotation even when locked
+    //        yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+    //        transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+    //        return;
+    //    }
+
+    //    isGrounded = controller.isGrounded;
+    //    animator.SetBool("isGrounded", isGrounded);
+    //    if (isGrounded && velocity.y < 0)
+    //        velocity.y = -2f;
+
+    //    // Player rotation with mouse
+    //    yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+    //    transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+
+    //    // Movement
+    //    float h = Input.GetAxis("Horizontal");
+    //    float v = Input.GetAxis("Vertical");
+    //    Vector3 direction = new Vector3(h, 0, v).normalized;
+
+    //    if (direction.magnitude >= 0.1f)
+    //    {
+    //        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + yaw;
+    //        Quaternion rot = Quaternion.Euler(0f, targetAngle, 0f);
+    //        transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f);
+
+    //        Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+    //        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+    //        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+
+    //        controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime);
+    //        animator.SetFloat("Speed", isRunning ? 3f : 1f);
+    //    }
+    //    else
+    //    {
+    //        animator.SetFloat("Speed", 0f);
+    //    }
+
+    //    // Jump
+    //    if (isGrounded && Input.GetButtonDown("Jump"))
+    //    {
+    //        velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+    //        animator.SetTrigger("JumpTrigger");
+    //    }
+
+    //    // Gravity
+    //    velocity.y += gravity * Time.deltaTime;
+    //    controller.Move(velocity * Time.deltaTime);
+    //}
+
     void HandleMovement()
     {
         // CRITICAL: Exit early if movement is locked (during radio tuning)
         if (movementLocked)
-        {
-            // Allow camera rotation even when locked
-            yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            transform.rotation = Quaternion.Euler(0f, yaw, 0f);
             return;
-        }
 
         isGrounded = controller.isGrounded;
         animator.SetBool("isGrounded", isGrounded);
+
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
-        // Player rotation with mouse
-        yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        transform.rotation = Quaternion.Euler(0f, yaw, 0f);
-
-        // Movement
+        // Lấy input di chuyển
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        Vector3 direction = new Vector3(h, 0, v).normalized;
+        Vector3 inputDir = new Vector3(h, 0f, v).normalized;
 
-        if (direction.magnitude >= 0.1f)
+        if (inputDir.magnitude >= 0.1f)
         {
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + yaw;
-            Quaternion rot = Quaternion.Euler(0f, targetAngle, 0f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * 10f);
+            // ✅ Hướng di chuyển theo hướng nhìn của camera
+            Transform cam = Camera.main.transform;
+            Vector3 camForward = cam.forward;
+            Vector3 camRight = cam.right;
 
-            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            camForward.y = 0f;
+            camRight.y = 0f;
+
+            Vector3 moveDir = camForward * v + camRight * h;
+            moveDir.Normalize();
+
             bool isRunning = Input.GetKey(KeyCode.LeftShift);
             float currentSpeed = isRunning ? runSpeed : walkSpeed;
 
-            controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime);
+            controller.Move(moveDir * currentSpeed * Time.deltaTime);
             animator.SetFloat("Speed", isRunning ? 3f : 1f);
         }
         else
@@ -224,16 +288,19 @@ public class PlayerController : MonoBehaviour
                 continue;
             }
 
-            // ===== CHECK ROTATE PICTURE =====
+            // 2️⃣ Kiểm tra TRANH XOAY
             RotatePicture picture = hit.collider.GetComponentInParent<RotatePicture>();
             if (picture != null)
             {
-                showPrompt = true;
-                promptMessage = "[E] Xoay bức tranh";
-                if (Input.GetKeyDown(KeyCode.E))
-                    picture.Rotate();
-                foundInteractable = true;
-                continue;
+                // 🟢 Chỉ cho hiện chữ E nếu puzzle CHƯA hoàn thành
+                if (!PuzzleManager.Instance.IsPuzzleCompleted())
+                {
+                    showPrompt = true;
+                    promptMessage = "[E] Xoay bức tranh";
+
+                    if (Input.GetKeyDown(KeyCode.E))
+                        picture.Rotate();
+                }
             }
 
             // ===== CHECK NOTE =====
@@ -373,6 +440,13 @@ public class PlayerController : MonoBehaviour
             nearbyCandle = candle;
             // Don't show prompt here - let HandleInteraction do it
         }
+
+        TrainDoorController door = other.GetComponent<TrainDoorController>();
+        if (door != null)
+        {
+            nearbyTrainDoor = door;
+            Debug.Log("🚪 Player entered train door trigger!");
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -383,6 +457,13 @@ public class PlayerController : MonoBehaviour
             nearbyCandle = null;
             if (TextManager.Instance != null)
                 TextManager.Instance.HidePrompt();
+        }
+
+        TrainDoorController door = other.GetComponent<TrainDoorController>();
+        if (door != null && door == nearbyTrainDoor)
+        {
+            nearbyTrainDoor = null;
+            Debug.Log("🚶 Player exited train door trigger.");
         }
     }
 }

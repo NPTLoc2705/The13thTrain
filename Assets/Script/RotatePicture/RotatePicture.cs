@@ -32,6 +32,12 @@ public class RotatePicture : MonoBehaviour
         if (targetToRotate != null)
         {
             initialY = Mathf.Repeat(targetToRotate.eulerAngles.y, 360f);
+
+            // 🟢 Kiểm tra đúng ngay khi bắt đầu
+            float currentY = Mathf.Repeat(targetToRotate.eulerAngles.y, 360f);
+            float relativeY = Mathf.Repeat(currentY - initialY + 360f, 360f);
+            float snappedRelative = Mathf.Repeat(Mathf.Round(relativeY / rotationStep) * rotationStep, 360f);
+            isCorrect = Mathf.Abs(Mathf.DeltaAngle(snappedRelative, Mathf.Repeat(correctAngle, 360f))) < tolerance;
         }
     }
 
