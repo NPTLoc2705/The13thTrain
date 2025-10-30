@@ -17,6 +17,7 @@ public class SafeController : MonoBehaviour
     private bool isOpen = false;
     private bool isShaking = false;
     private Vector2 originalAnchoredPosition;
+    private bool isPlayerNearby = false;
 
     void Start()
     {
@@ -42,6 +43,7 @@ public class SafeController : MonoBehaviour
     {
         if (other.CompareTag("Player") && !isOpen)
         {
+            isPlayerNearby = true;
             ShowPasswordUI();
         }
     }
@@ -50,6 +52,7 @@ public class SafeController : MonoBehaviour
     {
         if (other.CompareTag("Player") && !isOpen)
         {
+            isPlayerNearby = false;
             HidePasswordUI();
         }
     }
@@ -60,6 +63,12 @@ public class SafeController : MonoBehaviour
         if (passwordUI != null && passwordUI.activeSelf && Input.GetKeyDown(KeyCode.Return))
         {
             CheckPassword();
+        }
+
+        // Check for Escape key to close the password UI
+        if (passwordUI != null && passwordUI.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+        {
+            HidePasswordUI();
         }
     }
 
@@ -80,6 +89,10 @@ public class SafeController : MonoBehaviour
                 passwordInput.text = ""; // Clear previous input
                 passwordInput.ActivateInputField(); // Focus the input field
             }
+
+            // Show cursor for input
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 
@@ -88,7 +101,19 @@ public class SafeController : MonoBehaviour
         if (passwordUI != null && !isOpen)
         {
             passwordUI.SetActive(false);
+
+            // Lock cursor again
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
+    }
+
+    /// <summary>
+    /// Check if the safe password UI is currently open
+    /// </summary>
+    public bool IsPasswordUIOpen()
+    {
+        return passwordUI != null && passwordUI.activeSelf && !isOpen;
     }
 
     public void CheckPassword()
@@ -98,23 +123,24 @@ public class SafeController : MonoBehaviour
             isOpen = true;
             passwordUI.SetActive(false);
 
+            // Lock cursor again
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
             // Activate key and mystery box
             if (key != null)
             {
                 key.SetActive(true);
-                Debug.Log("Key activated at: " + key.transform.position);
                 PickupItem keyItem = key.GetComponent<PickupItem>();
                 if (keyItem != null)
                 {
                     keyItem.isCollected = false;
-                    Debug.Log("Key itemID: " + keyItem.itemID + ", isCollected: " + keyItem.isCollected);
                 }
             }
 
             if (mysteryBox != null)
             {
                 mysteryBox.SetActive(true);
-                Debug.Log("Mystery box activated at: " + mysteryBox.transform.position);
             }
 
             // Show notice via TextManager
@@ -125,7 +151,6 @@ public class SafeController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Incorrect password!");
             // Trigger shake animation
             if (!isShaking && shakeTarget != null)
             {
