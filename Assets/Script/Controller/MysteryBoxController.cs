@@ -25,6 +25,7 @@ public class MysteryBoxController : MonoBehaviour
     private bool isOpen = false;
     private GameObject trainInstance;
     private PlayerController playerController;
+    private bool isDisplayingTrain = false;
 
     void Start()
     {
@@ -40,10 +41,7 @@ public class MysteryBoxController : MonoBehaviour
         {
             displayImage.gameObject.SetActive(false);
         }
-        else
-        {
-            Debug.LogError("displayImage is not assigned!");
-        }
+        
 
         if (renderCamera != null)
         {
@@ -51,20 +49,14 @@ public class MysteryBoxController : MonoBehaviour
             renderCamera.orthographic = true;
             renderCamera.targetTexture = renderTexture;
         }
-        else
-        {
-            Debug.LogError("renderCamera is not assigned!");
-        }
+      
 
         if (closeButton != null)
         {
             closeButton.gameObject.SetActive(false);
             closeButton.onClick.AddListener(CloseUI);
         }
-        else
-        {
-            Debug.LogError("closeButton is not assigned!");
-        }
+       
 
         // Setup video player
         if (videoPlayer != null)
@@ -75,12 +67,8 @@ public class MysteryBoxController : MonoBehaviour
             if (videoClip != null)
             {
                 videoPlayer.clip = videoClip;
-                Debug.Log("Video clip assigned: " + videoClip.name);
             }
-            else
-            {
-                Debug.LogError("Video Clip is not assigned!");
-            }
+           
 
             videoPlayer.loopPointReached += OnVideoEnd;
 
@@ -91,14 +79,21 @@ public class MysteryBoxController : MonoBehaviour
                 if (canvasParent != null)
                 {
                     canvasParent.gameObject.SetActive(false);
-                    Debug.Log("CutsceneCanvas set to inactive at start");
                 }
                 videoDisplay.gameObject.SetActive(false);
             }
         }
         else
         {
-            Debug.LogError("videoPlayer is not assigned!");
+        }
+    }
+
+    void Update()
+    {
+        // Allow closing train display with Escape key
+        if (isDisplayingTrain && Input.GetKeyDown(KeyCode.Escape))
+        {
+            CloseUI();
         }
     }
 
@@ -106,22 +101,18 @@ public class MysteryBoxController : MonoBehaviour
     {
         if (isOpen)
         {
-            Debug.Log("Mystery box already opened!");
             return;
         }
 
         if (PickupManager.Instance == null || !PickupManager.Instance.IsCollected("SafeKey"))
         {
-            Debug.Log("Need the SafeKey to open the mystery box!");
             return;
         }
 
         isOpen = true;
-        Debug.Log("Mystery box opened!");
 
         if (toyTrainPrefab == null || renderCamera == null || renderTexture == null || displayImage == null)
         {
-            Debug.LogError("Missing required components!");
             return;
         }
 
@@ -129,7 +120,6 @@ public class MysteryBoxController : MonoBehaviour
         Vector3 trainPosition = transform.position + trainOffset;
         trainInstance = Instantiate(toyTrainPrefab, trainPosition, Quaternion.identity);
         trainInstance.SetActive(true);
-        Debug.Log("Toy train instantiated at: " + trainPosition);
 
         // Configure render camera
         renderCamera.enabled = true;
@@ -155,17 +145,19 @@ public class MysteryBoxController : MonoBehaviour
         {
             closeButton.gameObject.SetActive(true);
         }
+        isDisplayingTrain = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        Debug.Log("Train image displayed. Waiting for player to click Close button...");
 
-        // NOW WAITING FOR PLAYER TO CLICK CLOSE BUTTON
+        // NOW WAITING FOR PLAYER TO CLICK CLOSE BUTTON OR PRESS ESC
         // The CloseUI() function will handle the rest
     }
 
     private void CloseUI()
     {
-        Debug.Log("Close button clicked! Starting video sequence...");
+        if (!isDisplayingTrain) return;
+
+        isDisplayingTrain = false;
 
         // Hide train image and close button
         displayImage.gameObject.SetActive(false);
@@ -184,30 +176,34 @@ public class MysteryBoxController : MonoBehaviour
         PlayCutsceneVideo();
     }
 
+    /// <summary>
+    /// Check if the train display is currently open
+    /// </summary>
+    public bool IsTrainDisplayOpen()
+    {
+        return isDisplayingTrain;
+    }
+
     private void PlayCutsceneVideo()
     {
         if (videoPlayer == null)
         {
-            Debug.LogError("VideoPlayer is null!");
             LoadNextScene();
             return;
         }
 
         if (videoClip == null)
         {
-            Debug.LogError("VideoClip is null!");
             LoadNextScene();
             return;
         }
 
         if (videoDisplay == null)
         {
-            Debug.LogError("VideoDisplay is null!");
             LoadNextScene();
             return;
         }
 
-        Debug.Log("=== Starting Video Playback ===");
 
         // Disable player input
         if (playerController != null)
@@ -222,14 +218,12 @@ public class MysteryBoxController : MonoBehaviour
         if (canvasParent != null)
         {
             canvasParent.gameObject.SetActive(true);
-            Debug.Log("CutsceneCanvas activated!");
         }
 
         // Ensure VideoPlayer is enabled
         if (!videoPlayer.enabled)
         {
             videoPlayer.enabled = true;
-            Debug.Log("VideoPlayer enabled");
         }
 
         // Assign video clip
@@ -242,13 +236,11 @@ public class MysteryBoxController : MonoBehaviour
         if (videoPlayer.targetTexture != null)
         {
             videoRT = videoPlayer.targetTexture;
-            Debug.Log("Using assigned render texture");
         }
         else
         {
             videoRT = new RenderTexture(1920, 1080, 0);
             videoPlayer.targetTexture = videoRT;
-            Debug.Log("Created new render texture");
         }
 
         videoDisplay.texture = videoRT;
@@ -261,15 +253,12 @@ public class MysteryBoxController : MonoBehaviour
 
     private void OnVideoPrepared(VideoPlayer source)
     {
-        Debug.Log("Video prepared! Playing...");
         source.prepareCompleted -= OnVideoPrepared;
         source.Play();
-        Debug.Log("Video.Play() called. IsPlaying: " + source.isPlaying);
     }
 
     private void OnVideoEnd(VideoPlayer vp)
     {
-        Debug.Log("Video finished!");
 
         // Hide video and canvas
         if (videoDisplay != null)
@@ -294,16 +283,12 @@ public class MysteryBoxController : MonoBehaviour
 
     private void LoadNextScene()
     {
-        Debug.Log("Loading scene: " + nextSceneName);
 
         if (Application.CanStreamedLevelBeLoaded(nextSceneName))
         {
             SceneManager.LoadScene(nextSceneName);
         }
-        else
-        {
-            Debug.LogError("Scene '" + nextSceneName + "' not found in Build Settings!");
-        }
+        
     }
 
     void OnDestroy()

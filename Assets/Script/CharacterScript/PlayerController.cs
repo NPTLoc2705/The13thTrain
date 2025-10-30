@@ -297,14 +297,40 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            // ===== CHECK NOTE =====
-            NoteOpener note = hit.collider.GetComponentInParent<NoteOpener>();
-            if (note != null)
+            //Check Note Interactable
+            NoteInteractable noteInteractable = hit.collider.GetComponentInParent<NoteInteractable>();
+            if (noteInteractable != null && noteInteractable.CanInteract())
             {
                 showPrompt = true;
-                promptMessage = "[E] Đọc ghi chú\n\"Tại sao lại có mảnh giấy này ở đây... Mình nên đọc nó.\"";
+                promptMessage = noteInteractable.GetPromptMessage();
                 if (Input.GetKeyDown(KeyCode.E))
-                    note.noteUI.OpenNote();
+                {
+                    noteInteractable.Interact();
+                }
+                foundInteractable = true;
+                continue;
+            }
+
+            // ===== CHECK NOTE =====
+            NoteOpener noteOpener = hit.collider.GetComponentInParent<NoteOpener>();
+            if (noteOpener != null)
+            {
+                showPrompt = true;
+                promptMessage = "[E] Đọc ghi chú";
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    if (CharacterMonologue.Instance != null)
+                    {
+                        CharacterMonologue.Instance.ShowMonologueWithCallback(
+                            "Tại sao lại có mảnh giấy này ở đây... Mình nên đọc nó.",
+                            () => noteOpener.noteUI.OpenNote()
+                        );
+                    }
+                    else
+                    {
+                        noteOpener.noteUI.OpenNote();
+                    }
+                }
                 foundInteractable = true;
                 continue;
             }
