@@ -5,6 +5,7 @@ using TMPro;
 /// <summary>
 /// UI Controller để xem các bức tranh/vẽ
 /// Cho phép người chơi xem qua lại các bức tranh
+/// UPDATED: Thêm tích hợp Puzzle Mode - Tìm điểm khác nhau
 /// </summary>
 public class PaintingViewerUI : MonoBehaviour
 {
@@ -21,6 +22,10 @@ public class PaintingViewerUI : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private KeyCode closeKey = KeyCode.Z; // Dùng Z để đóng, tránh conflict với ESC Pause Menu
     [SerializeField] private string instructionMessage = "◄ ► : Xem tranh | Z : Đóng";
+
+    [Header("Puzzle Mode")]
+    [Tooltip("Cho phép puzzle mode (tìm điểm khác nhau)")]
+    [SerializeField] private bool enablePuzzleMode = true;
 
     [Header("First Time Thoughts")]
     [Tooltip("Hiển thị suy nghĩ khi xem tranh lần đầu")]
@@ -49,6 +54,7 @@ public class PaintingViewerUI : MonoBehaviour
     private bool isOpen = false;
     private bool hasViewedOnce = false; // Track xem đã xem lần đầu chưa
     private MonoBehaviour playerController;
+    private DifferencePuzzleManager puzzleManager; // Reference to puzzle system
 
     // Singleton
     public static PaintingViewerUI Instance;
@@ -70,6 +76,13 @@ public class PaintingViewerUI : MonoBehaviour
     {
         // FORCE: Đảm bảo closeKey luôn là Z, tránh conflict với ESC của Pause Menu
         closeKey = KeyCode.Z;
+
+        // Get puzzle manager
+        puzzleManager = GetComponent<DifferencePuzzleManager>();
+        if (puzzleManager == null && enablePuzzleMode)
+        {
+            Debug.LogWarning("⚠️ EnablePuzzleMode = true nhưng không tìm thấy DifferencePuzzleManager!");
+        }
 
         // Tìm player controller
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -157,7 +170,7 @@ public class PaintingViewerUI : MonoBehaviour
             Debug.Log($"🔑 Phím X được nhấn! isOpen = {isOpen}, closeKey = {closeKey}");
         }
 
-        // Đóng bằng phím X
+        // Đóng bằng phím Z
         if (Input.GetKeyDown(closeKey))
         {
             Debug.Log("✅ Đang gọi CloseViewer()...");
@@ -168,10 +181,22 @@ public class PaintingViewerUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
             NextPainting();
+
+            // Nếu đang trong puzzle mode, cập nhật spots
+            if (enablePuzzleMode && puzzleManager != null)
+            {
+                puzzleManager.EnterPuzzleMode(); // Re-enable spots cho bức mới
+            }
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
             PreviousPainting();
+
+            // Nếu đang trong puzzle mode, cập nhật spots
+            if (enablePuzzleMode && puzzleManager != null)
+            {
+                puzzleManager.EnterPuzzleMode(); // Re-enable spots cho bức mới
+            }
         }
     }
 
@@ -489,6 +514,14 @@ public class PaintingViewerUI : MonoBehaviour
     public bool IsOpen()
     {
         return isOpen;
+    }
+
+    /// <summary>
+    /// PUBLIC: Lấy index bức tranh hiện tại (cho DifferencePuzzleManager)
+    /// </summary>
+    public int GetCurrentPaintingIndex()
+    {
+        return currentPaintingIndex;
     }
 
     void DisablePlayerMovement()
