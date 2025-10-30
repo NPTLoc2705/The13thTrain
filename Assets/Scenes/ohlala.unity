@@ -1105,7 +1105,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -570}
+  m_AnchoredPosition: {x: 0, y: -459.2}
   m_SizeDelta: {x: 990, y: 122}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &305622766
@@ -5698,13 +5698,14 @@ MonoBehaviour:
   monologueText: {fileID: 417946607}
   monologuePanel: {fileID: 238366726}
   playerObject: {fileID: 1843589261}
-  startingThoughts:
-  - "\u0110\xE2y l\xE0 \u0111\xE2u?"
-  - "Ng\xF4i nh\xE0 n\xE0y... t\u1EA1i sao m\xECnh l\u1EA1i \u1EDF trong \u0111\xE2y?"
-  - "M\xECnh nh\u1EDB l\xFAc n\xE3y m\xECnh c\xF2n \u1EDF trong s\xE2n ga m\xE0..."
-  - ...
-  - "C\xF3 l\u1EBD m\xECnh n\xEAn th\u1EED \u0111i xung quanh xem"
-  - "Bi\u1EBFt \u0111\xE2u m\xECnh s\u1EBD t\xECm ra c\xE1i g\xEC \u0111\xF3"
+  defaultStartingThoughts:
+  - "N\u01A1i n\xE0y... tr\xF4ng c\xF3 v\u1EBB quen thu\u1ED9c..."
+  - "T\xF4i c\u1EA7n ph\u1EA3i t\xECm ra s\u1EF1 th\u1EADt..."
+  - "H\xE0nh tr\xECnh n\xE0y s\u1EBD kh\xF4ng d\u1EC5 d\xE0ng..."
+  sampleSceneThoughts:
+  - "L\u1EA1i l\xE0 \xE1c m\u1ED9ng \xE0, h\xECnh nh\u01B0 c\xF3 g\xEC \u0111\xF3
+    kh\xE1c trong ng\xF4i nh\xE0 n\xE0y, m\xECnh ph\u1EA3i \u0111i xem th\u1EED m\u1EDBi
+    \u0111\u01B0\u1EE3c"
   playOnStart: 1
   timeBetweenThoughts: 2
   typeSpeed: 0.05
