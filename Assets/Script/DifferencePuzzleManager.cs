@@ -2,12 +2,10 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
-using System.Collections;
 
 /// <summary>
 /// Quản lý puzzle "Tìm điểm khác nhau" trong PaintingViewerUI
 /// TỰ ĐỘNG BẬT khi có bút - Không cần nhấn F
-/// VERSION: In-Viewer Thoughts + Key Reveal
 /// </summary>
 public class DifferencePuzzleManager : MonoBehaviour
 {
@@ -22,46 +20,20 @@ public class DifferencePuzzleManager : MonoBehaviour
     [Tooltip("Text hiển thị progress (optional) - vd: 2/4")]
     public TextMeshProUGUI progressText;
 
-    [Header("Completion Thoughts - IN VIEWER")]
-    [Tooltip("Hiển thị suy nghĩ TRONG viewer sau khi hoàn thành")]
-    public bool showCompletionThoughts = true;
-
-    [Tooltip("Text object để hiển thị thoughts (thường là thoughtsText của PaintingViewerUI)")]
-    public TextMeshProUGUI thoughtsText;
-
+    [Header("Completion")]
+    public bool showCompletionMonologue = true;
     [TextArea(2, 5)]
-    public string[] completionThoughts = new string[]
+    public string[] completionMonologue = new string[]
     {
         "Mình đã tìm thấy tất cả!",
         "Những bức tranh này... có vẻ là một câu chuyện đau buồn...",
         "Mình cần tìm hiểu thêm về nơi này."
     };
 
-    [Header("Thoughts Display Settings")]
-    [Tooltip("Thời gian hiển thị mỗi dòng thoughts (giây)")]
-    public float thoughtDisplayDuration = 3f;
-
-    [Tooltip("Thời gian fade in/out")]
-    public float thoughtFadeDuration = 0.5f;
-
-    [Header("Reward Settings")]
-    [Tooltip("GameObject chìa khóa (hoặc vật phẩm bất kỳ) sẽ xuất hiện sau khi hoàn thành")]
-    public GameObject rewardObject;
-
-    [Tooltip("Hiển thị thông báo về chìa khóa sau khi hoàn thành?")]
-    public bool showKeyNotice = true;
-
-    [Tooltip("Nội dung thông báo về chìa khóa")]
-    public string keyNoticeMessage = "Có gì đó đã xuất hiện trong phòng...";
-
-    [Tooltip("Delay (giây) trước khi hiện thông báo chìa khóa")]
-    public float keyNoticeDelay = 1f;
-
     private bool isPuzzleActive = false;
     private int foundCount = 0;
     private bool isPuzzleCompleted = false;
     private PaintingViewerUI paintingViewer;
-    private bool isShowingThoughts = false;
 
     void Start()
     {
@@ -87,34 +59,6 @@ public class DifferencePuzzleManager : MonoBehaviour
         if (allSpots.Count == 0)
         {
             Debug.LogWarning("⚠️ Không tìm thấy DifferenceSpot nào! Hãy tạo các button với DifferenceSpot script.");
-        }
-
-        // Check thoughtsText
-        if (thoughtsText == null)
-        {
-            Debug.LogWarning("⚠️ thoughtsText chưa được gán! Thoughts sẽ không hiển thị.");
-        }
-        else
-        {
-            // Ẩn thoughts text ban đầu
-            thoughtsText.text = "";
-            CanvasGroup cg = thoughtsText.GetComponent<CanvasGroup>();
-            if (cg == null)
-            {
-                cg = thoughtsText.gameObject.AddComponent<CanvasGroup>();
-            }
-            cg.alpha = 0f;
-        }
-
-        // Ẩn reward object ban đầu
-        if (rewardObject != null)
-        {
-            rewardObject.SetActive(false);
-            Debug.Log("✅ Reward object hidden initially");
-        }
-        else
-        {
-            Debug.LogWarning("⚠️ Reward object (chìa khóa) chưa được gán!");
         }
 
         UpdateProgressUI();
@@ -250,228 +194,30 @@ public class DifferencePuzzleManager : MonoBehaviour
 
         Debug.Log("🎉 ĐÃ HOÀN THÀNH PUZZLE - TÌM HẾT ĐIỂM KHÁC NHAU!");
 
-        // Disable tất cả spots (nhưng GIỮ circle markers visible)
+        // Disable tất cả spots
         DisableAllSpots();
 
-        // Hiển thị thông báo hoàn thành (không dùng ký tự đặc biệt)
+        // Hiển thị thông báo hoàn thành
         if (TextManager.Instance != null)
         {
-            TextManager.Instance.ShowNotice("Đã tìm thấy tất cả điểm khác nhau!", 3f);
+            TextManager.Instance.ShowNotice("✓ Đã tìm thấy tất cả điểm khác nhau!", 3f);
         }
 
-        // Hiển thị thoughts TRONG viewer sau 1.5 giây
-        if (showCompletionThoughts && completionThoughts.Length > 0)
+        // Hiển thị monologue sau 1 giây
+        if (showCompletionMonologue && completionMonologue.Length > 0)
         {
-            StartCoroutine(ShowThoughtsSequenceDelayed(1.5f));
+            Invoke("ShowCompletionMonologue", 1.5f);
         }
-        else
-        {
-            // Nếu không có thoughts, thực hiện hành động kết thúc ngay
-            Invoke("OnThoughtsComplete", 1.5f);
-        }
+
+        // TODO: Unlock điều gì đó hoặc trigger event tiếp theo
     }
 
-    /// <summary>
-    /// Coroutine: Delay trước khi hiển thị thoughts
-    /// </summary>
-    IEnumerator ShowThoughtsSequenceDelayed(float delay)
+    void ShowCompletionMonologue()
     {
-        yield return new WaitForSeconds(delay);
-        StartCoroutine(ShowThoughtsSequence());
-    }
-
-    /// <summary>
-    /// Hiển thị chuỗi thoughts TRONG viewer (giống first-time thoughts)
-    /// </summary>
-    IEnumerator ShowThoughtsSequence()
-    {
-        if (thoughtsText == null)
+        if (CharacterMonologue.Instance != null)
         {
-            Debug.LogWarning("⚠️ thoughtsText is null, skipping thoughts display");
-            OnThoughtsComplete();
-            yield break;
+            CharacterMonologue.Instance.ShowMonologueWithCallback(completionMonologue, null);
         }
-
-        isShowingThoughts = true;
-        Debug.Log("📖 Bắt đầu hiển thị completion thoughts trong viewer");
-
-        CanvasGroup cg = thoughtsText.GetComponent<CanvasGroup>();
-        if (cg == null)
-        {
-            cg = thoughtsText.gameObject.AddComponent<CanvasGroup>();
-        }
-
-        foreach (string thought in completionThoughts)
-        {
-            // Fade in
-            thoughtsText.text = thought;
-            yield return StartCoroutine(FadeCanvasGroup(cg, 0f, 1f, thoughtFadeDuration));
-
-            // Hold
-            yield return new WaitForSeconds(thoughtDisplayDuration);
-
-            // Fade out
-            yield return StartCoroutine(FadeCanvasGroup(cg, 1f, 0f, thoughtFadeDuration));
-
-            // Clear text
-            thoughtsText.text = "";
-
-            // Brief pause between thoughts
-            yield return new WaitForSeconds(0.3f);
-        }
-
-        isShowingThoughts = false;
-        Debug.Log("✅ Hoàn thành hiển thị thoughts");
-
-        // Sau khi thoughts xong, trigger hành động kết thúc
-        OnThoughtsComplete();
-    }
-
-    /// <summary>
-    /// Fade CanvasGroup helper
-    /// </summary>
-    IEnumerator FadeCanvasGroup(CanvasGroup cg, float startAlpha, float endAlpha, float duration)
-    {
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            cg.alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / duration);
-            yield return null;
-        }
-
-        cg.alpha = endAlpha;
-    }
-
-    /// <summary>
-    /// CALLBACK: Được gọi SAU KHI thoughts hoàn thành
-    /// </summary>
-    void OnThoughtsComplete()
-    {
-        Debug.Log("🎬 Thoughts hoàn thành - Bắt đầu hành động kết thúc!");
-
-        // 1. Ẩn tất cả circle markers
-        HideAllCircleMarkers();
-
-        // 2. Hiện chìa khóa
-        RevealRewardObject();
-
-        // 3. Hiển thị thông báo về chìa khóa (sau delay)
-        if (showKeyNotice && !string.IsNullOrEmpty(keyNoticeMessage))
-        {
-            Invoke("ShowKeyNotice", keyNoticeDelay);
-        }
-    }
-
-    /// <summary>
-    /// Ẩn tất cả circle markers (SAU thoughts)
-    /// </summary>
-    void HideAllCircleMarkers()
-    {
-        Debug.Log("👁️ Ẩn tất cả circle markers...");
-
-        foreach (DifferenceSpot spot in allSpots)
-        {
-            if (spot != null && spot.circleMarker != null)
-            {
-                // Fade out animation (optional)
-                StartCoroutine(FadeOutMarker(spot.circleMarker));
-            }
-        }
-    }
-
-    /// <summary>
-    /// Fade out animation cho circle marker
-    /// </summary>
-    IEnumerator FadeOutMarker(GameObject marker)
-    {
-        CanvasGroup canvasGroup = marker.GetComponent<CanvasGroup>();
-
-        // Thêm CanvasGroup nếu chưa có
-        if (canvasGroup == null)
-        {
-            canvasGroup = marker.AddComponent<CanvasGroup>();
-        }
-
-        float duration = 0.5f;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
-            yield return null;
-        }
-
-        // Ẩn hoàn toàn sau khi fade xong
-        marker.SetActive(false);
-        canvasGroup.alpha = 1f; // Reset cho lần sau (nếu cần)
-    }
-
-    /// <summary>
-    /// Hiện chìa khóa (hoặc reward object)
-    /// </summary>
-    void RevealRewardObject()
-    {
-        if (rewardObject == null)
-        {
-            Debug.LogWarning("⚠️ Reward object không được gán, bỏ qua!");
-            return;
-        }
-
-        Debug.Log("🔑 Hiện chìa khóa!");
-
-        // Hiện object
-        rewardObject.SetActive(true);
-
-        // Optional: Thêm effect hiện lên (scale animation, particle, etc.)
-        StartCoroutine(ScaleInRewardObject());
-    }
-
-    /// <summary>
-    /// Scale animation khi chìa khóa xuất hiện
-    /// </summary>
-    IEnumerator ScaleInRewardObject()
-    {
-        if (rewardObject == null) yield break;
-
-        Transform rewardTransform = rewardObject.transform;
-        Vector3 originalScale = rewardTransform.localScale;
-        Vector3 startScale = Vector3.zero;
-
-        rewardTransform.localScale = startScale;
-
-        float duration = 0.5f;
-        float elapsed = 0f;
-
-        // Scale up từ 0 → original
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-
-            // Ease out elastic effect
-            float scale = Mathf.Sin(t * Mathf.PI * 0.5f);
-            rewardTransform.localScale = Vector3.Lerp(startScale, originalScale, scale);
-
-            yield return null;
-        }
-
-        rewardTransform.localScale = originalScale;
-    }
-
-    /// <summary>
-    /// Hiển thị thông báo về chìa khóa
-    /// </summary>
-    void ShowKeyNotice()
-    {
-        if (TextManager.Instance != null)
-        {
-            TextManager.Instance.ShowNotice(keyNoticeMessage, 3f);
-        }
-
-        Debug.Log($"💬 {keyNoticeMessage}");
     }
 
     /// <summary>
@@ -572,14 +318,6 @@ public class DifferencePuzzleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Check xem đang hiển thị thoughts không (PUBLIC)
-    /// </summary>
-    public bool IsShowingThoughts()
-    {
-        return isShowingThoughts;
-    }
-
-    /// <summary>
     /// Reset puzzle (dùng khi chơi lại)
     /// </summary>
     public void ResetPuzzle()
@@ -587,30 +325,12 @@ public class DifferencePuzzleManager : MonoBehaviour
         foundCount = 0;
         isPuzzleCompleted = false;
         isPuzzleActive = false;
-        isShowingThoughts = false;
 
         foreach (DifferenceSpot spot in allSpots)
         {
             if (spot != null)
             {
                 spot.ResetSpot();
-            }
-        }
-
-        // Ẩn reward object
-        if (rewardObject != null)
-        {
-            rewardObject.SetActive(false);
-        }
-
-        // Clear thoughts text
-        if (thoughtsText != null)
-        {
-            thoughtsText.text = "";
-            CanvasGroup cg = thoughtsText.GetComponent<CanvasGroup>();
-            if (cg != null)
-            {
-                cg.alpha = 0f;
             }
         }
 
