@@ -5213,6 +5213,7 @@ MonoBehaviour:
   shakeTarget: {fileID: 1366827922}
   shakeDuration: 0.5
   shakeIntensity: 10
+  interactPrompt: "[E] Nh\u1EADp m\u1EADt kh\u1EA9u k\xE9t s\u1EAFt"
 --- !u!1 &1494926608
 GameObject:
   m_ObjectHideFlags: 0
@@ -6717,7 +6718,7 @@ MonoBehaviour:
   trainOffset: {x: 0, y: 2, z: 0}
   videoPlayer: {fileID: 927722044}
   videoDisplay: {fileID: 497790626}
-  videoClip: {fileID: 32900000, guid: a698e968c44d5d8478e3a3a8c16cef1c, type: 3}
+  videoClip: {fileID: 32900000, guid: 181bdeaef2643e249ad16809f45fb08d, type: 3}
   nextSceneName: MainMenu
 --- !u!4 &2021157246 stripped
 Transform:
