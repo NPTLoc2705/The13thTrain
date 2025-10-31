@@ -16,6 +16,9 @@ public class PuzzleManager : MonoBehaviour
     [Tooltip("ID vật phẩm nếu cấp trực tiếp")]
     public string rewardPickupItemId;
 
+    [Tooltip("Tham chiếu đến PickupItem component trên rewardObject (để auto-collect)")]
+    public PickupItem rewardPickupItem;
+
     private bool puzzleCompleted = false;
 
     void Awake()
@@ -53,16 +56,50 @@ public class PuzzleManager : MonoBehaviour
     {
         Debug.Log("✅ Puzzle completed!");
 
-        if (rewardObject != null && !grantDirectly)
+        // AUTO-COLLECT logic (like RadioPuzzle)
+        if (grantDirectly && rewardPickupItem != null && PickupManager.Instance != null)
+        {
+            // Mark as collected immediately
+            rewardPickupItem.isCollected = true;
+
+            // Add to PickupManager's collected list
+            if (!PickupManager.Instance.collectedItemIDs.Contains(rewardPickupItem.itemID))
+            {
+                PickupManager.Instance.collectedItemIDs.Add(rewardPickupItem.itemID);
+            }
+
+            // Play pickup sound if available
+            if (rewardPickupItem.pickupSound != null)
+            {
+                AudioSource.PlayClipAtPoint(
+                    rewardPickupItem.pickupSound,
+                    Camera.main.transform.position,
+                    rewardPickupItem.soundVolume
+                );
+            }
+
+            // Show collection message
+            if (TextManager.Instance != null)
+            {
+                TextManager.Instance.ShowNotice("Bạn đã nhận được 1 mảnh giấy!", 3f);
+            }
+
+            // Check if all pieces collected (trigger letter UI)
+            if (PickupManager.Instance.collectedItemIDs.Count == 5)
+            {
+                if (LetterUIController.Instance != null)
+                {
+                    LetterUIController.Instance.ShowLetterUI();
+                }
+            }
+
+            Debug.Log($"[PuzzleManager] Auto-collected: {rewardPickupItem.itemID} ({PickupManager.Instance.collectedItemIDs.Count}/5)");
+        }
+        // Original logic: Show reward object on map
+        else if (rewardObject != null && !grantDirectly)
         {
             rewardObject.SetActive(true);
             Debug.Log("🎁 Đã bật vật phẩm phần thưởng trên bản đồ.");
-        }
-
-        if (grantDirectly && !string.IsNullOrEmpty(rewardPickupItemId))
-        {
-            Debug.Log($"🎉 Granting reward directly: {rewardPickupItemId}");
-            // PickupManager.Instance.AddItemById(rewardPickupItemId);
         }
 
         // Có thể gọi UI hiển thị thông báo:

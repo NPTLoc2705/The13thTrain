@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.22264141, g: 0.21970086, b: 0.21970086, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -331,7 +331,7 @@ RectTransform:
   m_GameObject: {fileID: 65873353}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1630812372}
@@ -339,8 +339,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 14.3, y: 65.87}
-  m_SizeDelta: {x: 400.95, y: 200}
+  m_AnchoredPosition: {x: 14.3, y: 295}
+  m_SizeDelta: {x: 401.1, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &65873355
 MonoBehaviour:
@@ -489,6 +489,10 @@ PrefabInstance:
     - target: {fileID: 8307918109229613942, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_Name
       value: Piece1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307918109229613942, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8307918109229613942, guid: b028bdce4ed1d384d87bacb216f82d50, type: 3}
       propertyPath: m_TagString
@@ -953,7 +957,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 300}
+  m_SizeDelta: {x: 2000, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &171774685
 MonoBehaviour:
@@ -2425,16 +2429,28 @@ MonoBehaviour:
   correctOrder: 0100000002000000030000000400000005000000
   resetDelay: 0.6
   motherMessages:
-  - "Con \xE0... Ng\xE0y con ch\xE0o \u0111\u1EDDi, m\u1EB9 \u0111\xE3 h\u1EE9a s\u1EBD
-    b\u1EA3o v\u1EC7 con."
-  - "Con c\xF2n nh\u1EDB kh\xF4ng... m\u1EB9 t\u1EEBng t\u1EAFm cho con, nh\u1EEFng
-    ti\u1EBFng c\u01B0\u1EDDi nh\u01B0 m\u1EB7t tr\u1EDDi nh\u1ECF c\u1EE7a m\u1EB9."
-  - "Nh\u1EEFng b\u1EEFa c\u01A1m nhi\u1EC1u khi v\u1EAFng, m\u1EB9 lu\xF4n lo con
-    c\xF3 \u0103n \u0111\u1EE7 kh\xF4ng."
-  - "M\u1EB9 xin l\u1ED7i v\xEC \u0111\xE3 kh\xF4ng th\u1EC3 m\u1EA1nh kh\u1ECFe
-    h\u01A1n \u0111\u1EC3 \u1EDF b\xEAn con l\xE2u h\u01A1n."
-  - "D\xF9 m\u1EB9 kh\xF4ng c\xF2n \u1EDF \u0111\xE2y... \xE1nh s\xE1ng n\xE0y s\u1EBD
-    lu\xF4n d\u1EABn \u0111\u01B0\u1EDDng cho con. M\u1EB9 y\xEAu con."
+  - "Con trai \xE0... Ng\xE0y con ch\xE0o \u0111\u1EDDi, m\u1EB9 \u0111\xE3 h\u1EE9a
+    s\u1EBD lu\xF4n b\u1EA3o v\u1EC7 con. M\u1EB9 v\u1EABn nh\u1EDB n\u1EE5 c\u01B0\u1EDDi
+    c\u1EE7a con \u2014 nh\u01B0 m\u1ED9t ng\u1ECDn \u0111\xE8n nh\u1ECF soi s\xE1ng
+    cu\u1ED9c \u0111\u1EDDi c\u1EE7a m\u1EB9 v\u1EADy. Con c\xF3 bi\u1EBFt kh\xF4ng,
+    con ch\xEDnh l\xE0 m\xF3n qu\xE0 tuy\u1EC7t v\u1EDDi nh\u1EA5t c\u1EE7a m\u1EB9
+    \u0111\xF3 "
+  - "Con c\xF2n nh\u1EDB kh\xF4ng, khi nh\u1EEFng l\u1EA7n m\u1EB9 t\u1EAFm cho con?
+    Ch\xFAng ta \u0111\xE3 c\xF9ng n\xF4 \u0111\xF9a, t\u1EA1o h\xECnh ki\u1EC3u
+    t\xF3c, c\u0169ng nh\u01B0 gi\u1ECDc n\u01B0\u1EDBc. L\xFAc \u1EA5y ti\u1EBFng
+    c\u01B0\u1EDDi c\u1EE7a con khi\u1EBFn tim m\u1EB9 \u1EA5m \xE1p nh\u01B0 gi\xF3
+    m\xF9a xu\xE2n v\u1EADy. Nh\u1EEFng kho\u1EA3nh kh\u1EAFc \u1EA5y m\u1EB9 mang
+    theo su\u1ED1t \u0111\u1EDDi. "
+  - " C\xF3 nh\u1EEFng ng\xE0y... m\u1EB9 th\u1EA5y qu\xE1 m\u1EC7t m\u1ECFi. M\u1EB9
+    lo r\u1EB1ng m\xECnh kh\xF4ng c\xF2n \u0111\u1EE7 s\u1EE9c \u0111\u1EC3 che ch\u1EDF
+    con nh\u01B0 tr\u01B0\u1EDBc. Nh\u01B0ng m\u1EB9 v\u1EABn c\u1ED1, v\xEC con. "
+  - "M\u1EB9... xin l\u1ED7i con. M\u1EB9 \u01B0\u1EDBc m\u1EB9 c\xF3 th\u1EC3 \u1EDF
+    b\xEAn con l\xE2u h\u01A1n, nh\u01B0ng m\u1EB9... v\xEC s\u1EE9c kh\u1ECFe c\u1EE7a
+    m\u1EB9 \u0111ang d\u1EA7n m\u1ED9t y\u1EBFu \u0111i. Mong con \u0111\u1EEBng
+    o\xE1n gi\u1EADn m\u1EB9... "
+  - "D\xF9 m\u1EB9 kh\xF4ng c\xF2n b\xEAn con... M\u1EB9 v\u1EABn \u1EDF \u0111\xE2y,
+    trong \xE1nh s\xE1ng v\xE0 k\xFD \u1EE9c con mang theo. H\xE3y s\u1ED1ng m\u1EA1nh
+    m\u1EBD nh\xE9, con trai c\u1EE7a m\u1EB9. M\u1EB9 lu\xF4n y\xEAu con. "
   motherVoiceClips:
   - {fileID: 8300000, guid: 0b664d0cb483b1d478ff2bc4fd4b0ed0, type: 3}
   - {fileID: 8300000, guid: 7ff82500c21d12b4092999f3580f7279, type: 3}
@@ -2922,7 +2938,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1299.4, y: 1098.7}
+  m_SizeDelta: {x: 1300.12, y: 1571}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &780332245
 MonoBehaviour:
@@ -4529,8 +4545,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 94}
-  m_SizeDelta: {x: 400, y: 50}
+  m_AnchoredPosition: {x: -12, y: 410}
+  m_SizeDelta: {x: 1043.3, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1361814867
 CanvasRenderer:
@@ -4560,9 +4576,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Hello
-
-'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4571,7 +4585,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
+    rgba: 4293322470
   m_fontColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -4916,7 +4930,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1437318184
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4926,7 +4940,7 @@ RectTransform:
   m_GameObject: {fileID: 1437318183}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.8, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 702101013}
@@ -4934,8 +4948,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -78.77}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: -450.35}
+  m_SizeDelta: {x: 100, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1437318185
 MonoBehaviour:
@@ -5062,7 +5076,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 762473399586453277, guid: f2c0467b0a671da478c71e966c378df6, type: 3}
   m_PrefabInstance: {fileID: 2132036165}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2132036166}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd6974dd3653172479fda37c451d4889, type: 3}
@@ -5609,8 +5623,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7.25, y: -168.3}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 42.5, y: -323.4}
+  m_SizeDelta: {x: 100, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1630812373
 MonoBehaviour:
@@ -6037,8 +6051,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 198}
-  m_SizeDelta: {x: 400, y: 50}
+  m_AnchoredPosition: {x: 8, y: 305}
+  m_SizeDelta: {x: 1043.3, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1683113201
 GameObject:
@@ -6469,7 +6483,19 @@ PrefabInstance:
     - target: {fileID: 2688363418386048711, guid: 19db6da5dcb6159439ee26c8261e69e5, type: 3}
       propertyPath: rewardObject
       value: 
-      objectReference: {fileID: 2132036166}
+      objectReference: {fileID: 1459130523}
+    - target: {fileID: 2688363418386048711, guid: 19db6da5dcb6159439ee26c8261e69e5, type: 3}
+      propertyPath: grantDirectly
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2688363418386048711, guid: 19db6da5dcb6159439ee26c8261e69e5, type: 3}
+      propertyPath: rewardPickupItem
+      value: 
+      objectReference: {fileID: 1459130528}
+    - target: {fileID: 2688363418386048711, guid: 19db6da5dcb6159439ee26c8261e69e5, type: 3}
+      propertyPath: rewardPickupItemId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3139026924199729075, guid: 19db6da5dcb6159439ee26c8261e69e5, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 382
@@ -7265,11 +7291,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2c0467b0a671da478c71e966c378df6, type: 3}
---- !u!1 &2132036166 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4141254815832409681, guid: f2c0467b0a671da478c71e966c378df6, type: 3}
-  m_PrefabInstance: {fileID: 2132036165}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2145193824
 PrefabInstance:
   m_ObjectHideFlags: 0

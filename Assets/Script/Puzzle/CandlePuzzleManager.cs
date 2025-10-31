@@ -17,14 +17,14 @@ public class CandlePuzzleManager : MonoBehaviour
 
     [Header("Narrative Messages (shown each correct step)")]
     [Tooltip("One message per step (position in the sequence). These display when player lights the next correct candle.")]
-    [TextArea(2,6)]
+    [TextArea(2, 6)]
     public string[] motherMessages = new string[5]
     {
-        "Con à... Ngày con chào đời, mẹ đã hứa sẽ bảo vệ con.",
-        "Con còn nhớ không... mẹ từng tắm cho con, những tiếng cười như mặt trời nhỏ của mẹ.",
-        "Những bữa cơm nhiều khi vắng, mẹ luôn lo con có ăn đủ không.",
-        "Mẹ xin lỗi vì đã không thể mạnh khỏe hơn để ở bên con lâu hơn.",
-        "Dù mẹ không còn ở đây... ánh sáng này sẽ luôn dẫn đường cho con. Mẹ yêu con."
+        "Con trai à ... Ngày con chào đời, mẹ đã hứa sẽ luôn bảo vệ con. Mẹ vẫn nhớ nụ cười của con – như một ngọn đèn nhỏ soi sáng cuộc đời của mẹ vậy. Con có biết không, con chính là món quà tuyệt vời nhất của mẹ đó ",
+        "Con còn nhớ không, khi những lần mẹ tắm cho con? Chúng ta đã cùng nô đùa, tạo hình kiểu tóc, cũng như giọc nước. Lúc ấy tiếng cười của con khiến tim mẹ ấm áp như gió mùa xuân vậy. Những khoảnh khắc ấy mẹ mang theo suốt đời. ",
+        " Có những ngày... mẹ thấy quá mệt mỏi. Mẹ lo rằng mình không còn đủ sức để che chở con như trước. Nhưng mẹ vẫn cố, vì con. ",
+        "Mẹ... xin lỗi con. Mẹ ước mẹ có thể ở bên con lâu hơn, nhưng mẹ... vì sức khỏe của mẹ đang dần một yếu đi. Mong con đừng oán giận mẹ... ",
+        "Dù mẹ không còn bên con... Mẹ vẫn ở đây, trong ánh sáng và ký ức con mang theo. Hãy sống mạnh mẽ nhé, con trai của mẹ. Mẹ luôn yêu con. "
     };
 
     [Tooltip("Optional voice clips to play with each message (same length as motherMessages). Leave empty if not using voice.")]
@@ -35,7 +35,7 @@ public class CandlePuzzleManager : MonoBehaviour
 
     [Header("Reveal")]
     [Tooltip("The torn piece PickupItem to reveal when solved. Keep it inactive at start.")]
-    public PickupItem tornPiece; // drop your TornPiece2 root here (should be inactive)
+    public PickupItem tornPiece;
     public AudioClip successClip;
     public AudioSource sfxSource;
 
@@ -46,7 +46,24 @@ public class CandlePuzzleManager : MonoBehaviour
 
     // message handling
     private Coroutine messageCoroutine = null;
-    private AudioSource voiceSource; // used to play mother voice clips (created if null)
+    private AudioSource voiceSource;
+    private Queue<MessageData> messageQueue = new Queue<MessageData>(); // ✅ Queue for pending messages
+    private bool isPlayingMessage = false; // ✅ Track if currently playing a message
+
+    // Helper struct to store message data
+    private struct MessageData
+    {
+        public string message;
+        public AudioClip voiceClip;
+        public bool isFinalStep;
+
+        public MessageData(string msg, AudioClip clip, bool final)
+        {
+            message = msg;
+            voiceClip = clip;
+            isFinalStep = final;
+        }
+    }
 
     void Start()
     {
@@ -54,7 +71,6 @@ public class CandlePuzzleManager : MonoBehaviour
         if (candles.Count == 0)
         {
             candles.AddRange(FindObjectsOfType<Candle>());
-            Debug.Log($"[CandleManager] Auto-found {candles.Count} Candle(s).");
         }
 
         // Ensure the torn piece starts disabled
@@ -72,7 +88,7 @@ public class CandlePuzzleManager : MonoBehaviour
             }
         }
 
-        // Create a dedicated voiceSource for mother voice clips if any are assigned
+        // Create a dedicated voiceSource for mother voice clips
         bool hasVoice = false;
         if (motherVoiceClips != null)
         {
@@ -96,20 +112,8 @@ public class CandlePuzzleManager : MonoBehaviour
             }
             voiceSource.spatialBlend = 0f; // 2D voice
             voiceSource.volume = 1f;
-            Debug.Log("[CandleManager] voiceSource created and ready. Clips assigned: " + CountNonNullClips());
+            Debug.Log("[CandleManager] Voice source ready");
         }
-        else
-        {
-            Debug.Log("[CandleManager] No voice clips found in motherVoiceClips array. Will use text-only messages.");
-        }
-    }
-
-    int CountNonNullClips()
-    {
-        if (motherVoiceClips == null) return 0;
-        int c = 0;
-        foreach (var clip in motherVoiceClips) if (clip != null) c++;
-        return c;
     }
 
     /// <summary>
@@ -121,7 +125,7 @@ public class CandlePuzzleManager : MonoBehaviour
 
         playerSequence.Add(index);
 
-        // cancel any pending reset coroutine (we'll decide reset only when necessary)
+        // cancel any pending reset coroutine
         if (resetCoroutine != null)
         {
             StopCoroutine(resetCoroutine);
@@ -135,15 +139,14 @@ public class CandlePuzzleManager : MonoBehaviour
         {
             if (playerSequence[pos] != correctOrder[pos])
             {
-                // Wrong candle -> start reset coroutine
-                // Stop any message that might be showing
-                StopCurrentMessage();
+                // Wrong candle -> reset immediately and stop all messages
+                ForceStopAllMessages();
                 resetCoroutine = StartCoroutine(ResetAfterDelay(resetDelay));
                 return;
             }
             else
             {
-                // Correct step: show the associated mother message (pos = step index)
+                // Correct step: queue the message
                 bool isFinalStep = (pos == correctOrder.Count - 1);
                 Debug.Log($"[CandleManager] Correct candle at step {pos}. isFinalStep={isFinalStep}");
                 StartMotherMessageForStep(pos, isFinalStep);
@@ -153,9 +156,6 @@ public class CandlePuzzleManager : MonoBehaviour
 
     private void StartMotherMessageForStep(int stepIndex, bool isFinalStep)
     {
-        // stop existing message coroutine and voice
-        StopCurrentMessage();
-
         string msg = null;
         AudioClip clip = null;
 
@@ -165,41 +165,81 @@ public class CandlePuzzleManager : MonoBehaviour
         if (motherVoiceClips != null && motherVoiceClips.Length > stepIndex)
             clip = motherVoiceClips[stepIndex];
 
-        Debug.Log($"[CandleManager] Step {stepIndex}: message present? {(!string.IsNullOrEmpty(msg))}, voiceClip present? {(clip != null)}, isFinal={isFinalStep}");
+        // ✅ Add message to queue
+        MessageData data = new MessageData(msg, clip, isFinalStep);
+        messageQueue.Enqueue(data);
+        Debug.Log($"[CandleManager] Message queued for step {stepIndex}. Queue size: {messageQueue.Count}");
 
-        // Start coroutine to show text + voice (if available)
-        messageCoroutine = StartCoroutine(ShowMotherMessageCoroutine(msg, clip, isFinalStep));
+        // ✅ If not currently playing, start playing from queue
+        if (!isPlayingMessage)
+        {
+            StartCoroutine(ProcessMessageQueue());
+        }
+    }
+
+    /// <summary>
+    /// ✅ Process messages from queue one by one, waiting for each to complete
+    /// </summary>
+    private IEnumerator ProcessMessageQueue()
+    {
+        isPlayingMessage = true;
+
+        while (messageQueue.Count > 0)
+        {
+            MessageData data = messageQueue.Dequeue();
+            Debug.Log($"[CandleManager] Playing message. Remaining in queue: {messageQueue.Count}");
+
+            // Play this message and wait for it to complete
+            yield return StartCoroutine(ShowMotherMessageCoroutine(data.message, data.voiceClip, data.isFinalStep));
+
+            // Small delay between messages for better pacing
+            if (messageQueue.Count > 0)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+
+        isPlayingMessage = false;
+        Debug.Log("[CandleManager] All messages played");
     }
 
     private IEnumerator ShowMotherMessageCoroutine(string message, AudioClip voiceClip, bool isFinalStep)
     {
-        // Show text (prefer ShowNotice for readable time)
-        if (!string.IsNullOrEmpty(message) && TextManager.Instance != null)
+        // ✅ Calculate display duration: use audio length if available, otherwise use default
+        float displayDuration = messageDisplayTime;
+        if (voiceClip != null)
         {
-            TextManager.Instance.ShowNotice(message, messageDisplayTime);
-            Debug.Log("[CandleManager] Showing text: " + message);
+            displayDuration = voiceClip.length;
+            Debug.Log($"[CandleManager] Using audio clip length: {displayDuration}s");
+        }
+        else
+        {
+            Debug.Log($"[CandleManager] No audio clip, using default displayTime: {displayDuration}s");
         }
 
-        // Play voice if provided
+        // ✅ Show text with calculated duration (text will stay for the full audio length)
+        if (!string.IsNullOrEmpty(message) && TextManager.Instance != null)
+        {
+            TextManager.Instance.ShowNotice(message, displayDuration);
+            Debug.Log($"[CandleManager] Showing text for {displayDuration}s");
+        }
+
+        // ✅ Play voice if provided (starts at the same time as text)
         if (voiceClip != null && voiceSource != null)
         {
             voiceSource.clip = voiceClip;
             voiceSource.Play();
-            Debug.Log("[CandleManager] Playing voiceClip via voiceSource: " + voiceClip.name);
-            // wait until voice finished (or messageDisplayTime if no voice)
-            yield return new WaitForSeconds(voiceClip.length);
-        }
-        else
-        {
-            // no voice clip – wait displayTime
-            yield return new WaitForSeconds(messageDisplayTime);
+            Debug.Log("[CandleManager] Playing voiceClip: " + voiceClip.name);
         }
 
-        // After message ends, hide prompt/notice if still visible
+        // ✅ Wait for the full duration (audio length or default time)
+        yield return new WaitForSeconds(displayDuration);
+
+        // After duration ends, hide prompt/notice
         if (TextManager.Instance != null)
             TextManager.Instance.HidePrompt();
 
-        messageCoroutine = null;
+        Debug.Log("[CandleManager] Message completed");
 
         // If this was the final step, call solve now (after message finishes)
         if (isFinalStep)
@@ -209,23 +249,33 @@ public class CandlePuzzleManager : MonoBehaviour
         }
     }
 
-    private void StopCurrentMessage()
+    /// <summary>
+    /// ✅ Only used when wrong candle is lit - forcefully stops everything
+    /// </summary>
+    private void ForceStopAllMessages()
     {
+        // Clear the queue
+        messageQueue.Clear();
+        isPlayingMessage = false;
+
+        // Stop any running message coroutine
         if (messageCoroutine != null)
         {
             StopCoroutine(messageCoroutine);
             messageCoroutine = null;
-            Debug.Log("[CandleManager] Stopped message coroutine.");
         }
 
+        // Stop voice playback
         if (voiceSource != null && voiceSource.isPlaying)
         {
             voiceSource.Stop();
-            Debug.Log("[CandleManager] Stopped voiceSource playback.");
         }
 
+        // Hide text
         if (TextManager.Instance != null)
             TextManager.Instance.HidePrompt();
+
+        Debug.Log("[CandleManager] Force stopped all messages and cleared queue");
     }
 
     private IEnumerator ResetAfterDelay(float delay)
@@ -235,16 +285,12 @@ public class CandlePuzzleManager : MonoBehaviour
         playerSequence.Clear();
         resetCoroutine = null;
 
-        // Stop any currently playing message/voice
-        StopCurrentMessage();
-
         if (CharacterMonologue.Instance != null)
         {
             CharacterMonologue.Instance.ShowCandleWrongOrderMonologue();
         }
         else if (TextManager.Instance != null)
         {
-            // Fallback if monologue system not available
             TextManager.Instance.ShowNotice("Thứ tự không đúng. Các ngọn nến tắt hết.", 2f);
         }
     }
@@ -262,34 +308,27 @@ public class CandlePuzzleManager : MonoBehaviour
         if (solved) return;
         solved = true;
 
-        // Stop any message/voice
-        StopCurrentMessage();
-
         // Play success fx
         if (sfxSource != null && successClip != null)
         {
             sfxSource.PlayOneShot(successClip);
         }
 
-        // AUTO-COLLECT the torn piece instead of just revealing it
+        // AUTO-COLLECT the torn piece
         if (tornPiece != null && PickupManager.Instance != null)
         {
-            // Mark as collected immediately
             tornPiece.isCollected = true;
-            
-            // Add to PickupManager's collected list
+
             if (!PickupManager.Instance.collectedItemIDs.Contains(tornPiece.itemID))
             {
                 PickupManager.Instance.collectedItemIDs.Add(tornPiece.itemID);
             }
 
-            // Play pickup sound if available
             if (tornPiece.pickupSound != null)
             {
                 AudioSource.PlayClipAtPoint(tornPiece.pickupSound, Camera.main.transform.position, tornPiece.soundVolume);
             }
 
-            // Show collection message
             if (TextManager.Instance != null)
             {
                 TextManager.Instance.ShowNotice("Bạn đã nhận được 1 mảnh giấy!", 3f);
@@ -297,11 +336,10 @@ public class CandlePuzzleManager : MonoBehaviour
 
             if (CharacterMonologue.Instance != null)
             {
-                // Wait a bit for collection message, then show monologue
                 StartCoroutine(ShowCompletionMonologueAfterDelay(2.5f));
             }
 
-            // Check if all pieces collected (trigger letter UI)
+            // Check if all pieces collected
             if (PickupManager.Instance.collectedItemIDs.Count == 5)
             {
                 if (LetterUIController.Instance != null)
@@ -309,28 +347,24 @@ public class CandlePuzzleManager : MonoBehaviour
                     LetterUIController.Instance.ShowLetterUI();
                 }
             }
-
         }
+    }
 
-   }
-
-    // Optional helper to force-solve (editor/test)
     [ContextMenu("Force Solve")]
     public void ForceSolve()
     {
         playerSequence = new List<int>(correctOrder);
         OnPuzzleSolved();
     }
+
     private IEnumerator ShowCompletionMonologueAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
 
         if (CharacterMonologue.Instance != null)
         {
-            // Show monologue, then check for letter UI
             CharacterMonologue.Instance.ShowCandleCompletedMonologue(() =>
             {
-                // After monologue finishes, check if all pieces collected
                 if (PickupManager.Instance != null && PickupManager.Instance.collectedItemIDs.Count == 5)
                 {
                     if (LetterUIController.Instance != null)

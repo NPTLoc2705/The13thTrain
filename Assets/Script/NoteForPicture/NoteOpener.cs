@@ -1,24 +1,45 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class NoteOpener : MonoBehaviour
 {
     public NoteUI noteUI;
-    public float interactDistance = 2f;
-    private Transform player;
 
-    void Start()
+    [Header("Interaction Settings")]
+    public string interactPrompt = "[E] Đọc ghi chú";
+
+    [Header("Monologue Settings")]
+    public bool showMonologueBeforeOpen = true;
+    public string beforeOpenMonologue = "Tại sao lại có mảnh giấy này ở đây... Mình nên đọc nó.";
+
+    // Public method to check if can interact
+    public bool CanInteract()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        return noteUI != null && !noteUI.IsOpen();
     }
 
-    void Update()
+    // Public method to get prompt
+    public string GetPromptMessage()
     {
-        if (player == null || noteUI == null) return;
+        return interactPrompt;
+    }
 
-        float distance = Vector3.Distance(player.position, transform.position);
-        if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E))
+    // Public method called by PlayerController
+    public void Interact()
+    {
+        if (noteUI == null) return;
+
+        if (showMonologueBeforeOpen && CharacterMonologue.Instance != null)
+        {
+            CharacterMonologue.Instance.ShowMonologueWithCallback(
+                beforeOpenMonologue,
+                () => noteUI.OpenNote()
+            );
+            Debug.Log("[NoteOpener] Showing monologue before opening note");
+        }
+        else
         {
             noteUI.OpenNote();
+            Debug.Log("[NoteOpener] Opening note directly");
         }
     }
 }

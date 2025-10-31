@@ -20,10 +20,13 @@ public class NoteUI : MonoBehaviour
 
     void Awake()
     {
-        // Ẩn Canvas ngay khi khởi tạo (trước khi AudioSource kịp phát)
-        canvasGroup.alpha = 0f;
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
+        // Hide Canvas immediately when created
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = 0f;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+        }
     }
 
     void Start()
@@ -36,48 +39,94 @@ public class NoteUI : MonoBehaviour
     {
         if (!isOpen) return;
 
-        if (Input.GetKeyDown(KeyCode.A))
+        // Navigation keys
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
             PrevPage();
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
             NextPage();
+
+        // ✅ CRITICAL FIX: Consume ESC input completely
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
             CloseNote();
+
+            // CONSUME the input so other scripts don't see it
+            Input.ResetInputAxes(); // This helps but isn't perfect for GetKeyDown
+
+            return;
+        }
     }
 
     public void OpenNote()
     {
-        if (isOpen) return;
+        if (isOpen)
+        {
+            Debug.Log("[NoteUI] OpenNote() called but already open!");
+            return;
+        }
 
         isOpen = true;
         currentPage = 0;
         UpdatePage();
 
-        canvasGroup.alpha = 1f;
-        canvasGroup.interactable = true;
-        canvasGroup.blocksRaycasts = true;
+        // Show UI
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = 1f;
+            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
+        }
+        else
+        {
+        }
 
+        // Lock player movement
+        PlayerController pc = FindObjectOfType<PlayerController>();
+        if (pc != null)
+        {
+            pc.SetMovementLocked(true);
+        }
+      
+
+        // Show cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        Time.timeScale = 0f;
 
         PlayPageSound();
     }
 
     public void CloseNote()
     {
+        if (!isOpen)
+        {
+            return;
+        }
+
         isOpen = false;
 
-        canvasGroup.alpha = 0f;
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
+        // Hide UI
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = 0f;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
+        }
 
+        // Unlock player movement
+        PlayerController pc = FindObjectOfType<PlayerController>();
+        if (pc != null)
+        {
+            pc.SetMovementLocked(false);
+        }
+
+        // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        Time.timeScale = 1f;
 
-        // ⚠️ KHÔNG phát âm thanh khi chỉ mới khởi động
+        // Play sound (but not when game just started)
         if (Time.timeSinceLevelLoad > 0.5f)
             PlayPageSound();
+
     }
 
     void NextPage()
@@ -102,7 +151,10 @@ public class NoteUI : MonoBehaviour
 
     void UpdatePage()
     {
-        noteText.text = pages[currentPage];
+        if (noteText != null && pages != null && pages.Length > 0 && currentPage < pages.Length)
+        {
+            noteText.text = pages[currentPage];
+        }
     }
 
     void PlayPageSound()
@@ -111,5 +163,11 @@ public class NoteUI : MonoBehaviour
             audioSource.PlayOneShot(pageSound);
     }
 
-    public bool IsOpen() => isOpen;
+    /// <summary>
+    /// Check if note UI is currently open
+    /// </summary>
+    public bool IsOpen()
+    {
+        return isOpen;
+    }
 }

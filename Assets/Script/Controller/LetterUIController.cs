@@ -1,21 +1,23 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
 public class LetterUIController : MonoBehaviour
 {
-    public PickupManager pickupManager; // Drag the PickupManager GameObject here
-    public Transform modelViewerTransform; // Drag ModelViewer GameObject here
+    public PickupManager pickupManager;
+    public Transform modelViewerTransform;
 
     [Header("Prefab Settings")]
     [Tooltip("Either assign the prefab here OR place it in Resources/Prefabs/FullLetter")]
-    public GameObject fullLetterPrefab; // Drag FullPiece prefab here
-    public string prefabResourcePath = "Prefabs/FullLetter"; // Path in Resources folder
+    public GameObject fullLetterPrefab;
+    public string prefabResourcePath = "Prefabs/FullLetter";
 
-    public TextMeshProUGUI letterText; // Drag LetterText TMP Text component here
+    public TextMeshProUGUI letterText;
 
     private GameObject instantiatedLetter;
     private Canvas canvas;
+    private bool isClosing = false; // ✅ Track closing state to prevent pause menu
 
     // Static reference to access this instance
     public static LetterUIController Instance { get; private set; }
@@ -52,7 +54,6 @@ public class LetterUIController : MonoBehaviour
     // Called whenever a new scene is loaded
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-
         // Refresh references from the new scene
         RefreshReferences();
     }
@@ -66,10 +67,12 @@ public class LetterUIController : MonoBehaviour
 
     void Update()
     {
-        // Allow closing Letter UI with Escape key
-        if (IsOpen() && Input.GetKeyDown(KeyCode.Escape))
+        // ✅ Handle ESC key with proper timing to prevent pause menu
+        if (IsOpen() && Input.GetKeyDown(KeyCode.Escape) && !isClosing)
         {
-            CloseUI();
+            Debug.Log("[LetterUI] ESC pressed - starting close sequence");
+            isClosing = true;
+            StartCoroutine(CloseUIDelayed());
         }
     }
 
@@ -87,7 +90,7 @@ public class LetterUIController : MonoBehaviour
             pickupManager = PickupManager.Instance;
             if (pickupManager != null)
             {
-                Debug.Log(" PickupManager reference refreshed");
+                Debug.Log("[LetterUI] PickupManager reference refreshed");
             }
         }
 
@@ -99,16 +102,15 @@ public class LetterUIController : MonoBehaviour
             {
                 modelViewerTransform = modelViewer.transform;
             }
-           
         }
 
-        // Find LetterText in the current scene (it's likely a child of this GameObject)
+        // Find LetterText in the current scene
         if (letterText == null)
         {
             letterText = GetComponentInChildren<TextMeshProUGUI>();
             if (letterText != null)
             {
-                Debug.Log(" LetterText reference refreshed");
+                Debug.Log("[LetterUI] LetterText reference refreshed");
             }
         }
     }
@@ -132,17 +134,14 @@ public class LetterUIController : MonoBehaviour
     }
 
     /// <summary>
-    /// Check if the Letter UI is currently open
+    /// ✅ Check if the Letter UI is currently open (includes closing state for pause menu)
     /// </summary>
     public bool IsOpen()
     {
-        if (canvas != null)
-        {
-            return canvas.enabled;
-        }
-
-        // Fallback check
-        return gameObject.activeSelf;
+        // Return true if open OR in the process of closing
+        // This ensures PauseMenuController sees it as "active" during the close frame
+        bool canvasOpen = canvas != null && canvas.enabled;
+        return canvasOpen || isClosing;
     }
 
     public void ShowLetterUI()
@@ -152,11 +151,15 @@ public class LetterUIController : MonoBehaviour
 
         if (pickupManager == null)
         {
+            Debug.LogError("[LetterUI] PickupManager is null!");
             return;
         }
 
         if (pickupManager.collectedItemIDs.Count == 5) // Assuming 5 pieces
         {
+            Debug.Log("[LetterUI] ========== OPENING LETTER UI ==========");
+            isClosing = false;
+
             // Show the UI
             if (canvas != null)
             {
@@ -190,7 +193,7 @@ public class LetterUIController : MonoBehaviour
 
             if (fullLetterPrefab == null)
             {
-                Debug.LogError(" FullLetterPrefab is not assigned!");
+                Debug.LogError("[LetterUI] FullLetterPrefab is not assigned!");
                 return;
             }
 
@@ -208,24 +211,42 @@ public class LetterUIController : MonoBehaviour
             if (letterText != null)
             {
                 letterText.text = "Con trai yêu của mẹ,\r\n" +
-"If you're reading this, nghĩa là mẹ đã không thể tự mình nói với con được nữa.\r\n" +
-"Mẹ xin lỗi vì đã phải rời xa con quá sớm.\r\n\r\n" +
-"Bên trong két sắt có một món đồ — thứ sẽ giúp con tìm ra một vật đặc biệt, và cũng là bằng chứng rằng tình yêu không bao giờ phai nhạt… ngay cả khi mẹ đã không còn ở bên con.\r\n\r\n" +
-"Mật mã là 18082.\r\n" +
-"Hãy sử dụng nó thật khôn ngoan, và nhớ rằng… dù ở bất cứ đâu, mẹ vẫn luôn ở bên con";
-
+                    "Nếu con đọc được tờ giấy này, nghĩa là mẹ đã không thể tự mình nói với con được nữa.\r\n" +
+                    "Mẹ xin lỗi vì đã phải rời xa con quá sớm.\r\n" +
+                    "Bên trong két sắt có một món đồ — thứ sẽ giúp con tìm ra một vật đặc biệt, và cũng là bằng chứng rằng tình yêu không bao giờ phai nhạt… ngay cả khi mẹ đã không còn ở bên con.\r\n" +
+                    "Mật mã là 18082.\r\n" +
+                    "Hãy sử dụng nó thật khôn ngoan, và nhớ rằng… dù ở bất cứ đâu, mẹ vẫn luôn ở bên con";
             }
-           
+
+            // ✅ Lock player movement
+            PlayerController pc = FindObjectOfType<PlayerController>();
+            if (pc != null)
+            {
+                pc.SetMovementLocked(true);
+                Debug.Log("[LetterUI] Player movement LOCKED");
+            }
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-
         }
-      
+    }
+
+    /// <summary>
+    /// ✅ Delayed close to prevent pause menu from opening
+    /// </summary>
+    private IEnumerator CloseUIDelayed()
+    {
+        // Wait until end of frame so PauseMenuController can check IsOpen() first
+        yield return new WaitForEndOfFrame();
+
+        CloseUI();
+        isClosing = false;
     }
 
     public void CloseUI()
     {
+        Debug.Log("[LetterUI] ========== CLOSING LETTER UI ==========");
+
         if (instantiatedLetter != null)
         {
             Destroy(instantiatedLetter);
@@ -245,14 +266,29 @@ public class LetterUIController : MonoBehaviour
             }
         }
 
+        // ✅ CRITICAL: Stop any pending monologue to prevent wrong monologue from playing
+        if (CharacterMonologue.Instance != null)
+        {
+            // Force stop any queued monologue that might have been triggered
+            StopAllCoroutines(); // Stop our own coroutines
+            Debug.Log("[LetterUI] Stopped any pending monologues");
+        }
+
+        // ✅ Unlock player movement
+        PlayerController pc = FindObjectOfType<PlayerController>();
+        if (pc != null)
+        {
+            pc.SetMovementLocked(false);
+            Debug.Log("[LetterUI] Player movement UNLOCKED");
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         // Show "Find the safe" notice via TextManager
         if (TextManager.Instance != null)
         {
-            TextManager.Instance.ShowNotice("Find the safe", 3f);
+            TextManager.Instance.ShowNotice("Hãy tìm chiếc két sắt", 3f);
         }
-        
     }
 }

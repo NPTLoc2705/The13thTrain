@@ -78,16 +78,18 @@ public class PauseMenuController : MonoBehaviour
 
     void Update()
     {
-        // Toggle pause menu with Escape key
+        // ✅ CRITICAL: Check for interactions BEFORE processing ESC key
+        // This ensures we check the state BEFORE any interaction's Update() closes it
         if (Input.GetKeyDown(KeyCode.Escape) && canPause)
         {
-            // ✅ Check if any interactive UI is currently open
+            // Check if any interactive UI is currently open
             if (IsAnyInteractionActive())
             {
-                Debug.Log("⚠️ Cannot pause - interaction UI is open");
-                return; // Don't allow pause while interacting
+                Debug.Log("⚠️ ESC pressed but interaction is open - letting interaction handle it");
+                return; // Don't process pause - let the interaction's Update() handle ESC
             }
 
+            // No interaction active - toggle pause menu
             if (isPaused)
             {
                 ResumeGame();
@@ -104,19 +106,27 @@ public class PauseMenuController : MonoBehaviour
     /// </summary>
     private bool IsAnyInteractionActive()
     {
-        // Check if Note UI is open
+        // Check if Note UI is open (Paper with pages)
         NoteUI noteUI = FindObjectOfType<NoteUI>();
-        if (noteUI != null && noteUI.IsOpen())
+        if (noteUI != null)
         {
-            Debug.Log("📖 Note is open");
-            return true;
+            bool isNoteOpen = noteUI.IsOpen();
+            if (isNoteOpen)
+            {
+                Debug.Log("📖 NoteUI is open - ESC will close it");
+                return true;
+            }
+        }
+        else
+        {
+            Debug.Log("[PauseMenuController] NoteUI not found in scene");
         }
 
-        // Check if Riddle UI is open
+        // Check if Riddle UI is open (Riddle notes)
         RiddleUIController riddleUI = FindObjectOfType<RiddleUIController>();
         if (riddleUI != null && riddleUI.IsOpen())
         {
-            Debug.Log("📄 Riddle UI is open");
+            Debug.Log("📄 RiddleUI is open - ESC will close it");
             return true;
         }
 
@@ -124,7 +134,7 @@ public class PauseMenuController : MonoBehaviour
         SafeController safeController = FindObjectOfType<SafeController>();
         if (safeController != null && safeController.IsPasswordUIOpen())
         {
-            Debug.Log("🔐 Safe password UI is open");
+            Debug.Log("🔐 Safe UI is open - ESC will close it");
             return true;
         }
 
@@ -132,21 +142,21 @@ public class PauseMenuController : MonoBehaviour
         RadioPuzzle activeRadio = FindObjectOfType<RadioPuzzle>();
         if (activeRadio != null && activeRadio.IsTuning)
         {
-            Debug.Log("📻 Radio is tuning");
+            Debug.Log("📻 Radio is tuning - ESC will close it");
             return true;
         }
 
         // Check if Character Monologue is active
         if (CharacterMonologue.Instance != null && CharacterMonologue.Instance.IsActive())
         {
-            Debug.Log("💭 Monologue is playing");
+            Debug.Log("💭 Monologue is active");
             return true;
         }
 
         // Check if Letter UI is open
         if (LetterUIController.Instance != null && LetterUIController.Instance.IsOpen())
         {
-            Debug.Log("✉️ Letter UI is open");
+            Debug.Log("✉️ Letter UI is open - ESC will close it");
             return true;
         }
 
@@ -154,7 +164,7 @@ public class PauseMenuController : MonoBehaviour
         MysteryBoxController mysteryBox = FindObjectOfType<MysteryBoxController>();
         if (mysteryBox != null && mysteryBox.IsTrainDisplayOpen())
         {
-            Debug.Log("🎁 Mystery Box train display is open");
+            Debug.Log("🎁 Mystery Box display is open - ESC will close it");
             return true;
         }
 
@@ -164,7 +174,7 @@ public class PauseMenuController : MonoBehaviour
         {
             if (inspectable.isInspecting)
             {
-                Debug.Log("🔍 Object is being inspected");
+                Debug.Log("🔍 Object is being inspected - ESC will close it");
                 return true;
             }
         }
@@ -175,7 +185,7 @@ public class PauseMenuController : MonoBehaviour
         {
             if (noteInteractable.IsOpen())
             {
-                Debug.Log("📝 NoteInteractable is open");
+                Debug.Log("📝 NoteInteractable is open - ESC will close it");
                 return true;
             }
         }

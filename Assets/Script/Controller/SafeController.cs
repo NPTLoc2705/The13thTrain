@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System.Collections;
 
@@ -144,7 +144,7 @@ public class SafeController : MonoBehaviour
             }
 
             // Show notice via TextManager
-            TextManager.Instance.ShowNotice("Mystery box appeared!", 3f);
+            TextManager.Instance.ShowNotice("Hộp bí ẩn đã xuất hiện, hãy tìm nó!", 3f);
 
             // Destroy the safe immediately
             Destroy(gameObject);
