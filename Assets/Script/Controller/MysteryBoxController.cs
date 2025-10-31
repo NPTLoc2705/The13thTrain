@@ -276,7 +276,10 @@ public class MysteryBoxController : MonoBehaviour
         {
             playerController.enabled = true;
         }
+        // Destroy the mystery box before loading next scene
+        Destroy(gameObject);
 
+        
         // Load next scene
         LoadNextScene();
     }

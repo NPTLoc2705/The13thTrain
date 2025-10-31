@@ -303,6 +303,21 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            //Safe interaction check
+            SafeController safe = hit.collider.GetComponentInParent<SafeController>();
+            if (safe != null && safe.CanInteract())
+            {
+                showPrompt = true;
+                promptMessage = safe.GetPromptMessage();
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    safe.ShowPasswordUI();
+                }
+                foundInteractable = true;
+                continue;
+            }
+
+
             //Check Note Interactable
             NoteInteractable noteInteractable = hit.collider.GetComponentInParent<NoteInteractable>();
             if (noteInteractable != null && noteInteractable.CanInteract())

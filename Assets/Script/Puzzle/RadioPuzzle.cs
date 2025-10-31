@@ -4,66 +4,64 @@ using System.Collections;
 public class RadioPuzzle : MonoBehaviour
 {
     [Header("Audio Settings")]
-    [SerializeField] private AudioSource staticSound; // Looping static noise
-    [SerializeField] private AudioSource clearStationSound; // Clear audio when tuned
-    [SerializeField] private float staticMaxVolume = 1f; // Max static volume
+    [SerializeField] private AudioSource staticSound;
+    [SerializeField] private AudioSource clearStationSound;
+    [SerializeField] private float staticMaxVolume = 1f;
 
     [Header("Tuning Settings")]
-    [SerializeField] private float targetFrequency = 155.0f; // Hidden target (150-160 range)
-    [SerializeField] private float startingFrequency = 88f; // Start at low end
-    [SerializeField] private float minFrequency = 88f; // Extended FM range
-    [SerializeField] private float maxFrequency = 300f; // Extended to 300 FM
-    [SerializeField] private float tuneSpeed = 10f; // Faster tuning for larger range
-    [SerializeField] private float tolerance = 0.5f; // How close to accept (within 0.5 FM)
-    [SerializeField] private float driftAmount = 0.3f; // Random drift when not tuning
-    [SerializeField] private float holdTime = 2.5f; // Time to hold in correct range (2-3s)
+    [SerializeField] private float targetFrequency = 155.0f;
+    [SerializeField] private float startingFrequency = 88f;
+    [SerializeField] private float minFrequency = 88f;
+    [SerializeField] private float maxFrequency = 300f;
+    [SerializeField] private float tuneSpeed = 10f;
+    [SerializeField] private float tolerance = 0.5f;
+    [SerializeField] private float driftAmount = 0.3f;
+    [SerializeField] private float holdTime = 2.5f;
 
     [Header("Audio Feedback Settings")]
-    [SerializeField] private float maxHearingDistance = 20f; // Max distance to hear static changes
-    [SerializeField] private float optimalRange = 10f; // Range where static is quietest
+    [SerializeField] private float maxHearingDistance = 20f;
+    [SerializeField] private float optimalRange = 10f;
 
     [Header("Puzzle Reward")]
-    [SerializeField] private PickupItem pieceItem; // The torn piece to reveal
+    [SerializeField] private PickupItem pieceItem;
 
     [Header("Interaction")]
-    [SerializeField] private float interactionDistance = 3f; // Raycast distance
+    [SerializeField] private float interactionDistance = 3f;
 
     [Header("UI References")]
-    [SerializeField] private Canvas frequencyCanvas; // Assign RadioUI Canvas
-    [SerializeField] private Transform dialTransform; // Assign DialKnob's Transform
-    [SerializeField] private TMPro.TextMeshProUGUI frequencyText; // Assign FrequencyText
-    [SerializeField] private UnityEngine.UI.Button leftButton; // Assign LeftButton
-    [SerializeField] private UnityEngine.UI.Button rightButton; // Assign RightButton
-    [SerializeField] private UnityEngine.UI.Image leftHighlight; // Optional glow on LeftButton
-    [SerializeField] private UnityEngine.UI.Image rightHighlight; // Optional glow on RightButton
-    [SerializeField] private Color highlightColor = Color.yellow; // Glow color
+    [SerializeField] private Canvas frequencyCanvas;
+    [SerializeField] private Transform dialTransform;
+    [SerializeField] private TMPro.TextMeshProUGUI frequencyText;
+    [SerializeField] private UnityEngine.UI.Button leftButton;
+    [SerializeField] private UnityEngine.UI.Button rightButton;
+    [SerializeField] private UnityEngine.UI.Image leftHighlight;
+    [SerializeField] private UnityEngine.UI.Image rightHighlight;
+    [SerializeField] private Color highlightColor = Color.yellow;
     [SerializeField] private Color normalColor = Color.white;
 
     [Header("Player Reference")]
-    [SerializeField] private PlayerController playerController; // Assign PlayerController in Inspector
+    [SerializeField] private PlayerController playerController;
 
     private float currentFrequency;
-    private bool isTuning = false; // Is player in tuning mode?
-    private bool isSolved = false; // Prevent re-solving
-    private bool radioActivated = false; // Track if radio was turned on
-    private bool isFrequencyLocked = false; // Locked on target frequency
-    private bool isWaitingForAudio = false; // Waiting for clear station audio to finish
-    private bool hasPlayedAudio = false; // Track if audio has been played
+    private bool isTuning = false;
+    private bool isSolved = false;
+    private bool radioActivated = false;
+    private bool isFrequencyLocked = false;
+    private bool isWaitingForAudio = false;
+    private bool hasPlayedAudio = false;
 
-    // New variables for hold mechanic
-    private float timeInCorrectRange = 0f; // Time spent in correct frequency range
-    private bool isInCorrectRange = false; // Currently in correct range?
-    private bool hasShownHoldPrompt = false; // Track if we've shown the "hold" prompt
+    private float timeInCorrectRange = 0f;
+    private bool isInCorrectRange = false;
+    private bool hasShownHoldPrompt = false;
 
     void Start()
     {
         currentFrequency = startingFrequency;
 
-        // Setup audio sources
         if (staticSound != null)
         {
             staticSound.loop = true;
-            staticSound.Stop(); // Don't play until activated
+            staticSound.Stop();
         }
 
         if (clearStationSound != null)
@@ -72,13 +70,9 @@ public class RadioPuzzle : MonoBehaviour
             clearStationSound.Stop();
         }
 
-        // Hide piece initially
         if (pieceItem != null) pieceItem.gameObject.SetActive(false);
-
-        // Hide UI initially
         if (frequencyCanvas != null) frequencyCanvas.gameObject.SetActive(false);
 
-        // Check if already collected via manager
         if (PickupManager.Instance != null && pieceItem != null &&
             PickupManager.Instance.IsCollected(pieceItem.itemID))
         {
@@ -87,7 +81,6 @@ public class RadioPuzzle : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        // Optional: Setup button clicks for mouse/touch support
         if (leftButton != null) leftButton.onClick.AddListener(TuneLeft);
         if (rightButton != null) rightButton.onClick.AddListener(TuneRight);
     }
@@ -96,7 +89,6 @@ public class RadioPuzzle : MonoBehaviour
     {
         if (isSolved) return;
 
-        // Activate radio (first E press)
         if (Input.GetKeyDown(KeyCode.E) && !radioActivated && !isTuning)
         {
             if (IsPlayerLookingAtRadio())
@@ -105,7 +97,6 @@ public class RadioPuzzle : MonoBehaviour
             }
         }
 
-        // Enter tuning mode (second E press after activation)
         if (radioActivated && !isTuning)
         {
             if (Input.GetKeyDown(KeyCode.E) && IsPlayerLookingAtRadio())
@@ -114,7 +105,6 @@ public class RadioPuzzle : MonoBehaviour
             }
         }
 
-        // Handle tuning if active
         if (isTuning && !isFrequencyLocked) HandleTuning();
     }
 
@@ -128,25 +118,24 @@ public class RadioPuzzle : MonoBehaviour
             staticSound.volume = staticMaxVolume;
         }
 
-        // Delay to enter tuning mode for better UX
         Invoke(nameof(EnterTuningMode), 0.3f);
     }
 
     private void EnterTuningMode()
     {
         isTuning = true;
+        Debug.Log("[RadioPuzzle] ========== ENTERING TUNING MODE ==========");
 
-        // 🔒 LOCK PLAYER MOVEMENT - Player cannot move while tuning!
         if (playerController != null)
         {
             playerController.SetMovementLocked(true);
+            Debug.Log("[RadioPuzzle] Player movement LOCKED");
         }
 
         if (frequencyCanvas != null) frequencyCanvas.gameObject.SetActive(true);
 
         UpdateFrequencyUI();
 
-        // Unlock cursor for tuning
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -154,18 +143,18 @@ public class RadioPuzzle : MonoBehaviour
         {
             TextManager.Instance.ShowPrompt("[A/D] để điều chỉnh | [ESC] Thoát\nLắng nghe kỹ tiếng tĩnh điện!");
         }
+
+        Debug.Log($"[RadioPuzzle] Tuning mode active. isTuning = {isTuning}");
     }
 
     private void HandleTuning()
     {
         bool isTuningInput = false;
 
-        // Keyboard tuning (A/D keys now ONLY tune, not move character!)
         if (Input.GetKey(KeyCode.A))
         {
             TuneFrequency(-tuneSpeed * Time.deltaTime);
             isTuningInput = true;
-            // Reset hold timer when actively tuning
             timeInCorrectRange = 0f;
             hasShownHoldPrompt = false;
         }
@@ -173,43 +162,34 @@ public class RadioPuzzle : MonoBehaviour
         {
             TuneFrequency(tuneSpeed * Time.deltaTime);
             isTuningInput = true;
-            // Reset hold timer when actively tuning
             timeInCorrectRange = 0f;
             hasShownHoldPrompt = false;
         }
 
-        // Add drift when not actively tuning
         if (!isTuningInput)
         {
             currentFrequency += Random.Range(-driftAmount, driftAmount) * Time.deltaTime;
         }
 
-        // Clamp frequency
         currentFrequency = Mathf.Clamp(currentFrequency, minFrequency, maxFrequency);
 
-        // Update audio and UI
         UpdateStaticVolume();
         UpdateFrequencyUI();
         UpdateDialVisual();
         UpdateButtonHighlights();
 
-        // Check if frequency is in correct range
         float distance = Mathf.Abs(targetFrequency - currentFrequency);
 
-        // NEW LOGIC: Check if in correct range and not actively tuning
         if (distance <= tolerance && !isTuningInput)
         {
             if (!isInCorrectRange)
             {
-                // Just entered correct range
                 isInCorrectRange = true;
                 timeInCorrectRange = 0f;
             }
 
-            // Accumulate time in correct range
             timeInCorrectRange += Time.deltaTime;
 
-            // Show "hold" prompt after 0.5s in range
             if (timeInCorrectRange > 0.5f && !hasShownHoldPrompt)
             {
                 hasShownHoldPrompt = true;
@@ -219,7 +199,6 @@ public class RadioPuzzle : MonoBehaviour
                 }
             }
 
-            // Update countdown if showing hold prompt
             if (hasShownHoldPrompt && TextManager.Instance != null)
             {
                 float remaining = holdTime - timeInCorrectRange;
@@ -229,7 +208,6 @@ public class RadioPuzzle : MonoBehaviour
                 }
             }
 
-            // Check if held long enough
             if (timeInCorrectRange >= holdTime && !isFrequencyLocked)
             {
                 LockFrequency();
@@ -237,10 +215,8 @@ public class RadioPuzzle : MonoBehaviour
         }
         else
         {
-            // Outside correct range or actively tuning
             if (isInCorrectRange)
             {
-                // Just left correct range
                 isInCorrectRange = false;
                 timeInCorrectRange = 0f;
                 hasShownHoldPrompt = false;
@@ -252,10 +228,12 @@ public class RadioPuzzle : MonoBehaviour
             }
         }
 
-        // Exit tuning (only if not waiting for audio)
+        // ✅ CRITICAL: Exit tuning with ESC (only if not waiting for audio)
         if (Input.GetKeyDown(KeyCode.Escape) && !isWaitingForAudio)
         {
+            Debug.Log("[RadioPuzzle] ESC pressed - exiting tuning mode");
             ExitTuningMode();
+            return; // Exit immediately to prevent PauseMenuController from processing ESC
         }
     }
 
@@ -264,7 +242,6 @@ public class RadioPuzzle : MonoBehaviour
         currentFrequency += delta;
     }
 
-    // Public methods for button OnClick events
     public void TuneLeft()
     {
         if (isTuning && !isFrequencyLocked) TuneFrequency(-tuneSpeed * Time.deltaTime);
@@ -280,31 +257,24 @@ public class RadioPuzzle : MonoBehaviour
         if (staticSound == null) return;
 
         float distance = Mathf.Abs(targetFrequency - currentFrequency);
-
-        // NEW AUDIO FEEDBACK: Static gets quieter as you get closer to target
-        // Use exponential falloff for better audio feedback
         float normalizedDistance;
 
         if (distance <= optimalRange)
         {
-            // Very close - exponential reduction
             normalizedDistance = Mathf.Pow(distance / optimalRange, 2f);
         }
         else if (distance <= maxHearingDistance)
         {
-            // Medium range - linear increase
             float t = (distance - optimalRange) / (maxHearingDistance - optimalRange);
             normalizedDistance = Mathf.Lerp(1f, 0.3f, 1f - t);
         }
         else
         {
-            // Far away - constant loud static
             normalizedDistance = 1f;
         }
 
         staticSound.volume = Mathf.Clamp01(normalizedDistance) * staticMaxVolume;
 
-        // Pitch changes when very close (audio cue)
         if (distance <= tolerance * 3f)
         {
             staticSound.pitch = Mathf.Lerp(1.2f, 1.0f, distance / (tolerance * 3f));
@@ -320,10 +290,8 @@ public class RadioPuzzle : MonoBehaviour
         isFrequencyLocked = true;
         isWaitingForAudio = true;
 
-        // Stop static
         if (staticSound != null) staticSound.Stop();
 
-        // Play clear station audio (only once)
         if (clearStationSound != null && !hasPlayedAudio)
         {
             hasPlayedAudio = true;
@@ -332,7 +300,6 @@ public class RadioPuzzle : MonoBehaviour
             StartCoroutine(FadeInAudio(clearStationSound, 1.5f));
         }
 
-        // Update UI to show locked frequency
         if (frequencyText != null)
         {
             frequencyText.text = $"FM: {currentFrequency:F1} MHz ✓";
@@ -344,7 +311,6 @@ public class RadioPuzzle : MonoBehaviour
             TextManager.Instance.ShowPrompt("Tần số chính xác! Hãy lắng nghe đoạn ghi âm...");
         }
 
-        // Wait for audio to finish, THEN auto-collect the piece
         if (clearStationSound != null)
         {
             float audioLength = clearStationSound.clip.length;
@@ -352,17 +318,13 @@ public class RadioPuzzle : MonoBehaviour
         }
         else
         {
-            // Fallback if no audio
             StartCoroutine(WaitForAudioAndAutoCollect(3f));
         }
     }
 
     private IEnumerator WaitForAudioAndAutoCollect(float duration)
     {
-        // Wait for audio to finish
         yield return new WaitForSeconds(duration);
-
-        // NOW auto-collect the piece!
         AutoCollectPieceAndFinish();
     }
 
@@ -374,37 +336,30 @@ public class RadioPuzzle : MonoBehaviour
         isTuning = false;
         isWaitingForAudio = false;
 
-        // 🔓 UNLOCK PLAYER MOVEMENT WHEN PUZZLE IS SOLVED!
         if (playerController != null)
         {
             playerController.SetMovementLocked(false);
         }
 
-        // AUTO-COLLECT the torn piece instead of just revealing it
         if (pieceItem != null && PickupManager.Instance != null)
         {
-            // Mark as collected immediately
             pieceItem.isCollected = true;
 
-            // Add to PickupManager's collected list
             if (!PickupManager.Instance.collectedItemIDs.Contains(pieceItem.itemID))
             {
                 PickupManager.Instance.collectedItemIDs.Add(pieceItem.itemID);
             }
 
-            // Play pickup sound if available
             if (pieceItem.pickupSound != null)
             {
                 AudioSource.PlayClipAtPoint(pieceItem.pickupSound, Camera.main.transform.position, pieceItem.soundVolume);
             }
 
-            // Show collection message
             if (TextManager.Instance != null)
             {
                 TextManager.Instance.ShowNotice("Bạn đã nhận được 1 mảnh giấy!", 3f);
             }
 
-            // Check if all pieces collected (trigger letter UI)
             if (PickupManager.Instance.collectedItemIDs.Count == 5)
             {
                 if (LetterUIController.Instance != null)
@@ -425,19 +380,39 @@ public class RadioPuzzle : MonoBehaviour
     private void ExitTuningMode()
     {
         isTuning = false;
+        radioActivated = false; // ✅ Reset radio activation
 
-        // 🔓 UNLOCK PLAYER MOVEMENT - Player can move again!
+        // ✅ STOP ALL AUDIO when exiting
+        if (staticSound != null && staticSound.isPlaying)
+        {
+            staticSound.Stop();
+            Debug.Log("[RadioPuzzle] Static sound STOPPED");
+        }
+
+        if (clearStationSound != null && clearStationSound.isPlaying)
+        {
+            clearStationSound.Stop();
+            Debug.Log("[RadioPuzzle] Clear station sound STOPPED");
+        }
+
         if (playerController != null)
         {
             playerController.SetMovementLocked(false);
+            Debug.Log("[RadioPuzzle] Player movement UNLOCKED");
         }
-
+        var pauseMenu = FindObjectOfType<PauseMenuController>();
+        if (pauseMenu != null)
+        {
+            pauseMenu.NotifyInteractionClosed();
+        }
         if (frequencyCanvas != null) frequencyCanvas.gameObject.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         if (TextManager.Instance != null) TextManager.Instance.HidePrompt();
+
+        Debug.Log($"[RadioPuzzle] Tuning mode exited. isTuning = {isTuning}");
     }
 
     private bool IsPlayerLookingAtRadio()
@@ -482,7 +457,6 @@ public class RadioPuzzle : MonoBehaviour
             }
             else
             {
-                // Always show white text - no color hints until locked
                 frequencyText.text = $"FM: {currentFrequency:F1} MHz";
                 frequencyText.color = Color.white;
             }
@@ -503,7 +477,6 @@ public class RadioPuzzle : MonoBehaviour
     {
         if (isFrequencyLocked)
         {
-            // Disable highlights when locked
             if (leftHighlight != null) leftHighlight.color = normalColor;
             if (rightHighlight != null) rightHighlight.color = normalColor;
         }
@@ -514,7 +487,6 @@ public class RadioPuzzle : MonoBehaviour
         }
     }
 
-    // Public method to get interaction prompt (for PlayerController)
     public string GetPromptMessage()
     {
         if (!radioActivated) return "[E] Bật Radio lên";
@@ -522,6 +494,5 @@ public class RadioPuzzle : MonoBehaviour
         return "";
     }
 
-    // Public property for PlayerController to check if we're tuning
     public bool IsTuning => isTuning;
 }

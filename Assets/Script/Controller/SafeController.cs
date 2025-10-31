@@ -4,15 +4,18 @@ using System.Collections;
 
 public class SafeController : MonoBehaviour
 {
-    public GameObject passwordUI; // Drag PasswordUI Canvas here
-    public TMP_InputField passwordInput; // Drag TMP_InputField here
-    public GameObject key; // Drag Key GameObject here (inactive near safe position)
-    public GameObject mysteryBox; // Drag MysteryBox GameObject here
+    public GameObject passwordUI;
+    public TMP_InputField passwordInput;
+    public GameObject key;
+    public GameObject mysteryBox;
 
     [Header("Shake Settings")]
-    public RectTransform shakeTarget; // Drag the Panel (child of Canvas) here
+    public RectTransform shakeTarget;
     public float shakeDuration = 0.5f;
     public float shakeIntensity = 20f;
+
+    [Header("Interaction")]
+    public string interactPrompt = "[E] Nhập mật khẩu két sắt";
 
     private bool isOpen = false;
     private bool isShaking = false;
@@ -21,10 +24,8 @@ public class SafeController : MonoBehaviour
 
     void Start()
     {
-        // If shakeTarget is not assigned, try to find the Panel automatically
         if (shakeTarget == null && passwordUI != null)
         {
-            // Try to find a child named "Panel"
             Transform panelTransform = passwordUI.transform.Find("Panel");
             if (panelTransform != null)
             {
@@ -32,10 +33,15 @@ public class SafeController : MonoBehaviour
             }
         }
 
-        // Store the original anchored position
         if (shakeTarget != null)
         {
             originalAnchoredPosition = shakeTarget.anchoredPosition;
+        }
+
+        // ✅ Make sure password UI is hidden at start
+        if (passwordUI != null)
+        {
+            passwordUI.SetActive(false);
         }
     }
 
@@ -44,21 +50,44 @@ public class SafeController : MonoBehaviour
         if (other.CompareTag("Player") && !isOpen)
         {
             isPlayerNearby = true;
-            ShowPasswordUI();
+            // ✅ Show prompt instead of opening UI immediately
+            if (TextManager.Instance != null)
+            {
+                TextManager.Instance.ShowPrompt(interactPrompt);
+            }
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && !isOpen)
+        if (other.CompareTag("Player"))
         {
             isPlayerNearby = false;
-            HidePasswordUI();
+            // ✅ Hide prompt when leaving
+            if (TextManager.Instance != null)
+            {
+                TextManager.Instance.HidePrompt();
+            }
+
+            // ✅ Close password UI if player walks away
+            if (!isOpen && passwordUI != null && passwordUI.activeSelf)
+            {
+                HidePasswordUI();
+            }
         }
     }
 
     void Update()
     {
+        // ✅ Allow player to press E to open password UI when nearby
+        if (isPlayerNearby && !isOpen && Input.GetKeyDown(KeyCode.E))
+        {
+            if (passwordUI != null && !passwordUI.activeSelf)
+            {
+                ShowPasswordUI();
+            }
+        }
+
         // Check for Enter key press when passwordUI is active
         if (passwordUI != null && passwordUI.activeSelf && Input.GetKeyDown(KeyCode.Return))
         {
@@ -93,6 +122,12 @@ public class SafeController : MonoBehaviour
             // Show cursor for input
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+
+            // ✅ Hide the prompt when UI opens
+            if (TextManager.Instance != null)
+            {
+                TextManager.Instance.HidePrompt();
+            }
         }
     }
 
@@ -105,6 +140,12 @@ public class SafeController : MonoBehaviour
             // Lock cursor again
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            // ✅ Show prompt again if player is still nearby
+            if (isPlayerNearby && TextManager.Instance != null)
+            {
+                TextManager.Instance.ShowPrompt(interactPrompt);
+            }
         }
     }
 
@@ -144,7 +185,10 @@ public class SafeController : MonoBehaviour
             }
 
             // Show notice via TextManager
-            TextManager.Instance.ShowNotice("Hộp bí ẩn đã xuất hiện, hãy tìm nó!", 3f);
+            if (TextManager.Instance != null)
+            {
+                TextManager.Instance.ShowNotice("Hộp bí ẩn đã xuất hiện, hãy tìm nó!", 3f);
+            }
 
             // Destroy the safe immediately
             Destroy(gameObject);
@@ -170,7 +214,6 @@ public class SafeController : MonoBehaviour
 
         while (elapsed < shakeDuration)
         {
-            // Generate random offset for shake effect
             float offsetX = Random.Range(-shakeIntensity, shakeIntensity);
             float offsetY = Random.Range(-shakeIntensity, shakeIntensity);
 
@@ -183,5 +226,25 @@ public class SafeController : MonoBehaviour
         // Reset to original position
         shakeTarget.anchoredPosition = originalAnchoredPosition;
         isShaking = false;
+    }
+
+    /// <summary>
+    /// Get prompt message for nearby interaction
+    /// </summary>
+    public string GetPromptMessage()
+    {
+        if (isPlayerNearby && !isOpen)
+        {
+            return interactPrompt;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Check if player can interact with safe
+    /// </summary>
+    public bool CanInteract()
+    {
+        return isPlayerNearby && !isOpen;
     }
 }
