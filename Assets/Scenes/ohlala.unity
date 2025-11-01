@@ -1479,7 +1479,7 @@ MonoBehaviour:
   itemName: "Ch\xECa kh\xF3a \u0111en"
   model: {fileID: 355581200}
   destroyOnPickup: 1
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ef7a88fb84152fd40ac94e72794b1a3c, type: 3}
   soundVolume: 1
   spatialSound: 0
   showMonologueBeforePickup: 0
@@ -2773,7 +2773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
       propertyPath: itemName
-      value: Family Piece
+      value: "M\u1EA3nh "
       objectReference: {fileID: 0}
     - target: {fileID: 758959741033437129, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
       propertyPath: isCollected
@@ -4060,7 +4060,7 @@ MonoBehaviour:
   itemName: "Ch\xECa Kh\xF3a Xanh"
   model: {fileID: 1214747791}
   destroyOnPickup: 1
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ef7a88fb84152fd40ac94e72794b1a3c, type: 3}
   soundVolume: 1
   spatialSound: 0
   showMonologueBeforePickup: 0
@@ -4442,7 +4442,7 @@ MonoBehaviour:
   itemName: "Ch\xECa kh\xF3a \u0111\u1ECF"
   model: {fileID: 1496615254}
   destroyOnPickup: 1
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ef7a88fb84152fd40ac94e72794b1a3c, type: 3}
   soundVolume: 1
   spatialSound: 0
   showMonologueBeforePickup: 0
@@ -5815,8 +5815,24 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5511636175075909724, guid: 00e9011015c1d0046aac8c100da5a278, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1936504970}
   m_SourcePrefab: {fileID: 100100000, guid: 00e9011015c1d0046aac8c100da5a278, type: 3}
+--- !u!1 &1936504969 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5511636175075909724, guid: 00e9011015c1d0046aac8c100da5a278, type: 3}
+  m_PrefabInstance: {fileID: 1936504968}
+  m_PrefabAsset: {fileID: 0}
+--- !u!81 &1936504970
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1936504969}
+  m_Enabled: 1
 --- !u!4 &1947135692 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 110671728103782855, guid: 93e8942446d3580449168a14b3c10981, type: 3}

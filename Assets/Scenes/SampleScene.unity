@@ -3927,7 +3927,7 @@ MonoBehaviour:
   itemName: Key
   model: {fileID: 1115170244}
   destroyOnPickup: 1
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ef7a88fb84152fd40ac94e72794b1a3c, type: 3}
   soundVolume: 1
   spatialSound: 0
   showMonologueBeforePickup: 0
