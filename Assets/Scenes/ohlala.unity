@@ -1231,8 +1231,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.60338, y: 1.0544006, z: 1.8947817}
-  m_Center: {x: 0.34737533, y: 0.14161976, z: -0.08180526}
+  m_Size: {x: 2.2795022, y: 1.6654091, z: 3.1970267}
+  m_Center: {x: -0.15083458, y: 0.239648, z: 0.5693226}
 --- !u!114 &322897471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1249,8 +1249,8 @@ MonoBehaviour:
   itemName: "b\xFAt ch\xEC"
   model: {fileID: 322897469}
   destroyOnPickup: 1
-  pickupSound: {fileID: 0}
-  soundVolume: 1
+  pickupSound: {fileID: 8300000, guid: bc828188956919c42a69aeb1aa5360ec, type: 3}
+  soundVolume: 0.603
   spatialSound: 0
   showMonologueBeforePickup: 0
   monologueBeforePickup:
@@ -4111,8 +4111,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.799849, y: 1.6804208, z: 3.0683}
-  m_Center: {x: -0.049542367, y: 0.34021044, z: 1.0341504}
+  m_Size: {x: 4.0183096, y: 3.7703784, z: 4.938728}
+  m_Center: {x: 0.06716001, y: 1.3851897, z: 0.09893632}
 --- !u!1 &1340703096 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2722861732060022225, guid: 65c87446168d65144b8ae9646f7842c4, type: 3}
@@ -4838,27 +4838,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6161401401007260553, guid: 75b78c9ee651564459f19c876c8dcb07, type: 3}
       propertyPath: m_Size.x
-      value: 1.3115195
+      value: 2.7398844
       objectReference: {fileID: 0}
     - target: {fileID: 6161401401007260553, guid: 75b78c9ee651564459f19c876c8dcb07, type: 3}
       propertyPath: m_Size.y
-      value: 1.6709671
+      value: 2.3752089
       objectReference: {fileID: 0}
     - target: {fileID: 6161401401007260553, guid: 75b78c9ee651564459f19c876c8dcb07, type: 3}
       propertyPath: m_Size.z
-      value: 0.57978624
+      value: 2.4846606
       objectReference: {fileID: 0}
     - target: {fileID: 6161401401007260553, guid: 75b78c9ee651564459f19c876c8dcb07, type: 3}
       propertyPath: m_Center.x
-      value: 0.45593664
+      value: 0.81371367
       objectReference: {fileID: 0}
     - target: {fileID: 6161401401007260553, guid: 75b78c9ee651564459f19c876c8dcb07, type: 3}
       propertyPath: m_Center.y
-      value: 0.07012415
+      value: 0.4222433
       objectReference: {fileID: 0}
     - target: {fileID: 6161401401007260553, guid: 75b78c9ee651564459f19c876c8dcb07, type: 3}
       propertyPath: m_Center.z
-      value: -0.04161326
+      value: -0.010160923
       objectReference: {fileID: 0}
     - target: {fileID: 6161401401007260553, guid: 75b78c9ee651564459f19c876c8dcb07, type: 3}
       propertyPath: m_IsTrigger
@@ -5732,9 +5732,15 @@ MonoBehaviour:
   monologuePanel: {fileID: 238366726}
   playerObject: {fileID: 1843589261}
   defaultStartingThoughts:
-  - "N\u01A1i n\xE0y... tr\xF4ng c\xF3 v\u1EBB quen thu\u1ED9c..."
-  - "T\xF4i c\u1EA7n ph\u1EA3i t\xECm ra s\u1EF1 th\u1EADt..."
-  - "H\xE0nh tr\xECnh n\xE0y s\u1EBD kh\xF4ng d\u1EC5 d\xE0ng..."
+  - "Ng\xF4i nh\xE0 n\xE0y... T\u1EA1i sao m\xECnh l\u1EA1i \u1EDF \u0111\xE2y?"
+  - "M\xECnh nh\u1EDB r\xF5 r\xE0ng h\u1ED3i n\xE3y \u0111\xE3 b\u01B0\u1EDBc l\xEAn
+    \u0111o\xE0n t\xE0u \u0111\xF3"
+  - ...
+  - "Ng\xF4i nh\xE0 n\xE0y, mang l\u1EA1i cho m\xECnh c\u1EA3m gi\xE1c r\u1EA5t quen
+    thu\u1ED9c"
+  - "Th\u1EADt k\u1EF3 l\u1EA1"
+  - "C\xF3 l\u1EBD m\xECnh n\xEAn n\xEAn \u0111i t\xECm hi\u1EC3u xung quanh ng\xF4i
+    nh\xE0 n\xE0y"
   sampleSceneThoughts:
   - "L\u1EA1i l\xE0 \xE1c m\u1ED9ng \xE0, h\xECnh nh\u01B0 c\xF3 g\xEC \u0111\xF3
     kh\xE1c trong ng\xF4i nh\xE0 n\xE0y, m\xECnh ph\u1EA3i \u0111i xem th\u1EED m\u1EDBi
