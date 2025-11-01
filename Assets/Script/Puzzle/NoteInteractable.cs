@@ -78,7 +78,7 @@ public class NoteInteractable : MonoBehaviour
     {
         Debug.Log("[NoteInteractable] OpenNote() called");
 
-        // Instantiate UI if it doesn't exist
+        // Create a fresh UI instance each time (or reuse existing one if it's still valid)
         if (uiInstance == null && riddleUIPrefab != null)
         {
             uiInstance = Instantiate(riddleUIPrefab);
@@ -88,7 +88,16 @@ public class NoteInteractable : MonoBehaviour
             {
                 Debug.LogError("[NoteInteractable] RiddleUIController component not found!");
                 Destroy(uiInstance);
+                uiInstance = null;
                 return;
+            }
+        }
+        else if (uiInstance != null)
+        {
+            // If instance exists, make sure we have the controller reference
+            if (uiController == null)
+            {
+                uiController = uiInstance.GetComponent<RiddleUIController>();
             }
         }
 
@@ -130,8 +139,8 @@ public class NoteInteractable : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
 
-                // Play monologue after close (if enabled)
-                if (playMonologueAfterClose && !string.IsNullOrEmpty(afterCloseMonologue))
+                // Play monologue after close (if enabled) - ONLY FIRST TIME
+                if (playMonologueAfterClose && !hasBeenRead && !string.IsNullOrEmpty(afterCloseMonologue))
                 {
                     if (CharacterMonologue.Instance != null)
                     {
@@ -145,9 +154,13 @@ public class NoteInteractable : MonoBehaviour
                 {
                     Debug.Log($"[Note] Would add to journal: {journalTitle}");
                 }
-            });
 
-            hasBeenRead = true;
+                // Mark as read AFTER all callbacks
+                if (!hasBeenRead)
+                {
+                    hasBeenRead = true;
+                }
+            });
         }
     }
 
