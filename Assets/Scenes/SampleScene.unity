@@ -3498,6 +3498,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: House
       objectReference: {fileID: 0}
+    - target: {fileID: 1829740962660109438, guid: 93e8942446d3580449168a14b3c10981, type: 3}
+      propertyPath: doorSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 9322c7e586b87a241ae65022d9b7ec32, type: 3}
+    - target: {fileID: 4732331119106391464, guid: 93e8942446d3580449168a14b3c10981, type: 3}
+      propertyPath: doorSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 9322c7e586b87a241ae65022d9b7ec32, type: 3}
     - target: {fileID: 6771249273653632256, guid: 93e8942446d3580449168a14b3c10981, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.1333342
@@ -3538,6 +3546,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7223572193923071484, guid: 93e8942446d3580449168a14b3c10981, type: 3}
+      propertyPath: doorSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 9322c7e586b87a241ae65022d9b7ec32, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

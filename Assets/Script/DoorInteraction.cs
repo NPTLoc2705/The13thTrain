@@ -14,12 +14,21 @@ public class DoorInteraction : MonoBehaviour
     public bool requiresKey = false;
     public string requiredKeyID = "Chìa khóa đỏ";
 
+    [Header("Sound Settings")]
+    [Tooltip("Âm thanh khi mở/đóng cửa")]
+    public AudioClip doorSound;
+
+    [Range(0f, 1f)]
+    [Tooltip("Âm lượng của sound effect")]
+    public float soundVolume = 0.8f;
+
     private Quaternion closedRotation;
     private Quaternion openRotation;
     private Coroutine currentCoroutine;
     private Transform playerTransform;
     private bool wasInRange = false;
     private bool isAnimating = false;
+    private AudioSource audioSource;
 
     void Start()
     {
@@ -45,6 +54,17 @@ public class DoorInteraction : MonoBehaviour
         playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
         if (playerTransform == null)
             Debug.LogError("Player not found! Make sure Player has tag 'Player'");
+
+        // Setup AudioSource
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 1f; // 3D sound
+        audioSource.minDistance = 1f;
+        audioSource.maxDistance = 15f;
     }
 
     void Update()
@@ -140,8 +160,8 @@ public class DoorInteraction : MonoBehaviour
         Quaternion startRotation = doorWing.rotation;
         Quaternion targetRotation = isOpen ? closedRotation : openRotation;
 
-        // Hiển thị notice
-        
+        // Play sound khi bắt đầu mở/đóng cửa
+        PlayDoorSound();
 
         // Set trigger ngay lập tức khi mở cửa
         if (doorCollider != null && !isOpen)
@@ -188,6 +208,18 @@ public class DoorInteraction : MonoBehaviour
                 TextManager.Instance.ShowPrompt(promptMessage);
                 wasInRange = true;
             }
+        }
+    }
+
+    /// <summary>
+    /// Phát âm thanh khi mở/đóng cửa
+    /// </summary>
+    private void PlayDoorSound()
+    {
+        if (audioSource != null && doorSound != null)
+        {
+            audioSource.PlayOneShot(doorSound, soundVolume);
+            Debug.Log($"🔊 Playing door sound ({(isOpen ? "closing" : "opening")})");
         }
     }
 

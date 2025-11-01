@@ -236,7 +236,9 @@ public class DifferencePuzzleManager : MonoBehaviour
         // Check hoàn thành
         if (foundCount >= totalDifferences)
         {
-            OnPuzzleCompleted();
+            // CRITICAL FIX: Delay để đợi circle marker animation hoàn thành (0.35s)
+            // Trước khi chạy thoughts và các hành động tiếp theo
+            StartCoroutine(DelayedPuzzleCompletion(0.5f));
         }
     }
 
@@ -250,8 +252,8 @@ public class DifferencePuzzleManager : MonoBehaviour
 
         Debug.Log("🎉 ĐÃ HOÀN THÀNH PUZZLE - TÌM HẾT ĐIỂM KHÁC NHAU!");
 
-        // Disable tất cả spots (nhưng GIỮ circle markers visible)
-        DisableAllSpots();
+        // CRITICAL FIX: Chỉ disable buttons, GIỮ circle markers visible
+        DisableAllSpots(hideGameObjects: false);
 
         // Hiển thị thông báo hoàn thành (không dùng ký tự đặc biệt)
         if (TextManager.Instance != null)
@@ -259,16 +261,53 @@ public class DifferencePuzzleManager : MonoBehaviour
             TextManager.Instance.ShowNotice("Đã tìm thấy tất cả điểm khác nhau!", 3f);
         }
 
-        // Hiển thị thoughts TRONG viewer sau 1.5 giây
+        // NEW: Ẩn spots sau khi circle markers hiện đủ (1s), TRƯỚC KHI thoughts bắt đầu
+        StartCoroutine(HideSpotsBeforeThoughts());
+    }
+
+    /// <summary>
+    /// Ẩn tất cả spots sau khi circle markers hiện đủ, trước khi chạy thoughts
+    /// </summary>
+    IEnumerator HideSpotsBeforeThoughts()
+    {
+        // Đợi 1 giây để người chơi thấy rõ các circle markers
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("👁️ Ẩn tất cả spots trước khi chạy thoughts...");
+
+        // Ẩn TẤT CẢ spots (kể cả circle markers)
+        foreach (DifferenceSpot spot in allSpots)
+        {
+            if (spot != null)
+            {
+                spot.gameObject.SetActive(false);
+            }
+        }
+
+        // Sau khi ẩn spots, chờ thêm 0.5s rồi hiển thị thoughts
+        yield return new WaitForSeconds(0.5f);
+
+        // Hiển thị thoughts
         if (showCompletionThoughts && completionThoughts.Length > 0)
         {
-            StartCoroutine(ShowThoughtsSequenceDelayed(1.5f));
+            StartCoroutine(ShowThoughtsSequence());
         }
         else
         {
             // Nếu không có thoughts, thực hiện hành động kết thúc ngay
-            Invoke("OnThoughtsComplete", 1.5f);
+            OnThoughtsComplete();
         }
+    }
+
+    /// <summary>
+    /// CRITICAL FIX: Delay trước khi gọi OnPuzzleCompleted
+    /// Để đảm bảo circle marker animation hoàn thành
+    /// </summary>
+    IEnumerator DelayedPuzzleCompletion(float delay)
+    {
+        Debug.Log($"⏳ Đợi {delay}s để circle marker animation hoàn thành...");
+        yield return new WaitForSeconds(delay);
+        OnPuzzleCompleted();
     }
 
     /// <summary>
@@ -351,13 +390,12 @@ public class DifferencePuzzleManager : MonoBehaviour
     {
         Debug.Log("🎬 Thoughts hoàn thành - Bắt đầu hành động kết thúc!");
 
-        // 1. Ẩn tất cả circle markers
-        HideAllCircleMarkers();
+        // Spots đã được ẩn trong HideSpotsBeforeThoughts(), không cần ẩn nữa
 
-        // 2. Hiện chìa khóa
+        // 1. Hiện chìa khóa
         RevealRewardObject();
 
-        // 3. Hiển thị thông báo về chìa khóa (sau delay)
+        // 2. Hiển thị thông báo về chìa khóa (sau delay)
         if (showKeyNotice && !string.IsNullOrEmpty(keyNoticeMessage))
         {
             Invoke("ShowKeyNotice", keyNoticeDelay);
@@ -522,18 +560,34 @@ public class DifferencePuzzleManager : MonoBehaviour
 
     /// <summary>
     /// Disable tất cả spots
+    /// FIXED: Chỉ disable button interaction, GIỮ circle markers visible khi hoàn thành
     /// </summary>
-    void DisableAllSpots()
+    /// <param name="hideGameObjects">True = ẩn GameObjects hoàn toàn, False = chỉ disable buttons</param>
+    void DisableAllSpots(bool hideGameObjects = true)
     {
         foreach (DifferenceSpot spot in allSpots)
         {
             if (spot == null) continue;
 
-            // Ẩn TẤT CẢ spots (kể cả đã tìm thấy) khi thoát puzzle mode
-            spot.gameObject.SetActive(false);
+            if (hideGameObjects)
+            {
+                // Ẩn hoàn toàn (khi thoát puzzle mode)
+                spot.gameObject.SetActive(false);
+            }
+            else
+            {
+                // CHỈ disable button, GIỮ circle markers visible (khi hoàn thành puzzle)
+                Button btn = spot.GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.interactable = false;
+                }
+            }
+
+            Debug.Log($"🔒 Disabled spot '{spot.spotID}' (hidden: {hideGameObjects}, found: {spot.IsFound()})");
         }
 
-        Debug.Log("✅ Disabled all spots");
+        Debug.Log($"✅ Disabled all spots (hideGameObjects: {hideGameObjects})");
     }
 
     /// <summary>

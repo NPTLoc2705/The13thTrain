@@ -25,7 +25,16 @@ public class PaintingBookOpener : MonoBehaviour
         "Bên trong có gì nhỉ?"
     };
 
+    [Header("Sound Settings")]
+    [Tooltip("Âm thanh khi mở sách (book open sound)")]
+    public AudioClip bookOpenSound;
+
+    [Range(0f, 1f)]
+    [Tooltip("Âm lượng của sound effect")]
+    public float soundVolume = 0.7f;
+
     private bool hasBeenOpened = false;
+    private AudioSource audioSource;
 
     void Start()
     {
@@ -37,6 +46,29 @@ public class PaintingBookOpener : MonoBehaviour
             if (paintingViewer == null)
             {
                 Debug.LogError("❌ PaintingViewerUI không tìm thấy! Hãy đảm bảo có PaintingViewerUI trong scene.");
+            }
+        }
+
+        // Setup AudioSource
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 1f; // 3D sound
+        audioSource.minDistance = 1f;
+        audioSource.maxDistance = 10f;
+    }
+
+    void Update()
+    {
+        // CRITICAL: Force ẩn prompt khi viewer đang mở
+        if (paintingViewer != null && paintingViewer.IsOpen())
+        {
+            if (TextManager.Instance != null)
+            {
+                TextManager.Instance.HidePrompt();
             }
         }
     }
@@ -57,6 +89,9 @@ public class PaintingBookOpener : MonoBehaviour
         {
             TextManager.Instance.HidePrompt();
         }
+
+        // Play sound khi mở sách
+        PlayOpenSound();
 
         // Nếu có monologue và chưa mở lần nào
         if (showMonologueBeforeOpen && !hasBeenOpened && monologueBeforeOpen.Length > 0)
@@ -81,23 +116,29 @@ public class PaintingBookOpener : MonoBehaviour
     }
 
     /// <summary>
+    /// Phát âm thanh khi mở sách
+    /// </summary>
+    void PlayOpenSound()
+    {
+        if (audioSource != null && bookOpenSound != null)
+        {
+            audioSource.PlayOneShot(bookOpenSound, soundVolume);
+            Debug.Log("🔊 Playing book open sound");
+        }
+    }
+
+    /// <summary>
     /// Lấy prompt message để hiển thị
     /// </summary>
     public string GetPromptMessage()
     {
-        // CRITICAL: Không hiển thị prompt khi viewer đang mở
+        // Chỉ hiện prompt khi viewer đóng
         if (paintingViewer != null && paintingViewer.IsOpen())
         {
-            return null; // Trả về null để PlayerController ẩn prompt
+            return null; // Viewer đang mở → ẩn prompt
         }
 
-        // CRITICAL: Không hiển thị prompt khi CharacterMonologue đang active
-        if (CharacterMonologue.Instance != null && CharacterMonologue.Instance.IsActive())
-        {
-            return null; // Trả về null để PlayerController ẩn prompt
-        }
-
-        // Luôn hiển thị prompt đơn giản khi đứng gần
+        // Viewer đóng → hiện prompt
         return "[E] Mở cuốn sách";
     }
 
