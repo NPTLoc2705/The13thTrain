@@ -343,12 +343,7 @@ public class RadioPuzzle : MonoBehaviour
 
         if (pieceItem != null && PickupManager.Instance != null)
         {
-            pieceItem.isCollected = true;
-
-            if (!PickupManager.Instance.collectedItemIDs.Contains(pieceItem.itemID))
-            {
-                PickupManager.Instance.collectedItemIDs.Add(pieceItem.itemID);
-            }
+            PickupManager.Instance.CollectItem(pieceItem);
 
             if (pieceItem.pickupSound != null)
             {

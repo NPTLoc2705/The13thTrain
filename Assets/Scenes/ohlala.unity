@@ -2884,7 +2884,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2990183451391734160, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
       propertyPath: m_TagString
-      value: PuzzlePiece
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 5059446393563581174, guid: b5eeb82525ff6824d8852a269d1f6c4b, type: 3}
       propertyPath: m_TagString
@@ -5487,6 +5487,7 @@ MonoBehaviour:
   - {fileID: 1496615258}
   - {fileID: 355581201}
   collectedItemIDs: []
+  keepPuzzleProgressAcrossScenes: 0
 --- !u!4 &1863081712
 Transform:
   m_ObjectHideFlags: 0
@@ -7347,7 +7348,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6586380701880126115, guid: 9295189b4f03b8a47b9873a8492069d1, type: 3}
       propertyPath: m_TagString
-      value: PuzzlePiece
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 7689586449187942139, guid: 9295189b4f03b8a47b9873a8492069d1, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

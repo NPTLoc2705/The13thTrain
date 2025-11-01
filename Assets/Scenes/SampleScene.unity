@@ -229,7 +229,7 @@ GameObject:
   - component: {fileID: 18066820}
   m_Layer: 0
   m_Name: TornPiece2
-  m_TagString: Untagged
+  m_TagString: PuzzlePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3337,7 +3337,7 @@ GameObject:
   - component: {fileID: 880969806}
   m_Layer: 0
   m_Name: TornPiece 3
-  m_TagString: Untagged
+  m_TagString: PuzzlePiece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

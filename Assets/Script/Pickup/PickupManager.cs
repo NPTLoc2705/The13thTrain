@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Collections.Generic;
 
 public class PickupManager : MonoBehaviour
@@ -9,6 +10,13 @@ public class PickupManager : MonoBehaviour
 
     [Header("Danh sách ID đã nhặt được (tự động cập nhật)")]
     public List<string> collectedItemIDs = new List<string>();
+
+    [Header("Scene Settings")]
+    [Tooltip("If true, keeps puzzle piece progress across scenes. If false, resets everything.")]
+    public bool keepPuzzleProgressAcrossScenes = false;
+
+    // Track puzzle pieces separately for clarity
+    private int puzzlePiecesCollected = 0;
 
     // Singleton để PlayerController có thể gọi
     public static PickupManager Instance;
@@ -24,77 +32,122 @@ public class PickupManager : MonoBehaviour
         }
         else if (Instance != this)
         {
-            // Destroy duplicate but keep the data
-            Debug.LogWarning(" Duplicate PickupManager found in new scene. Destroying duplicate but keeping singleton.");
+            Debug.LogWarning("Duplicate PickupManager found in new scene. Destroying duplicate but keeping singleton.");
             Destroy(gameObject);
             return;
         }
 
-        // Subscribe to scene loaded event
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void OnDestroy()
     {
-        // Only clear reference if THIS is the singleton
         if (Instance == this)
         {
             Instance = null;
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            Debug.Log(" PickupManager singleton destroyed");
+            Debug.Log("PickupManager singleton destroyed");
         }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($" Scene '{scene.name}' loaded. PickupManager ready.");
+        // Clean null references to prevent ghost objects
+        pickupItems.RemoveAll(x => x == null);
 
-        // If entering gameplay scene from main menu, might want to reset
-        if (scene.name == "SampleTest" || scene.name == "MainMenu")
+        if (keepPuzzleProgressAcrossScenes)
         {
-            // Optionally reset if coming from main menu
-            // ResetProgress();
+            // OPTION A: Keep puzzle pieces, reset everything else
+            // Remove non-puzzle items from collected list
+            collectedItemIDs.RemoveAll(id =>
+            {
+                PickupItem foundItem = pickupItems.Find(x => x != null && x.itemID == id);
+                return foundItem == null || !foundItem.CompareTag("PuzzlePiece");
+            });
+
+            Debug.Log($"🔄 Entered {scene.name} - Kept puzzle progress ({puzzlePiecesCollected}/5), reset other items");
+
+            // Check if we should show letter in SampleScene
+            if (scene.name == "SampleScene" && puzzlePiecesCollected >= 5)
+            {
+                Debug.Log("🧩 All puzzle pieces collected — showing letter.");
+                StartCoroutine(ShowLetterAfterDelay());
+            }
+        }
+        else
+        {
+            // OPTION B: Reset EVERYTHING when entering new scene
+            collectedItemIDs.Clear();
+            puzzlePiecesCollected = 0;
+
+            Debug.Log($"🔄 Entered {scene.name} - Reset all pickup progress (fresh start)");
         }
     }
 
-    // Call this when starting a new game to reset progress
+    private IEnumerator ShowLetterAfterDelay()
+    {
+        yield return new WaitForSeconds(0.25f);
+
+        if (LetterUIController.Instance != null)
+        {
+            LetterUIController.Instance.ShowLetterUI();
+        }
+        else
+        {
+            Debug.LogWarning("🧩 LetterUIController not found in scene!");
+        }
+    }
+
+    // Call this when starting a new game to reset progress completely
     public void ResetProgress()
     {
         collectedItemIDs.Clear();
         pickupItems.Clear();
-        Debug.Log(" PickupManager progress reset");
+        puzzlePiecesCollected = 0;
+        Debug.Log("PickupManager progress reset");
     }
 
     public void RegisterPickup(PickupItem item)
     {
-        if (!pickupItems.Contains(item))
-        {
+        if (item != null && !pickupItems.Contains(item))
             pickupItems.Add(item);
-        }
     }
 
     public void CollectItem(PickupItem item)
     {
         if (item == null || item.isCollected) return;
 
+        // Execute item pickup
         item.OnPickup();
 
+        // Track the item ID
         if (!collectedItemIDs.Contains(item.itemID))
             collectedItemIDs.Add(item.itemID);
 
-        Debug.Log($" Collected: {item.itemID} ({collectedItemIDs.Count}/5)");
+        Debug.Log($"✅ Collected: {item.itemID} ({collectedItemIDs.Count} total items)");
 
-        // Check if all pieces are collected and show UI
-        if (collectedItemIDs.Count == 5)
+        // If this item is a PuzzlePiece
+        if (item.CompareTag("PuzzlePiece"))
         {
-            // Use singleton to access LetterUIController
-            if (LetterUIController.Instance != null)
+            puzzlePiecesCollected++;
+            Debug.Log($"🧩 Puzzle pieces collected: {puzzlePiecesCollected}/5");
+
+            // Only show the letter if we're in SampleScene and have all 5
+            if (puzzlePiecesCollected >= 5 && SceneManager.GetActiveScene().name == "SampleScene")
             {
-                LetterUIController.Instance.ShowLetterUI();
+                Debug.Log("🧩 All 5 puzzle pieces collected in SampleScene!");
+                if (LetterUIController.Instance != null)
+                {
+                    LetterUIController.Instance.ShowLetterUI();
+                }
+                else
+                {
+                    Debug.LogWarning("⚠️ LetterUIController not found in SampleScene! Make sure LetterUI GameObject exists.");
+                }
             }
-            else
+            else if (puzzlePiecesCollected >= 5)
             {
-                Debug.LogError(" LetterUIController instance not found! Ensure the LetterUI GameObject is in the scene.");
+                Debug.Log("🧩 All 5 puzzle pieces collected! Letter will show when entering SampleScene.");
             }
         }
     }
@@ -102,5 +155,11 @@ public class PickupManager : MonoBehaviour
     public bool IsCollected(string itemID)
     {
         return collectedItemIDs.Contains(itemID);
+    }
+
+    // Helper method to check puzzle piece count
+    public int GetPuzzlePieceCount()
+    {
+        return puzzlePiecesCollected;
     }
 }

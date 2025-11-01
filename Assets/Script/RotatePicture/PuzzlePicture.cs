@@ -60,13 +60,7 @@ public class PuzzleManager : MonoBehaviour
         if (grantDirectly && rewardPickupItem != null && PickupManager.Instance != null)
         {
             // Mark as collected immediately
-            rewardPickupItem.isCollected = true;
-
-            // Add to PickupManager's collected list
-            if (!PickupManager.Instance.collectedItemIDs.Contains(rewardPickupItem.itemID))
-            {
-                PickupManager.Instance.collectedItemIDs.Add(rewardPickupItem.itemID);
-            }
+            PickupManager.Instance.CollectItem(rewardPickupItem);
 
             // Play pickup sound if available
             if (rewardPickupItem.pickupSound != null)

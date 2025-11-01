@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using UnityEngine.SceneManagement;
@@ -41,7 +41,7 @@ public class MysteryBoxController : MonoBehaviour
         {
             displayImage.gameObject.SetActive(false);
         }
-        
+
 
         if (renderCamera != null)
         {
@@ -49,14 +49,14 @@ public class MysteryBoxController : MonoBehaviour
             renderCamera.orthographic = true;
             renderCamera.targetTexture = renderTexture;
         }
-      
+
 
         if (closeButton != null)
         {
             closeButton.gameObject.SetActive(false);
             closeButton.onClick.AddListener(CloseUI);
         }
-       
+
 
         // Setup video player
         if (videoPlayer != null)
@@ -68,7 +68,7 @@ public class MysteryBoxController : MonoBehaviour
             {
                 videoPlayer.clip = videoClip;
             }
-           
+
 
             videoPlayer.loopPointReached += OnVideoEnd;
 
@@ -82,9 +82,6 @@ public class MysteryBoxController : MonoBehaviour
                 }
                 videoDisplay.gameObject.SetActive(false);
             }
-        }
-        else
-        {
         }
     }
 
@@ -110,6 +107,12 @@ public class MysteryBoxController : MonoBehaviour
         }
 
         isOpen = true;
+
+        // HIDE THE "PRESS E" PROMPT IMMEDIATELY
+        if (TextManager.Instance != null)
+        {
+            TextManager.Instance.HidePrompt();
+        }
 
         if (toyTrainPrefab == null || renderCamera == null || renderTexture == null || displayImage == null)
         {
@@ -259,7 +262,6 @@ public class MysteryBoxController : MonoBehaviour
 
     private void OnVideoEnd(VideoPlayer vp)
     {
-
         // Hide video and canvas
         if (videoDisplay != null)
         {
@@ -276,26 +278,36 @@ public class MysteryBoxController : MonoBehaviour
         {
             playerController.enabled = true;
         }
+
+        // ENSURE PROMPT IS HIDDEN BEFORE DESTROYING
+        if (TextManager.Instance != null)
+        {
+            TextManager.Instance.HidePrompt();
+        }
+
         // Destroy the mystery box before loading next scene
         Destroy(gameObject);
 
-        
         // Load next scene
         LoadNextScene();
     }
 
     private void LoadNextScene()
     {
-
         if (Application.CanStreamedLevelBeLoaded(nextSceneName))
         {
             SceneManager.LoadScene(nextSceneName);
         }
-        
     }
 
     void OnDestroy()
     {
+        // CLEAN UP PROMPT WHEN OBJECT IS DESTROYED
+        if (TextManager.Instance != null)
+        {
+            TextManager.Instance.HidePrompt();
+        }
+
         if (videoPlayer != null)
         {
             videoPlayer.loopPointReached -= OnVideoEnd;

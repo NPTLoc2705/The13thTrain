@@ -317,13 +317,7 @@ public class CandlePuzzleManager : MonoBehaviour
         // AUTO-COLLECT the torn piece
         if (tornPiece != null && PickupManager.Instance != null)
         {
-            tornPiece.isCollected = true;
-
-            if (!PickupManager.Instance.collectedItemIDs.Contains(tornPiece.itemID))
-            {
-                PickupManager.Instance.collectedItemIDs.Add(tornPiece.itemID);
-            }
-
+            PickupManager.Instance.CollectItem(tornPiece);
             if (tornPiece.pickupSound != null)
             {
                 AudioSource.PlayClipAtPoint(tornPiece.pickupSound, Camera.main.transform.position, tornPiece.soundVolume);
