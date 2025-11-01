@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.06568628, g: 0.06568628, b: 0.07156863, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -587,7 +587,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &195857054
 RectTransform:
   m_ObjectHideFlags: 0
@@ -597,15 +597,15 @@ RectTransform:
   m_GameObject: {fileID: 195857053}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2039620629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 48.2}
-  m_SizeDelta: {x: 800, y: 50}
+  m_AnchoredPosition: {x: -12, y: 410}
+  m_SizeDelta: {x: 1043.3, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &195857055
 CanvasRenderer:
@@ -1231,8 +1231,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.336779, y: 3.6520324, z: 2.5849266}
-  m_Center: {x: -0.080450535, y: -0.25117946, z: 0.122003555}
+  m_Size: {x: 1, y: 1.84, z: 1.74}
+  m_Center: {x: 0.09, y: -0.25117946, z: 0.122003555}
 --- !u!114 &322897471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1312,7 +1312,7 @@ MonoBehaviour:
   isOpen: 0
   interactionDistance: 6
   requiresKey: 1
-  requiredKeyID: RedKey
+  requiredKeyID: "Ch\xECa kh\xF3a \u0111\u1ECF"
 --- !u!65 &333212355
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1475,8 +1475,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd6974dd3653172479fda37c451d4889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
-  itemID: BlackKey
-  itemName: Black Key
+  itemID: "Ch\xECa kh\xF3a \u0111en"
+  itemName: "Ch\xECa kh\xF3a \u0111en"
   model: {fileID: 355581200}
   destroyOnPickup: 1
   pickupSound: {fileID: 0}
@@ -2638,7 +2638,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &812944808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2749,15 +2749,15 @@ RectTransform:
   m_GameObject: {fileID: 812944807}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2039620629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1121}
-  m_SizeDelta: {x: 800, y: 50}
+  m_AnchoredPosition: {x: 8, y: 305}
+  m_SizeDelta: {x: 1043.3, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &822987242
 PrefabInstance:
@@ -3721,7 +3721,7 @@ MonoBehaviour:
   isOpen: 0
   interactionDistance: 6
   requiresKey: 1
-  requiredKeyID: GreenKey
+  requiredKeyID: "Ch\xECa Kh\xF3a Xanh"
 --- !u!65 &1072656195
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4056,8 +4056,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd6974dd3653172479fda37c451d4889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
-  itemID: GreenKey
-  itemName: Green Key
+  itemID: "Ch\xECa Kh\xF3a Xanh"
+  itemName: "Ch\xECa Kh\xF3a Xanh"
   model: {fileID: 1214747791}
   destroyOnPickup: 1
   pickupSound: {fileID: 0}
@@ -4438,8 +4438,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd6974dd3653172479fda37c451d4889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
-  itemID: RedKey
-  itemName: Red Key
+  itemID: "Ch\xECa kh\xF3a \u0111\u1ECF"
+  itemName: "Ch\xECa kh\xF3a \u0111\u1ECF"
   model: {fileID: 1496615254}
   destroyOnPickup: 1
   pickupSound: {fileID: 0}
@@ -4909,12 +4909,24 @@ PrefabInstance:
       value: Pencil
       objectReference: {fileID: 0}
     - target: {fileID: 590543240985620583, guid: b59a9c8244569884ea37036b2c96f95e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 590543240985620583, guid: b59a9c8244569884ea37036b2c96f95e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 4.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 590543240985620583, guid: b59a9c8244569884ea37036b2c96f95e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 590543240985620583, guid: b59a9c8244569884ea37036b2c96f95e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.253
+      value: 2.74
       objectReference: {fileID: 0}
     - target: {fileID: 590543240985620583, guid: b59a9c8244569884ea37036b2c96f95e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.013
+      value: 3.851
       objectReference: {fileID: 0}
     - target: {fileID: 590543240985620583, guid: b59a9c8244569884ea37036b2c96f95e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5998,7 +6010,7 @@ MonoBehaviour:
   isOpen: 0
   interactionDistance: 6
   requiresKey: 1
-  requiredKeyID: BlackKey
+  requiredKeyID: "Ch\xECa kh\xF3a \u0111en"
 --- !u!65 &1986816031
 BoxCollider:
   m_ObjectHideFlags: 0

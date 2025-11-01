@@ -24,6 +24,7 @@ public class RiddleUIController : MonoBehaviour
 
     private System.Action onCloseCallback;
     private bool hintShown = false;
+    private bool isCurrentlyOpen = false; // Track if UI is actually open
 
     void Awake()
     {
@@ -47,12 +48,14 @@ public class RiddleUIController : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+
+        isCurrentlyOpen = false;
     }
 
     void Update()
     {
-        // Allow ESC key to close the UI
-        if (Input.GetKeyDown(KeyCode.Escape))
+        // ONLY allow ESC key to close if the UI is actually open
+        if (isCurrentlyOpen && Input.GetKeyDown(KeyCode.Escape))
         {
             Close();
         }
@@ -60,6 +63,8 @@ public class RiddleUIController : MonoBehaviour
 
     public void Show(string text, System.Action onClose = null)
     {
+        Debug.Log("[RiddleUIController] Show() called");
+
         // Show the 3D background if available
         if (note3DBackground != null)
         {
@@ -85,17 +90,26 @@ public class RiddleUIController : MonoBehaviour
         // Store callback
         onCloseCallback = onClose;
         hintShown = false;
+        isCurrentlyOpen = true; // Mark as open
 
         // Auto-close after delay if set
         if (defaultAutoCloseSeconds > 0f)
         {
             Invoke(nameof(Close), defaultAutoCloseSeconds);
         }
-
     }
 
     public void Close()
     {
+        // If not currently open, don't do anything
+        if (!isCurrentlyOpen)
+        {
+            Debug.Log("[RiddleUIController] Close() called but UI is not open, ignoring");
+            return;
+        }
+
+        Debug.Log("[RiddleUIController] Close() - closing UI");
+
         // Cancel any pending auto-close
         CancelInvoke();
 
@@ -115,19 +129,26 @@ public class RiddleUIController : MonoBehaviour
             gameObject.SetActive(false);
         }
 
+        // Mark as closed BEFORE invoking callback
+        isCurrentlyOpen = false;
+
+        // Store callback locally and clear it to prevent multiple calls
+        System.Action callbackToInvoke = onCloseCallback;
+        onCloseCallback = null;
+
         // Invoke the callback
-        onCloseCallback?.Invoke();
-
-       
-
+        if (callbackToInvoke != null)
+        {
+            Debug.Log("[RiddleUIController] Invoking close callback");
+            callbackToInvoke.Invoke();
+        }
     }
+
     public bool IsOpen()
     {
-        if (panel != null)
-            return panel.activeSelf;
-        else
-            return gameObject.activeSelf;
+        return isCurrentlyOpen;
     }
+
     private void OnHintClicked()
     {
         if (riddleText != null && !hintShown)
@@ -135,8 +156,13 @@ public class RiddleUIController : MonoBehaviour
             // Append hint to the existing text
             riddleText.text += "\n\n" + hintText;
             hintShown = true;
-
         }
-        
+    }
+
+    void OnDestroy()
+    {
+        // Clear callback to prevent errors
+        onCloseCallback = null;
+        isCurrentlyOpen = false;
     }
 }

@@ -27,6 +27,7 @@ public class NoteInteractable : MonoBehaviour
     private GameObject uiInstance;
     private RiddleUIController uiController;
     private bool hasBeenRead = false;
+    private bool isCurrentlyOpen = false; // Track if note is currently being read
 
     void Start()
     {
@@ -42,7 +43,8 @@ public class NoteInteractable : MonoBehaviour
     // Public method to check if the note can be interacted with
     public bool CanInteract()
     {
-        return !(openOnce && hasBeenRead);
+        // Can't interact if already open or if openOnce and already read
+        return !isCurrentlyOpen && !(openOnce && hasBeenRead);
     }
 
     // Public method to get the prompt message
@@ -54,6 +56,12 @@ public class NoteInteractable : MonoBehaviour
     // Public method to open the note
     public void Interact()
     {
+        if (isCurrentlyOpen)
+        {
+            Debug.Log("[NoteInteractable] Note is already open, ignoring interaction");
+            return;
+        }
+
         if (openOnce && hasBeenRead)
         {
             if (TextManager.Instance != null)
@@ -68,6 +76,8 @@ public class NoteInteractable : MonoBehaviour
 
     private void OpenNote()
     {
+        Debug.Log("[NoteInteractable] OpenNote() called");
+
         // Instantiate UI if it doesn't exist
         if (uiInstance == null && riddleUIPrefab != null)
         {
@@ -76,6 +86,7 @@ public class NoteInteractable : MonoBehaviour
 
             if (uiController == null)
             {
+                Debug.LogError("[NoteInteractable] RiddleUIController component not found!");
                 Destroy(uiInstance);
                 return;
             }
@@ -83,6 +94,14 @@ public class NoteInteractable : MonoBehaviour
 
         if (uiController != null)
         {
+            isCurrentlyOpen = true; // Mark as open
+
+            // Hide the interaction prompt immediately
+            if (TextManager.Instance != null)
+            {
+                TextManager.Instance.HidePrompt();
+            }
+
             // Lock player movement
             PlayerController pc = FindObjectOfType<PlayerController>();
             if (pc != null)
@@ -95,6 +114,9 @@ public class NoteInteractable : MonoBehaviour
             uiController.Show(noteText, () =>
             {
                 Debug.Log("[NoteInteractable] RiddleUI closed callback triggered");
+
+                // Mark as no longer open
+                isCurrentlyOpen = false;
 
                 // FIRST: Unlock player movement BEFORE playing monologue
                 PlayerController pcc = FindObjectOfType<PlayerController>();
@@ -134,7 +156,7 @@ public class NoteInteractable : MonoBehaviour
     /// </summary>
     public bool IsOpen()
     {
-        return uiController != null && uiController.IsOpen();
+        return isCurrentlyOpen && uiController != null && uiController.IsOpen();
     }
 
     private void OnDestroy()
@@ -144,5 +166,6 @@ public class NoteInteractable : MonoBehaviour
         {
             Destroy(uiInstance);
         }
+        isCurrentlyOpen = false;
     }
 }

@@ -12,7 +12,7 @@ public class DoorInteraction : MonoBehaviour
     [Header("Door Interaction Settings")]
     public float interactionDistance = 3f;
     public bool requiresKey = false;
-    public string requiredKeyID = "RedKey";
+    public string requiredKeyID = "Chìa khóa đỏ";
 
     private Quaternion closedRotation;
     private Quaternion openRotation;
